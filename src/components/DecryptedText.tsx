@@ -17,6 +17,8 @@ interface DecryptedTextProps {
   scramblingClassName?: string;
   parentClassName?: string;
   startDelay?: number;
+  /** Fires once, after every character has resolved. */
+  onComplete?: () => void;
 }
 
 const DEFAULT_CHARACTERS =
@@ -32,6 +34,7 @@ export default function DecryptedText({
   scramblingClassName = "",
   parentClassName = "",
   startDelay = 0,
+  onComplete,
 }: DecryptedTextProps) {
   const [display, setDisplay] = useState<string[]>(() => text.split(""));
   const [solved, setSolved] = useState<boolean[]>(() =>
@@ -39,6 +42,10 @@ export default function DecryptedText({
   );
   const containerRef = useRef<HTMLSpanElement>(null);
   const hasRun = useRef(false);
+  const onCompleteRef = useRef(onComplete);
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
 
   useEffect(() => {
     const node = containerRef.current;
@@ -103,6 +110,7 @@ export default function DecryptedText({
 
             if (allSolved && intervalId !== undefined) {
               clearInterval(intervalId);
+              onCompleteRef.current?.();
             }
           }, speed);
         }, startDelay);
@@ -126,6 +134,7 @@ export default function DecryptedText({
         <span
           key={i}
           aria-hidden="true"
+          data-glyph={text[i] !== " " ? "true" : undefined}
           className={`${className} ${solved[i] ? "" : scramblingClassName}`.trim()}
         >
           {char}

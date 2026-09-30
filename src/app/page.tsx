@@ -1,6 +1,13 @@
+"use client";
+
+import { useRef, useState } from "react";
 import DecryptedText from "@/components/DecryptedText";
+import TechSelectBox from "@/components/TechSelectBox";
 
 export default function Home() {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const [decrypted, setDecrypted] = useState(false);
+
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-black px-6 text-zinc-100">
       <div
@@ -15,7 +22,10 @@ export default function Home() {
         <span className="mb-4 font-mono text-xs uppercase tracking-[0.3em] text-cyan-400">
           Gryphon Arrows &middot; IMechE UAS Challenge
         </span>
-        <h1 className="font-display text-4xl tracking-tight sm:text-6xl">
+        <h1
+          ref={headingRef}
+          className="relative font-display text-4xl tracking-tight sm:text-6xl"
+        >
           <DecryptedText
             text="Site under construction"
             className="text-zinc-100"
@@ -23,10 +33,12 @@ export default function Home() {
             speed={40}
             iterationsPerChar={10}
             staggerMs={70}
+            onComplete={() => setDecrypted(true)}
           />
+          <TechSelectBox containerRef={headingRef} active={decrypted} />
         </h1>
         <p className="mt-4 max-w-md font-body text-sm text-zinc-400">
-          Building something worth flying. Check back soon.
+          Taking off soon, hang on!!
         </p>
       </div>
     </main>

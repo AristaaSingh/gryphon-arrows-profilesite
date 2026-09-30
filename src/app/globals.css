@@ -17,3 +17,59 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/* Tech Text-style hover selection box: see TechSelectBox.tsx */
+.tech-select-box {
+  position: absolute;
+  pointer-events: none;
+  border: 1px dashed rgba(34, 211, 238, 0);
+  border-radius: 2px;
+  opacity: 0;
+  transition:
+    left 110ms ease-out,
+    top 110ms ease-out,
+    width 110ms ease-out,
+    height 110ms ease-out,
+    opacity 150ms ease-out,
+    border-color 150ms ease-out;
+}
+
+.tech-select-box--visible {
+  opacity: 1;
+  border-color: rgba(34, 211, 238, 0.6);
+}
+
+.tech-select-box__label {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  white-space: nowrap;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: rgba(34, 211, 238, 0.85);
+}
+
+.tech-select-box__corner {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(34, 211, 238, 0.85);
+}
+
+.tech-select-box__corner--tl {
+  left: -1.5px;
+  top: -1.5px;
+}
+.tech-select-box__corner--tr {
+  right: -1.5px;
+  top: -1.5px;
+}
+.tech-select-box__corner--bl {
+  left: -1.5px;
+  bottom: -1.5px;
+}
+.tech-select-box__corner--br {
+  right: -1.5px;
+  bottom: -1.5px;
+}

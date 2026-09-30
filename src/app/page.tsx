@@ -22,7 +22,7 @@ export default function Home() {
             scramblingClassName="text-cyan-400/70"
             speed={30}
             iterationsPerChar={10}
-            parallel={1}
+            staggerMs={55}
           />
         </h1>
         <p className="mt-4 max-w-md font-body text-sm text-zinc-400">

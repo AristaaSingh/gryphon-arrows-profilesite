@@ -8,8 +8,8 @@ interface DecryptedTextProps {
   speed?: number;
   /** Average number of ticks before a character locks in. */
   iterationsPerChar?: number;
-  /** How many characters resolve at roughly the same time (higher = more at once). */
-  parallel?: number;
+  /** Ms between each character starting to scramble — the gap between lock-ins. */
+  staggerMs?: number;
   characters?: string;
   /** Applied to every character, resolved or not — keeps one font throughout. */
   className?: string;
@@ -26,7 +26,7 @@ export default function DecryptedText({
   text,
   speed = 40,
   iterationsPerChar = 8,
-  parallel = 5,
+  staggerMs = 30,
   characters = DEFAULT_CHARACTERS,
   className = "",
   scramblingClassName = "",
@@ -53,9 +53,10 @@ export default function DecryptedText({
         const length = text.length;
         const chars = text.split("");
 
-        // Stagger each character's start so ~`parallel` are scrambling at once,
-        // rather than the whole string or one letter at a time.
-        const startTick = chars.map((_, i) => Math.floor(i / parallel));
+        // Each character starts `staggerMs` after the previous one, independent
+        // of the scramble tick speed, so the gap between lock-ins is tunable
+        // without changing how fast individual characters flicker.
+        const startAtMs = chars.map((_, i) => i * staggerMs);
         // Per-character threshold with jitter so resolves don't land in lockstep.
         const threshold = chars.map(() =>
           Math.max(2, iterationsPerChar + Math.floor(Math.random() * 4) - 2)
@@ -63,7 +64,7 @@ export default function DecryptedText({
         const ticks = chars.map(() => 0);
         const isSolved = chars.map((c) => c === " ");
 
-        let globalTick = 0;
+        let elapsedMs = 0;
         let intervalId: ReturnType<typeof setInterval> | undefined;
 
         const timeoutId = setTimeout(() => {
@@ -76,7 +77,7 @@ export default function DecryptedText({
                 nextDisplay[i] = chars[i];
                 continue;
               }
-              if (startTick[i] > globalTick) {
+              if (startAtMs[i] > elapsedMs) {
                 nextDisplay[i] =
                   chars[i] === " "
                     ? " "
@@ -98,7 +99,7 @@ export default function DecryptedText({
 
             setDisplay(nextDisplay);
             setSolved(isSolved.slice());
-            globalTick += 1;
+            elapsedMs += speed;
 
             if (allSolved && intervalId !== undefined) {
               clearInterval(intervalId);

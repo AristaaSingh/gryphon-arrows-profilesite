@@ -24,18 +24,26 @@ interface DecryptTechHeadingProps {
   maxFontSize?: number;
   /** Decrypts right-to-left instead of the default left-to-right. */
   reverse?: boolean;
+  /**
+   * Swap to the interactive Tech Text component once decrypted. Default
+   * false: the heading just stays as resolved DecryptedText (feedback was
+   * Tech Text didn't fit here) — set true to bring it back, the rest of
+   * this component is unchanged either way.
+   */
+  interactive?: boolean;
 }
 
 const DEFAULT_ACCENT = "#e02828";
 
 /**
- * Plays the DecryptedText scramble-in effect once per word, then swaps to
- * the real reactbits.dev Tech Text component (hover reveal, drag, idle
- * sweep, particles) for the interactive resting state — see
- * TechText.jsx/.css. Self-contained: it measures its own box, so both
- * phases render at the same size no matter where this component is
- * placed, and there's no flash of a wrong size before the first real
- * measurement (the box stays invisible until then).
+ * Plays the DecryptedText scramble-in effect once per word. With
+ * `interactive` (off by default — see that prop), swaps afterward to the
+ * real reactbits.dev Tech Text component (hover reveal, drag, idle sweep,
+ * particles) for an interactive resting state instead of just leaving the
+ * resolved text in place — see TechText.jsx/.css. Self-contained: it
+ * measures its own box, so both phases render at the same size no matter
+ * where this component is placed, and there's no flash of a wrong size
+ * before the first real measurement (the box stays invisible until then).
  */
 export default function DecryptTechHeading({
   text,
@@ -47,6 +55,7 @@ export default function DecryptTechHeading({
   minFontSize = 24,
   maxFontSize = 160,
   reverse = false,
+  interactive = false,
 }: DecryptTechHeadingProps) {
   const words = text.split(" ").filter(Boolean);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -94,7 +103,7 @@ export default function DecryptTechHeading({
       className={`relative font-display ${className}`.trim()}
       style={{ ...style, visibility: fontSize === null ? "hidden" : "visible" }}
     >
-      {!decrypted && fontSize !== null && (
+      {(!decrypted || !interactive) && fontSize !== null && (
         <h1
           className="relative flex h-full items-center justify-center whitespace-nowrap"
           style={{
@@ -123,7 +132,7 @@ export default function DecryptTechHeading({
         </h1>
       )}
 
-      {decrypted && fontSize !== null && (
+      {decrypted && interactive && fontSize !== null && (
         <TechText
           text={text}
           fontWeight={400}

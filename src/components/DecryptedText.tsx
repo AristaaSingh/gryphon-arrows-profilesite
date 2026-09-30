@@ -26,7 +26,7 @@ export default function DecryptedText({
   text,
   speed = 40,
   iterationsPerChar = 8,
-  staggerMs = 55,
+  staggerMs = 70,
   characters = DEFAULT_CHARACTERS,
   className = "",
   scramblingClassName = "",

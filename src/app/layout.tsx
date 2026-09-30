@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Rubik_80s_Fade, Space_Mono, Exo_2 } from "next/font/google";
+import { Anta, Space_Mono, Exo_2 } from "next/font/google";
 import "./globals.css";
 
-const rubik80sFade = Rubik_80s_Fade({
+const anta = Anta({
   variable: "--font-display",
   weight: "400",
   subsets: ["latin"],
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${rubik80sFade.variable} ${spaceMono.variable} ${exo2.variable} h-full antialiased`}
+      className={`${anta.variable} ${spaceMono.variable} ${exo2.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-body">{children}</body>
     </html>

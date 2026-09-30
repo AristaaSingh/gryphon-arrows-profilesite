@@ -129,9 +129,13 @@ export default function DecryptTechHeading({
           accentColor={accentColor}
           reach={220}
           softness={0.7}
-          dashLength={4}
-          dashGap={3}
-          strokeWidth={1.5}
+          // Scaled to the rendered font size (capped at these same values,
+          // which were tuned for a large desktop heading) — at mobile's
+          // much smaller size, fixed pixel dashes/stroke read as dense and
+          // congested relative to the letterforms.
+          dashLength={Math.min(4, Math.max(2, fontSize * 0.042))}
+          dashGap={Math.min(3, Math.max(1.5, fontSize * 0.031))}
+          strokeWidth={Math.min(1.5, Math.max(1, fontSize * 0.0156))}
           lineStyle="dashed"
           reveal="letter"
           specks={15}

@@ -52,6 +52,30 @@ export default function TechSelectBox({
       container.querySelectorAll<HTMLElement>('[data-glyph="true"]')
     );
 
+    // getBoundingClientRect() on an inline character span reports the line
+    // box height, which is identical for every character on the line — that
+    // gave a box whose height never changed. Measure each glyph's actual ink
+    // height with canvas text metrics instead, same as reactbits' own
+    // approach, and cache per character+font.
+    const measureCanvas = document.createElement("canvas");
+    const measureCtx = measureCanvas.getContext("2d");
+    const inkHeightCache = new Map<string, number>();
+
+    const getInkHeight = (el: HTMLElement, char: string, fallback: number) => {
+      if (!measureCtx || !char.trim()) return fallback;
+      const style = getComputedStyle(el);
+      const key = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}|${char}`;
+      const cached = inkHeightCache.get(key);
+      if (cached !== undefined) return cached;
+      measureCtx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      const metrics = measureCtx.measureText(char);
+      const height =
+        (metrics.actualBoundingBoxAscent ?? 0) + (metrics.actualBoundingBoxDescent ?? 0);
+      const resolved = height > 0 ? height : fallback;
+      inkHeightCache.set(key, resolved);
+      return resolved;
+    };
+
     const handleMove = (e: MouseEvent) => {
       if (glyphs.length === 0) return;
       const containerRect = container.getBoundingClientRect();
@@ -85,11 +109,12 @@ export default function TechSelectBox({
       }
 
       const rect = nearest.getBoundingClientRect();
+      const inkHeight = getInkHeight(nearest, nearest.textContent ?? "", rect.height);
       target.current = {
         left: rect.left - containerRect.left,
-        top: rect.top - containerRect.top,
+        top: rect.top - containerRect.top + (rect.height - inkHeight) / 2,
         width: rect.width,
-        height: rect.height,
+        height: inkHeight,
         opacity: 1,
       };
 

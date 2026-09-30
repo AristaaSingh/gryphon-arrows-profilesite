@@ -9,9 +9,17 @@ Web, Overpass, Exo 2, Saira, Share Tech, and others).
 
 | Role    | Font             | Notes                                               |
 | ------- | ---------------- | ---------------------------------------------------- |
-| Display | Anta              | Headings. Switched from Rubik 80s Fade 2026-09-30 — that font's grainy halftone texture and COLR color-font rendering caused problems (washed out at small sizes, incompatible with canvas-drawn hover effects). |
+| Display | Gajraj One        | Headings. Went Rubik 80s Fade -> Anta -> Gajraj One (2026-09-30). Rubik 80s Fade's grainy COLR color-font rendering caused problems (washed out at small sizes, incompatible with canvas-drawn hover effects); Anta was a plain fallback while fixing those. |
 | Mono    | Space Mono        | Labels, eyebrows, spec-sheet data lines, nav.        |
 | Body    | Exo 2             | Paragraph text.                                       |
+
+The "GRYPHON ARROWS" heading is two separate words (two `DecryptedText`
+instances) rather than one string with literal spaces between every
+letter — `letter-spacing` (`tracking-[0.2em]` on the `<h1>`) gives the
+within-word letter spacing, and a flex `gap` gives the word gap its own,
+wider value. Literal space characters would also break `TechSelectBox`'s
+letter-detection and word-gap handling, which already treats `" "` as a
+non-glyph separator.
 
 Loaded via `next/font/google` in `src/app/layout.tsx` (self-hosted at build
 time, no runtime request to Google Fonts), exposed as CSS variables

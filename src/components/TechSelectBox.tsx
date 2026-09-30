@@ -28,7 +28,7 @@ const OPACITY_SMOOTHING = 0.12;
 // clears the letterform instead of cutting through it. Scales with the
 // glyph's own size instead of a fixed px, so it still clears the letter
 // at both small and large heading sizes.
-const outsetFor = (inkHeight: number) => Math.max(6, inkHeight * 0.22);
+const outsetFor = (inkHeight: number) => Math.max(4, inkHeight * 0.1);
 const HIDDEN_CLASS = "tech-select-box__glyph-hidden";
 const ACCENT = "#e02828";
 

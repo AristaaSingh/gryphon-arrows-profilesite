@@ -6,7 +6,8 @@ import TechSelectBox from "@/components/TechSelectBox";
 
 export default function Home() {
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const [decrypted, setDecrypted] = useState(false);
+  const [resolvedCount, setResolvedCount] = useState(0);
+  const decrypted = resolvedCount >= 2;
 
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 text-zinc-100">
@@ -24,16 +25,26 @@ export default function Home() {
         </span>
         <h1
           ref={headingRef}
-          className="relative font-display text-5xl tracking-tight sm:text-7xl md:text-8xl"
+          className="relative flex flex-wrap items-baseline justify-center gap-x-8 sm:gap-x-12 font-display text-5xl tracking-[0.2em] sm:text-7xl md:text-8xl"
         >
           <DecryptedText
-            text="Site under construction"
+            text="GRYPHON"
             className="text-zinc-100"
             scramblingClassName="text-[#e02828]/70"
             speed={40}
             iterationsPerChar={10}
             staggerMs={70}
-            onComplete={() => setDecrypted(true)}
+            onComplete={() => setResolvedCount((c) => c + 1)}
+          />
+          <DecryptedText
+            text="ARROWS"
+            className="text-zinc-100"
+            scramblingClassName="text-[#e02828]/70"
+            speed={40}
+            iterationsPerChar={10}
+            staggerMs={70}
+            startDelay={550}
+            onComplete={() => setResolvedCount((c) => c + 1)}
           />
           <TechSelectBox containerRef={headingRef} active={decrypted} />
         </h1>

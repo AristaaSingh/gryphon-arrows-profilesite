@@ -2,50 +2,40 @@
 
 import { useEffect, useRef, useState } from "react";
 
-type RevealDirection = "start" | "end" | "center";
-
 interface DecryptedTextProps {
   text: string;
+  /** Ms between scramble ticks. */
   speed?: number;
-  /** How many scrambled frames a character shows before it's "solved". */
+  /** Average number of ticks before a character locks in. */
   iterationsPerChar?: number;
-  /** Order in which characters lock in. */
-  revealDirection?: RevealDirection;
+  /** How many characters resolve at roughly the same time (higher = more at once). */
+  parallel?: number;
   characters?: string;
+  /** Applied to every character, resolved or not — keeps one font throughout. */
   className?: string;
-  encryptedClassName?: string;
+  /** Extra class applied only while a character is still scrambling (e.g. a color tint). */
+  scramblingClassName?: string;
   parentClassName?: string;
-  /** Delay in ms before the effect starts. */
   startDelay?: number;
 }
 
 const DEFAULT_CHARACTERS =
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=/\\<>[]{}";
 
-function revealOrder(length: number, direction: RevealDirection): number[] {
-  const indices = Array.from({ length }, (_, i) => i);
-  if (direction === "end") return indices.reverse();
-  if (direction === "center") {
-    const mid = (length - 1) / 2;
-    return indices.sort((a, b) => Math.abs(a - mid) - Math.abs(b - mid));
-  }
-  return indices;
-}
-
 export default function DecryptedText({
   text,
   speed = 40,
-  iterationsPerChar = 7,
-  revealDirection = "start",
+  iterationsPerChar = 8,
+  parallel = 5,
   characters = DEFAULT_CHARACTERS,
   className = "",
-  encryptedClassName = "",
+  scramblingClassName = "",
   parentClassName = "",
   startDelay = 0,
 }: DecryptedTextProps) {
   const [display, setDisplay] = useState<string[]>(() => text.split(""));
-  const [revealed, setRevealed] = useState<boolean[]>(() =>
-    text.split("").map(() => false)
+  const [solved, setSolved] = useState<boolean[]>(() =>
+    text.split("").map((c) => c === " ")
   );
   const containerRef = useRef<HTMLSpanElement>(null);
   const hasRun = useRef(false);
@@ -60,67 +50,65 @@ export default function DecryptedText({
         hasRun.current = true;
         observer.disconnect();
 
-        const order = revealOrder(text.length, revealDirection);
-        const charTicks = order.map(() => 0);
-        const solvedLocal = text.split("").map(() => false);
-        let solvedCount = 0;
+        const length = text.length;
+        const chars = text.split("");
 
-        const timeout = setTimeout(() => {
-          const interval = setInterval(() => {
-            setDisplay((prev) => {
-              const next = [...prev];
-              order.forEach((charIndex, orderPos) => {
-                if (solvedLocal[charIndex]) return;
-                const isActiveSlot = orderPos <= solvedCount;
-                if (!isActiveSlot) return;
+        // Stagger each character's start so ~`parallel` are scrambling at once,
+        // rather than the whole string or one letter at a time.
+        const startTick = chars.map((_, i) => Math.floor(i / parallel));
+        // Per-character threshold with jitter so resolves don't land in lockstep.
+        const threshold = chars.map(() =>
+          Math.max(2, iterationsPerChar + Math.floor(Math.random() * 4) - 2)
+        );
+        const ticks = chars.map(() => 0);
+        const isSolved = chars.map((c) => c === " ");
 
-                if (text[charIndex] === " ") {
-                  next[charIndex] = " ";
-                  charTicks[orderPos] = iterationsPerChar;
-                  solvedLocal[charIndex] = true;
-                  return;
-                }
+        let globalTick = 0;
+        let intervalId: ReturnType<typeof setInterval> | undefined;
 
-                charTicks[orderPos] += 1;
-                if (charTicks[orderPos] >= iterationsPerChar) {
-                  next[charIndex] = text[charIndex];
-                  solvedLocal[charIndex] = true;
-                } else {
-                  next[charIndex] =
-                    characters[Math.floor(Math.random() * characters.length)];
-                }
-              });
-              return next;
-            });
+        const timeoutId = setTimeout(() => {
+          intervalId = setInterval(() => {
+            const nextDisplay = new Array<string>(length);
+            let allSolved = true;
 
-            setRevealed((prev) => {
-              const next = [...prev];
-              let changed = false;
-              order.forEach((charIndex, orderPos) => {
-                if (
-                  !next[charIndex] &&
-                  orderPos <= solvedCount &&
-                  charTicks[orderPos] >= iterationsPerChar
-                ) {
-                  next[charIndex] = true;
-                  changed = true;
-                }
-              });
-              return changed ? next : prev;
-            });
+            for (let i = 0; i < length; i++) {
+              if (isSolved[i]) {
+                nextDisplay[i] = chars[i];
+                continue;
+              }
+              if (startTick[i] > globalTick) {
+                nextDisplay[i] =
+                  chars[i] === " "
+                    ? " "
+                    : characters[Math.floor(Math.random() * characters.length)];
+                allSolved = false;
+                continue;
+              }
 
-            if (charTicks[solvedCount] >= iterationsPerChar) {
-              solvedCount += 1;
+              ticks[i] += 1;
+              if (ticks[i] >= threshold[i]) {
+                nextDisplay[i] = chars[i];
+                isSolved[i] = true;
+              } else {
+                nextDisplay[i] =
+                  characters[Math.floor(Math.random() * characters.length)];
+                allSolved = false;
+              }
             }
 
-            if (solvedCount >= order.length) {
-              clearInterval(interval);
+            setDisplay(nextDisplay);
+            setSolved(isSolved.slice());
+            globalTick += 1;
+
+            if (allSolved && intervalId !== undefined) {
+              clearInterval(intervalId);
             }
           }, speed);
         }, startDelay);
 
         return () => {
-          clearTimeout(timeout);
+          clearTimeout(timeoutId);
+          if (intervalId !== undefined) clearInterval(intervalId);
         };
       },
       { threshold: 0.4 }
@@ -137,7 +125,7 @@ export default function DecryptedText({
         <span
           key={i}
           aria-hidden="true"
-          className={revealed[i] ? className : encryptedClassName || className}
+          className={`${className} ${solved[i] ? "" : scramblingClassName}`.trim()}
         >
           {char}
         </span>

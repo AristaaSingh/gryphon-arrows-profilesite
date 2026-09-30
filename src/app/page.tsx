@@ -19,10 +19,10 @@ export default function Home() {
           <DecryptedText
             text="Site under construction"
             className="text-zinc-100"
-            encryptedClassName="font-mono text-cyan-400/70"
-            revealDirection="start"
+            scramblingClassName="text-cyan-400/70"
             speed={35}
             iterationsPerChar={6}
+            parallel={5}
           />
         </h1>
         <p className="mt-4 max-w-md font-body text-sm text-zinc-400">

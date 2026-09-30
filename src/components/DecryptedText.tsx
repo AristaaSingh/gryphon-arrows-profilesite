@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 interface DecryptedTextProps {
   text: string;
@@ -15,6 +15,12 @@ interface DecryptedTextProps {
   className?: string;
   /** Extra class applied only while a character is still scrambling (e.g. a color tint). */
   scramblingClassName?: string;
+  /** Inline style for every character — for colors that come from a runtime
+   *  variable, where a Tailwind arbitrary-value class can't be generated. */
+  style?: CSSProperties;
+  /** Inline style applied (merged over `style`) only while a character is
+   *  still scrambling. */
+  scramblingStyle?: CSSProperties;
   parentClassName?: string;
   startDelay?: number;
   /** Fires once, after every character has resolved. */
@@ -35,6 +41,8 @@ export default function DecryptedText({
   characters = DEFAULT_CHARACTERS,
   className = "",
   scramblingClassName = "",
+  style,
+  scramblingStyle,
   parentClassName = "",
   startDelay = 0,
   onComplete,
@@ -139,6 +147,7 @@ export default function DecryptedText({
           aria-hidden="true"
           data-glyph={text[i] !== " " ? "true" : undefined}
           className={`${className} ${solved[i] ? "" : scramblingClassName}`.trim()}
+          style={solved[i] ? style : { ...style, ...scramblingStyle }}
         >
           {char}
         </span>

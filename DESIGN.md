@@ -13,13 +13,21 @@ Web, Overpass, Exo 2, Saira, Share Tech, and others).
 | Mono    | Space Mono        | Labels, eyebrows, spec-sheet data lines, nav.        |
 | Body    | Exo 2             | Paragraph text.                                       |
 
-The "GRYPHON ARROWS" heading is two separate words (two `DecryptedText`
+The "GRYPHON ARROWS" intro is two separate words (two `DecryptedText`
 instances) rather than one string with literal spaces between every
 letter — `letter-spacing` (`tracking-[0.2em]` on the `<h1>`) gives the
 within-word letter spacing, and a flex `gap` gives the word gap its own,
-wider value. Literal space characters would also break `TechSelectBox`'s
-letter-detection and word-gap handling, which already treats `" "` as a
-non-glyph separator.
+wider value.
+
+Once both words finish decrypting, the heading swaps to
+`TechText` (`src/components/TechText.jsx` + `.css`) — reactbits.dev's
+actual "Tech Text" component (hover-triggered dashed-outline reveal,
+draggable letters, idle sweep, particle "specks"), copied verbatim from
+https://reactbits.dev/text-animations/tech-text rather than reimplemented,
+since it's distributed as copy-paste source (no real npm package exists;
+their own CLI does the same copy). This only became viable after dropping
+Rubik 80s Fade — TechText renders via Canvas, and canvas text painting
+doesn't support COLR color fonts.
 
 Loaded via `next/font/google` in `src/app/layout.tsx` (self-hosted at build
 time, no runtime request to Google Fonts), exposed as CSS variables

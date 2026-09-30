@@ -21,74 +21,8 @@ body {
   color: var(--foreground);
 }
 
-/* Tech Text-style hover selection box: see TechSelectBox.tsx.
-   Position/size/opacity are driven every frame by a spring-smoothed
-   requestAnimationFrame loop in JS, not CSS transitions — this only
-   sets the static look. */
-.tech-select-box {
-  position: absolute;
-  left: 0;
-  top: 0;
-  pointer-events: none;
-  border: 1px dashed rgba(var(--accent-rgb), 0.7);
-  border-radius: 2px;
-  opacity: 0;
-  box-shadow:
-    0 0 6px 1px rgba(var(--accent-rgb), 0.35),
-    0 0 14px 2px rgba(var(--accent-rgb), 0.15);
-  will-change: transform, width, height, opacity;
-}
-
-.tech-select-box__label {
-  position: absolute;
-  left: 0;
-  bottom: calc(100% + 6px);
-  white-space: nowrap;
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: rgba(var(--accent-rgb), 0.9);
-}
-
-.tech-select-box__corner {
-  position: absolute;
-  width: 4px;
-  height: 4px;
-  background: rgba(var(--accent-rgb), 0.9);
-}
-
-.tech-select-box__corner--tl {
-  left: -1.5px;
-  top: -1.5px;
-}
-.tech-select-box__corner--tr {
-  right: -1.5px;
-  top: -1.5px;
-}
-.tech-select-box__corner--bl {
-  left: -1.5px;
-  bottom: -1.5px;
-}
-.tech-select-box__corner--br {
-  right: -1.5px;
-  bottom: -1.5px;
-}
-
-/* Every decrypted heading letter: transitions opacity so the hide/show
-   swap below (and the decrypt effect's own scramble/resolve classes)
-   fades instead of snapping instantly. */
+/* Every decrypted heading letter: transitions opacity so the scramble ->
+   resolve swap fades instead of snapping instantly. */
 [data-glyph="true"] {
   transition: opacity 450ms ease;
-}
-
-/* Hides the real glyph while TechSelectBox draws a genuine stroke-only
-   outline of it on a canvas overlay (see TechSelectBox.tsx). */
-.tech-select-box__glyph-hidden {
-  opacity: 0;
-}
-
-.tech-select-canvas {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
 }

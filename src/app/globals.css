@@ -3,6 +3,9 @@
 :root {
   --background: #000000;
   --foreground: #ededed;
+  /* Team colour: red. Kept as separate r,g,b so it can be reused at
+     different alphas via rgba(var(--accent-rgb), <alpha>). */
+  --accent-rgb: 224, 40, 40;
 }
 
 @theme inline {
@@ -27,9 +30,12 @@ body {
   left: 0;
   top: 0;
   pointer-events: none;
-  border: 1px dashed rgba(34, 211, 238, 0.65);
+  border: 1px dashed rgba(var(--accent-rgb), 0.7);
   border-radius: 2px;
   opacity: 0;
+  box-shadow:
+    0 0 6px 1px rgba(var(--accent-rgb), 0.35),
+    0 0 14px 2px rgba(var(--accent-rgb), 0.15);
   will-change: transform, width, height, opacity;
 }
 
@@ -41,14 +47,14 @@ body {
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 10px;
   letter-spacing: 0.08em;
-  color: rgba(34, 211, 238, 0.85);
+  color: rgba(var(--accent-rgb), 0.9);
 }
 
 .tech-select-box__corner {
   position: absolute;
   width: 4px;
   height: 4px;
-  background: rgba(34, 211, 238, 0.85);
+  background: rgba(var(--accent-rgb), 0.9);
 }
 
 .tech-select-box__corner--tl {
@@ -68,10 +74,16 @@ body {
   bottom: -1.5px;
 }
 
-/* The currently-selected letter: solid fill swaps for a stroked outline,
-   matching reactbits' fill -> dashed-outline reveal under the cursor. */
-.tech-select-box__glyph-hollow {
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  -webkit-text-stroke: 1.25px rgba(34, 211, 238, 0.9);
+/* Hides the real (solid, color-font) glyph while TechSelectBox draws a
+   genuine stroke-only outline of it on a canvas overlay — a CSS-only
+   color swap can't produce a hollow letter on a COLR color font, since
+   COLR rendering ignores `color`/-webkit-text-fill-color. */
+.tech-select-box__glyph-hidden {
+  opacity: 0;
+}
+
+.tech-select-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }

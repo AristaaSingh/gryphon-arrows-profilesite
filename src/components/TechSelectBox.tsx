@@ -27,15 +27,17 @@ const OPACITY_SMOOTHING = 0.12;
 // Gap between the dashed box and the glyph's own ink bounds, so the line
 // clears the letterform instead of cutting through it.
 const OUTSET = 5;
-const HOLLOW_CLASS = "tech-select-box__glyph-hollow";
+const HIDDEN_CLASS = "tech-select-box__glyph-hidden";
+const ACCENT = "#e02828";
 
 /**
  * A CAD/blueprint-style selection box that chases whichever letter the
  * cursor is nearest to with spring-damped motion (not a linear CSS ease),
- * with a dimension readout — the fluid-motion part of reactbits.dev's
- * "Tech Text" hover effect, reimplemented in DOM/CSS instead of canvas so
- * it can sit over real (color-font) heading text without a duplicate
- * canvas-rendered text layer.
+ * with a dimension readout and a hollow-outline swap on the selected
+ * letter — reactbits.dev's "Tech Text" hover effect, reimplemented without
+ * its canvas/physics engine for the rest of the (real, DOM) heading text.
+ * Only the single selected character is ever drawn on canvas, to get a
+ * true stroke-only outline on a COLR color font (see drawHollowGlyph).
  */
 export default function TechSelectBox({
   containerRef,
@@ -44,6 +46,7 @@ export default function TechSelectBox({
 }: TechSelectBoxProps) {
   const boxElRef = useRef<HTMLDivElement>(null);
   const labelElRef = useRef<HTMLSpanElement>(null);
+  const canvasElRef = useRef<HTMLCanvasElement>(null);
   const current = useRef<BoxState>({ left: 0, top: 0, width: 0, height: 0, opacity: 0 });
   const target = useRef<BoxState>({ left: 0, top: 0, width: 0, height: 0, opacity: 0 });
   const hasAppeared = useRef(false);
@@ -81,6 +84,47 @@ export default function TechSelectBox({
       return resolved;
     };
 
+    // Draws a genuine stroke-only outline of one character on a canvas
+    // overlay. Rubik 80s Fade is a COLR color font: DOM text ignores
+    // `color`/-webkit-text-fill-color for it, so a CSS-only "hollow" trick
+    // just paints a stroke on top of the still-visible color fill. Canvas
+    // text painting always ignores COLR palettes and uses strokeStyle only,
+    // so hiding the real glyph (opacity, not color) and drawing this instead
+    // gives a real hollow letter regardless of font technology.
+    const drawHollowGlyph = (glyphEl: HTMLElement, containerRect: DOMRect) => {
+      const canvas = canvasElRef.current;
+      const ctx = canvas?.getContext("2d");
+      if (!canvas || !ctx) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const w = Math.max(1, Math.round(containerRect.width));
+      const h = Math.max(1, Math.round(containerRect.height));
+      if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        canvas.style.width = `${w}px`;
+        canvas.style.height = `${h}px`;
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+
+      const char = glyphEl.textContent ?? "";
+      if (!char.trim()) return;
+      const style = getComputedStyle(glyphEl);
+      ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      const rect = glyphEl.getBoundingClientRect();
+      const metrics = ctx.measureText(char);
+      const ascent =
+        metrics.fontBoundingBoxAscent ?? metrics.actualBoundingBoxAscent ?? rect.height * 0.8;
+      const x = rect.left - containerRect.left;
+      const baselineY = rect.top - containerRect.top + ascent;
+
+      ctx.lineWidth = 1.25;
+      ctx.strokeStyle = ACCENT;
+      ctx.setLineDash([3, 2]);
+      ctx.strokeText(char, x, baselineY);
+    };
+
     const handleMove = (e: MouseEvent) => {
       if (glyphs.length === 0) return;
       const containerRect = container.getBoundingClientRect();
@@ -111,15 +155,20 @@ export default function TechSelectBox({
       const selected = !nearest || nearestDistance > 120 ? null : nearest;
 
       if (selected !== activeGlyph.current) {
-        activeGlyph.current?.classList.remove(HOLLOW_CLASS);
-        selected?.classList.add(HOLLOW_CLASS);
+        activeGlyph.current?.classList.remove(HIDDEN_CLASS);
+        selected?.classList.add(HIDDEN_CLASS);
         activeGlyph.current = selected;
       }
 
       if (!selected) {
         target.current.opacity = 0;
+        canvasElRef.current
+          ?.getContext("2d")
+          ?.clearRect(0, 0, canvasElRef.current.width, canvasElRef.current.height);
         return;
       }
+
+      drawHollowGlyph(selected, containerRect);
 
       const rect = selected.getBoundingClientRect();
       const inkHeight = getInkHeight(selected, selected.textContent ?? "", rect.height);
@@ -145,8 +194,10 @@ export default function TechSelectBox({
     const handleLeave = () => {
       target.current.opacity = 0;
       hasAppeared.current = false;
-      activeGlyph.current?.classList.remove(HOLLOW_CLASS);
+      activeGlyph.current?.classList.remove(HIDDEN_CLASS);
       activeGlyph.current = null;
+      const canvas = canvasElRef.current;
+      canvas?.getContext("2d")?.clearRect(0, 0, canvas.width, canvas.height);
     };
 
     container.addEventListener("mousemove", handleMove);
@@ -186,7 +237,7 @@ export default function TechSelectBox({
       container.removeEventListener("mousemove", handleMove);
       container.removeEventListener("mouseleave", handleLeave);
       cancelAnimationFrame(rafId);
-      activeGlyph.current?.classList.remove(HOLLOW_CLASS);
+      activeGlyph.current?.classList.remove(HIDDEN_CLASS);
       activeGlyph.current = null;
     };
   }, [containerRef, active]);
@@ -194,12 +245,15 @@ export default function TechSelectBox({
   if (!active) return null;
 
   return (
-    <div ref={boxElRef} aria-hidden="true" className={`tech-select-box ${className}`.trim()}>
-      <span ref={labelElRef} className="tech-select-box__label" />
-      <span className="tech-select-box__corner tech-select-box__corner--tl" />
-      <span className="tech-select-box__corner tech-select-box__corner--tr" />
-      <span className="tech-select-box__corner tech-select-box__corner--bl" />
-      <span className="tech-select-box__corner tech-select-box__corner--br" />
-    </div>
+    <>
+      <canvas ref={canvasElRef} aria-hidden="true" className="tech-select-canvas" />
+      <div ref={boxElRef} aria-hidden="true" className={`tech-select-box ${className}`.trim()}>
+        <span ref={labelElRef} className="tech-select-box__label" />
+        <span className="tech-select-box__corner tech-select-box__corner--tl" />
+        <span className="tech-select-box__corner tech-select-box__corner--tr" />
+        <span className="tech-select-box__corner tech-select-box__corner--bl" />
+        <span className="tech-select-box__corner tech-select-box__corner--br" />
+      </div>
+    </>
   );
 }

@@ -19,7 +19,7 @@ export default function Home() {
         }}
       />
       <div className="relative flex flex-col items-center text-center">
-        <span className="mb-4 font-mono text-xs uppercase tracking-[0.3em] text-cyan-400">
+        <span className="mb-4 font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
           Gryphon Arrows &middot; IMechE UAS Challenge
         </span>
         <h1
@@ -29,7 +29,7 @@ export default function Home() {
           <DecryptedText
             text="Site under construction"
             className="text-zinc-100"
-            scramblingClassName="text-cyan-400/70"
+            scramblingClassName="text-[#e02828]/70"
             speed={40}
             iterationsPerChar={10}
             staggerMs={70}

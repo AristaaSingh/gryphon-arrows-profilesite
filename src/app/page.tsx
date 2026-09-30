@@ -10,7 +10,17 @@ export default function Home() {
         alt=""
         fill
         priority
-        className="object-cover object-[25%_center]"
+        className="object-cover object-[25%_100%]"
+      />
+      {/* The image doesn't cover every aspect ratio cleanly (e.g. very
+          tall/narrow viewports) — fade the top and right edges to black so
+          any exposed edge blends in rather than showing a hard cutoff. */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(to bottom, #000 0%, transparent 22%), linear-gradient(to left, #000 0%, transparent 22%)",
+        }}
       />
 
       <SiteNav />

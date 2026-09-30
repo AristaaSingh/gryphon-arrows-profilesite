@@ -52,13 +52,12 @@ export default function Home() {
             reveal, drag, specks, idle sweep) — see TechText.jsx. */}
         {decrypted && (
           <div
-            className="relative h-40 w-full max-w-3xl sm:h-56 md:h-72"
+            className="relative h-40 w-full max-w-5xl font-display sm:h-56 md:h-72"
             role="img"
             aria-label="Gryphon Arrows"
           >
             <TechText
               text="GRYPHON ARROWS"
-              fontFamily="var(--font-display)"
               fontWeight={400}
               fontSize={180}
               letterSpacing={0.12}

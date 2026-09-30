@@ -20,7 +20,7 @@ export default function Home() {
             text="Site under construction"
             className="text-zinc-100"
             scramblingClassName="text-cyan-400/70"
-            speed={30}
+            speed={40}
             iterationsPerChar={10}
             staggerMs={70}
           />

@@ -25,8 +25,10 @@ const approach = (current: number, target: number, dt: number, seconds: number) 
 const POSITION_SMOOTHING = 0.1; // seconds — lower = snappier chase
 const OPACITY_SMOOTHING = 0.12;
 // Gap between the dashed box and the glyph's own ink bounds, so the line
-// clears the letterform instead of cutting through it.
-const OUTSET = 5;
+// clears the letterform instead of cutting through it. Scales with the
+// glyph's own size instead of a fixed px, so it still clears the letter
+// at both small and large heading sizes.
+const outsetFor = (inkHeight: number) => Math.max(6, inkHeight * 0.22);
 const HIDDEN_CLASS = "tech-select-box__glyph-hidden";
 const ACCENT = "#e02828";
 
@@ -172,11 +174,12 @@ export default function TechSelectBox({
 
       const rect = selected.getBoundingClientRect();
       const inkHeight = getInkHeight(selected, selected.textContent ?? "", rect.height);
+      const outset = outsetFor(inkHeight);
       target.current = {
-        left: rect.left - containerRect.left - OUTSET,
-        top: rect.top - containerRect.top + (rect.height - inkHeight) / 2 - OUTSET,
-        width: rect.width + OUTSET * 2,
-        height: inkHeight + OUTSET * 2,
+        left: rect.left - containerRect.left - outset,
+        top: rect.top - containerRect.top + (rect.height - inkHeight) / 2 - outset,
+        width: rect.width + outset * 2,
+        height: inkHeight + outset * 2,
         opacity: 1,
       };
 
@@ -224,6 +227,12 @@ export default function TechSelectBox({
         el.style.width = `${cur.width}px`;
         el.style.height = `${cur.height}px`;
         el.style.opacity = cur.opacity < 0.01 ? "0" : String(cur.opacity);
+      }
+      // Fade the hollow-letter canvas with the same spring as the box, so
+      // the letter swap eases in/out instead of popping instantly whenever
+      // the selection jumps to a different letter.
+      if (canvasElRef.current) {
+        canvasElRef.current.style.opacity = cur.opacity < 0.01 ? "0" : String(cur.opacity);
       }
       if (labelElRef.current && tgt.opacity > 0) {
         labelElRef.current.textContent = `${Math.round(tgt.width)}×${Math.round(tgt.height)}`;

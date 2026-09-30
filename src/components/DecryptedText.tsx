@@ -21,8 +21,11 @@ interface DecryptedTextProps {
   onComplete?: () => void;
 }
 
-const DEFAULT_CHARACTERS =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=/\\<>[]{}";
+// Lowercase-heavy with no tall symbols (no ^\<>{} etc.) — an all-caps or
+// symbol-heavy scramble set has taller cap-height/ascenders than ordinary
+// lowercase text, so it visually reads as a bigger font size than the
+// resolved text even though font-size never actually changes.
+const DEFAULT_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 export default function DecryptedText({
   text,

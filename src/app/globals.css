@@ -74,10 +74,15 @@ body {
   bottom: -1.5px;
 }
 
-/* Hides the real (solid, color-font) glyph while TechSelectBox draws a
-   genuine stroke-only outline of it on a canvas overlay — a CSS-only
-   color swap can't produce a hollow letter on a COLR color font, since
-   COLR rendering ignores `color`/-webkit-text-fill-color. */
+/* Every decrypted heading letter: transitions opacity so the hide/show
+   swap below (and the decrypt effect's own scramble/resolve classes)
+   fades instead of snapping instantly. */
+[data-glyph="true"] {
+  transition: opacity 140ms ease;
+}
+
+/* Hides the real glyph while TechSelectBox draws a genuine stroke-only
+   outline of it on a canvas overlay (see TechSelectBox.tsx). */
 .tech-select-box__glyph-hidden {
   opacity: 0;
 }

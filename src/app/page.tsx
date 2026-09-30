@@ -24,7 +24,7 @@ export default function Home() {
         </span>
         <h1
           ref={headingRef}
-          className="relative font-display text-4xl tracking-tight sm:text-6xl"
+          className="relative font-display text-5xl tracking-tight sm:text-7xl md:text-8xl"
         >
           <DecryptedText
             text="Site under construction"

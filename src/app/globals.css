@@ -1,10 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Slightly lifted from true black: Rubik 80s Fade is a COLR color font
-     whose gradient fades toward transparent, and against pure #000 that
-     faded portion disappears entirely. */
-  --background: #0c0d10;
+  --background: #000000;
   --foreground: #ededed;
 }
 

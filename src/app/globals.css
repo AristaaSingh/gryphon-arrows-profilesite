@@ -18,25 +18,19 @@ body {
   color: var(--foreground);
 }
 
-/* Tech Text-style hover selection box: see TechSelectBox.tsx */
+/* Tech Text-style hover selection box: see TechSelectBox.tsx.
+   Position/size/opacity are driven every frame by a spring-smoothed
+   requestAnimationFrame loop in JS, not CSS transitions — this only
+   sets the static look. */
 .tech-select-box {
   position: absolute;
+  left: 0;
+  top: 0;
   pointer-events: none;
-  border: 1px dashed rgba(34, 211, 238, 0);
+  border: 1px dashed rgba(34, 211, 238, 0.65);
   border-radius: 2px;
   opacity: 0;
-  transition:
-    left 110ms ease-out,
-    top 110ms ease-out,
-    width 110ms ease-out,
-    height 110ms ease-out,
-    opacity 150ms ease-out,
-    border-color 150ms ease-out;
-}
-
-.tech-select-box--visible {
-  opacity: 1;
-  border-color: rgba(34, 211, 238, 0.6);
+  will-change: transform, width, height, opacity;
 }
 
 .tech-select-box__label {

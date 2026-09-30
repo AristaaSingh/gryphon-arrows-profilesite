@@ -147,6 +147,7 @@ export default function DecryptTechHeading({
           labels
           draggable
           sweep
+          sweepReverse={reverse}
           speed={1}
           style={undefined}
         />

@@ -56,6 +56,11 @@ const TechText = ({
   labels = true,
   draggable = true,
   sweep = true,
+  // PATCHED from the reactbits.dev source: upstream's idle sweep always
+  // starts from the left edge with no way to configure that. This flips
+  // the starting side — see the `sweepReverse` use in the tick() sweep
+  // formula below, the only other line touched by this patch.
+  sweepReverse = false,
   speed = 1,
   className = '',
   style
@@ -86,6 +91,7 @@ const TechText = ({
       labels,
       draggable,
       sweep,
+      sweepReverse,
       speed
     };
     wakeRef.current();
@@ -466,7 +472,10 @@ const TechText = ({
       let targetX = pointer.x;
       let targetY = pointer.y;
       if (sweeping) {
-        targetX = view.left + (view.right - view.left) * (0.5 - 0.5 * Math.cos(clock * 0.45));
+        // cos(0) = 1, so the unreversed formula's 0.5 - 0.5*cos starts at 0
+        // (the left edge) at clock=0; the reversed one starts at 1 (right).
+        const xPhase = s.sweepReverse ? 0.5 + 0.5 * Math.cos(clock * 0.45) : 0.5 - 0.5 * Math.cos(clock * 0.45);
+        targetX = view.left + (view.right - view.left) * xPhase;
         targetY = view.top + (view.bottom - view.top) * (0.45 + 0.1 * Math.sin(clock * 0.8));
       }
       const active = pointer.inside || sweeping || dragging >= 0;

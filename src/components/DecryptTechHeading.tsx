@@ -22,6 +22,8 @@ interface DecryptTechHeadingProps {
   letterSpacingEm?: number;
   minFontSize?: number;
   maxFontSize?: number;
+  /** Decrypts right-to-left instead of the default left-to-right. */
+  reverse?: boolean;
 }
 
 const DEFAULT_ACCENT = "#e02828";
@@ -44,6 +46,7 @@ export default function DecryptTechHeading({
   letterSpacingEm = 0.2,
   minFontSize = 24,
   maxFontSize = 160,
+  reverse = false,
 }: DecryptTechHeadingProps) {
   const words = text.split(" ").filter(Boolean);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -113,6 +116,7 @@ export default function DecryptTechHeading({
               iterationsPerChar={10}
               staggerMs={70}
               startDelay={i * 550}
+              reverse={reverse}
               onComplete={() => setResolvedCount((c) => c + 1)}
             />
           ))}

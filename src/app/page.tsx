@@ -31,14 +31,15 @@ export default function Home() {
             IMechE UAS Challenge
           </span>
 
-          <div className="flex flex-col items-end gap-1">
+          <div className="flex flex-col items-end">
             <DecryptTechHeading
               text="Gryphon"
-              className="h-16 w-64 sm:h-24 sm:w-80 md:h-32 md:w-[28rem]"
+              className="h-14 w-72 sm:h-20 sm:w-96 md:h-28 md:w-[34rem]"
             />
             <DecryptTechHeading
               text="Arrows"
-              className="h-16 w-64 sm:h-24 sm:w-80 md:h-32 md:w-[28rem]"
+              reverse
+              className="-mt-4 h-14 w-72 sm:-mt-6 sm:h-20 sm:w-96 md:-mt-8 md:h-28 md:w-[34rem]"
             />
           </div>
 

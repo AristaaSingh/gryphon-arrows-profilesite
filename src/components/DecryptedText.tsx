@@ -23,6 +23,8 @@ interface DecryptedTextProps {
   scramblingStyle?: CSSProperties;
   parentClassName?: string;
   startDelay?: number;
+  /** Locks in right-to-left instead of the default left-to-right. */
+  reverse?: boolean;
   /** Fires once, after every character has resolved. */
   onComplete?: () => void;
 }
@@ -45,6 +47,7 @@ export default function DecryptedText({
   scramblingStyle,
   parentClassName = "",
   startDelay = 0,
+  reverse = false,
   onComplete,
 }: DecryptedTextProps) {
   const [display, setDisplay] = useState<string[]>(() => text.split(""));
@@ -73,8 +76,11 @@ export default function DecryptedText({
 
         // Each character starts `staggerMs` after the previous one, independent
         // of the scramble tick speed, so the gap between lock-ins is tunable
-        // without changing how fast individual characters flicker.
-        const startAtMs = chars.map((_, i) => i * staggerMs);
+        // without changing how fast individual characters flicker. `reverse`
+        // just flips which end of the string starts first.
+        const startAtMs = chars.map((_, i) =>
+          (reverse ? length - 1 - i : i) * staggerMs
+        );
         // Per-character threshold with jitter so resolves don't land in lockstep.
         const threshold = chars.map(() =>
           Math.max(2, iterationsPerChar + Math.floor(Math.random() * 4) - 2)

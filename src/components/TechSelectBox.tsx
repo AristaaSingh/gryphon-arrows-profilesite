@@ -23,7 +23,7 @@ const approach = (current: number, target: number, dt: number, seconds: number) 
   current + (target - current) * (1 - Math.exp(-dt / seconds));
 
 const POSITION_SMOOTHING = 0.1; // seconds — lower = snappier chase
-const OPACITY_SMOOTHING = 0.12;
+const OPACITY_SMOOTHING = 0.3;
 // Gap between the dashed box and the glyph's own ink bounds, so the line
 // clears the letterform instead of cutting through it. Scales with the
 // glyph's own size instead of a fixed px, so it still clears the letter
@@ -63,26 +63,36 @@ export default function TechSelectBox({
     );
 
     // getBoundingClientRect() on an inline character span reports the line
-    // box height, which is identical for every character on the line — that
-    // gave a box whose height never changed. Measure each glyph's actual ink
-    // height with canvas text metrics instead, same as reactbits' own
-    // approach, and cache per character+font.
+    // box's height and the character's advance width (which includes side
+    // bearing/spacing) — neither is the glyph's tight ink box. Using rect
+    // width but ink-measured height meant the same outset looked like
+    // different padding on each axis. Measure both with canvas text
+    // metrics, same as reactbits' own approach, cached per character+font.
     const measureCanvas = document.createElement("canvas");
     const measureCtx = measureCanvas.getContext("2d");
-    const inkHeightCache = new Map<string, number>();
+    const inkBoxCache = new Map<string, { width: number; height: number }>();
 
-    const getInkHeight = (el: HTMLElement, char: string, fallback: number) => {
+    const getInkBox = (
+      el: HTMLElement,
+      char: string,
+      fallback: { width: number; height: number }
+    ) => {
       if (!measureCtx || !char.trim()) return fallback;
       const style = getComputedStyle(el);
       const key = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}|${char}`;
-      const cached = inkHeightCache.get(key);
+      const cached = inkBoxCache.get(key);
       if (cached !== undefined) return cached;
       measureCtx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
       const metrics = measureCtx.measureText(char);
       const height =
         (metrics.actualBoundingBoxAscent ?? 0) + (metrics.actualBoundingBoxDescent ?? 0);
-      const resolved = height > 0 ? height : fallback;
-      inkHeightCache.set(key, resolved);
+      const width =
+        (metrics.actualBoundingBoxLeft ?? 0) + (metrics.actualBoundingBoxRight ?? 0);
+      const resolved = {
+        width: width > 0 ? width : fallback.width,
+        height: height > 0 ? height : fallback.height,
+      };
+      inkBoxCache.set(key, resolved);
       return resolved;
     };
 
@@ -173,13 +183,16 @@ export default function TechSelectBox({
       drawHollowGlyph(selected, containerRect);
 
       const rect = selected.getBoundingClientRect();
-      const inkHeight = getInkHeight(selected, selected.textContent ?? "", rect.height);
-      const outset = outsetFor(inkHeight);
+      const ink = getInkBox(selected, selected.textContent ?? "", {
+        width: rect.width,
+        height: rect.height,
+      });
+      const outset = outsetFor(ink.height);
       target.current = {
-        left: rect.left - containerRect.left - outset,
-        top: rect.top - containerRect.top + (rect.height - inkHeight) / 2 - outset,
-        width: rect.width + outset * 2,
-        height: inkHeight + outset * 2,
+        left: rect.left - containerRect.left + (rect.width - ink.width) / 2 - outset,
+        top: rect.top - containerRect.top + (rect.height - ink.height) / 2 - outset,
+        width: ink.width + outset * 2,
+        height: ink.height + outset * 2,
         opacity: 1,
       };
 

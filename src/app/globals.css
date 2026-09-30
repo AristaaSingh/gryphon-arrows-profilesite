@@ -78,7 +78,7 @@ body {
    swap below (and the decrypt effect's own scramble/resolve classes)
    fades instead of snapping instantly. */
 [data-glyph="true"] {
-  transition: opacity 140ms ease;
+  transition: opacity 450ms ease;
 }
 
 /* Hides the real glyph while TechSelectBox draws a genuine stroke-only

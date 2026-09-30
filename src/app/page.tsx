@@ -13,10 +13,10 @@ export default function Home() {
         <span className="mb-4 font-mono text-xs uppercase tracking-[0.3em] text-cyan-400">
           Gryphon Arrows &middot; IMechE UAS Challenge
         </span>
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-6xl">
+        <h1 className="font-display text-4xl tracking-tight sm:text-6xl">
           Site under construction
         </h1>
-        <p className="mt-4 max-w-md font-mono text-sm text-zinc-400">
+        <p className="mt-4 max-w-md font-body text-sm text-zinc-400">
           Building something worth flying. Check back soon.
         </p>
       </div>

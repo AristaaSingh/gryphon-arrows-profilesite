@@ -24,6 +24,10 @@ const approach = (current: number, target: number, dt: number, seconds: number) 
 
 const POSITION_SMOOTHING = 0.1; // seconds — lower = snappier chase
 const OPACITY_SMOOTHING = 0.12;
+// Gap between the dashed box and the glyph's own ink bounds, so the line
+// clears the letterform instead of cutting through it.
+const OUTSET = 5;
+const HOLLOW_CLASS = "tech-select-box__glyph-hollow";
 
 /**
  * A CAD/blueprint-style selection box that chases whichever letter the
@@ -43,6 +47,7 @@ export default function TechSelectBox({
   const current = useRef<BoxState>({ left: 0, top: 0, width: 0, height: 0, opacity: 0 });
   const target = useRef<BoxState>({ left: 0, top: 0, width: 0, height: 0, opacity: 0 });
   const hasAppeared = useRef(false);
+  const activeGlyph = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -103,18 +108,26 @@ export default function TechSelectBox({
         }
       }
 
-      if (!nearest || nearestDistance > 120) {
+      const selected = !nearest || nearestDistance > 120 ? null : nearest;
+
+      if (selected !== activeGlyph.current) {
+        activeGlyph.current?.classList.remove(HOLLOW_CLASS);
+        selected?.classList.add(HOLLOW_CLASS);
+        activeGlyph.current = selected;
+      }
+
+      if (!selected) {
         target.current.opacity = 0;
         return;
       }
 
-      const rect = nearest.getBoundingClientRect();
-      const inkHeight = getInkHeight(nearest, nearest.textContent ?? "", rect.height);
+      const rect = selected.getBoundingClientRect();
+      const inkHeight = getInkHeight(selected, selected.textContent ?? "", rect.height);
       target.current = {
-        left: rect.left - containerRect.left,
-        top: rect.top - containerRect.top + (rect.height - inkHeight) / 2,
-        width: rect.width,
-        height: inkHeight,
+        left: rect.left - containerRect.left - OUTSET,
+        top: rect.top - containerRect.top + (rect.height - inkHeight) / 2 - OUTSET,
+        width: rect.width + OUTSET * 2,
+        height: inkHeight + OUTSET * 2,
         opacity: 1,
       };
 
@@ -132,6 +145,8 @@ export default function TechSelectBox({
     const handleLeave = () => {
       target.current.opacity = 0;
       hasAppeared.current = false;
+      activeGlyph.current?.classList.remove(HOLLOW_CLASS);
+      activeGlyph.current = null;
     };
 
     container.addEventListener("mousemove", handleMove);
@@ -171,6 +186,8 @@ export default function TechSelectBox({
       container.removeEventListener("mousemove", handleMove);
       container.removeEventListener("mouseleave", handleLeave);
       cancelAnimationFrame(rafId);
+      activeGlyph.current?.classList.remove(HOLLOW_CLASS);
+      activeGlyph.current = null;
     };
   }, [containerRef, active]);
 

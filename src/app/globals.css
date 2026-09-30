@@ -67,3 +67,11 @@ body {
   right: -1.5px;
   bottom: -1.5px;
 }
+
+/* The currently-selected letter: solid fill swaps for a stroked outline,
+   matching reactbits' fill -> dashed-outline reveal under the cursor. */
+.tech-select-box__glyph-hollow {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1.25px rgba(34, 211, 238, 0.9);
+}

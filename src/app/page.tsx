@@ -1,3 +1,5 @@
+import DecryptedText from "@/components/DecryptedText";
+
 export default function Home() {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-black px-6 text-zinc-100">
@@ -14,7 +16,14 @@ export default function Home() {
           Gryphon Arrows &middot; IMechE UAS Challenge
         </span>
         <h1 className="font-display text-4xl tracking-tight sm:text-6xl">
-          Site under construction
+          <DecryptedText
+            text="Site under construction"
+            className="text-zinc-100"
+            encryptedClassName="font-mono text-cyan-400/70"
+            revealDirection="start"
+            speed={35}
+            iterationsPerChar={6}
+          />
         </h1>
         <p className="mt-4 max-w-md font-body text-sm text-zinc-400">
           Building something worth flying. Check back soon.

@@ -3,18 +3,18 @@
 import { useState } from "react";
 
 // Placeholder nav: labels/links below are stand-ins for the real site
-// structure. "Overview" is the first tab and holds a submenu for the
+// structure. "Explore" is the first tab and holds a submenu for the
 // parallax single-page site's sections; the rest are separate pages that
 // don't exist yet (linked with "#" so they don't 404).
-const OVERVIEW_SECTIONS = [
+const EXPLORE_SECTIONS = [
   { label: "About Us", href: "#about" },
   { label: "The Challenge", href: "#challenge" },
   { label: "Meet the Team", href: "#team" },
   { label: "Join Us", href: "#join" },
+  { label: "Sponsors", href: "#sponsors" },
 ];
 
 const PAGES = [
-  { label: "Sponsors", href: "#" },
   { label: "Gallery", href: "#" },
   { label: "Contact", href: "#" },
 ];
@@ -23,7 +23,7 @@ export default function SiteNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="animate-fade-in-up absolute inset-x-0 top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-sm">
+    <nav className="animate-fade-in-up fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-sm">
       <div className="flex items-center justify-between px-6 py-4 sm:px-10">
         <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-300">
           Gryphon Arrows
@@ -37,7 +37,7 @@ export default function SiteNav() {
               type="button"
               className="flex items-center gap-1.5 py-2 transition-colors hover:text-[#e02828]"
             >
-              Overview
+              Explore
               <svg
                 aria-hidden="true"
                 viewBox="0 0 10 6"
@@ -48,7 +48,7 @@ export default function SiteNav() {
             </button>
 
             <ul className="invisible absolute left-0 top-full flex min-w-[180px] translate-y-1 flex-col gap-0.5 rounded-sm border border-white/10 bg-black/90 p-1.5 opacity-0 backdrop-blur-sm transition-all duration-150 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-              {OVERVIEW_SECTIONS.map((item) => (
+              {EXPLORE_SECTIONS.map((item) => (
                 <li key={item.label}>
                   <a
                     href={item.href}
@@ -91,8 +91,8 @@ export default function SiteNav() {
       {/* Mobile panel */}
       {mobileOpen && (
         <div className="flex flex-col gap-1 border-t border-white/10 px-6 py-4 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300 sm:hidden">
-          <span className="px-1 py-2 text-zinc-500">Overview</span>
-          {OVERVIEW_SECTIONS.map((item) => (
+          <span className="px-1 py-2 text-zinc-500">Explore</span>
+          {EXPLORE_SECTIONS.map((item) => (
             <a
               key={item.label}
               href={item.href}

@@ -152,9 +152,9 @@ export default function DecryptTechHeading({
                 WebkitTextStroke: `${fontSize * outlineWidthEm}px ${outlineColor}`,
                 textShadow: halo,
               }}
-              speed={40}
-              iterationsPerChar={10}
-              staggerMs={70}
+              speed={55}
+              iterationsPerChar={14}
+              staggerMs={95}
               startDelay={i * 550}
               reverse={reverse}
               onComplete={() => setResolvedCount((c) => c + 1)}

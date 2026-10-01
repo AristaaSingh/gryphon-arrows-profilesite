@@ -44,14 +44,18 @@ export default function Home() {
 
         <DecryptTechHeading
           text="Gryphon"
+          outlineWidthEm={0}
+          haloBlurEm={0}
           className="h-16 w-72 sm:h-24 sm:w-96 md:h-32 md:w-[34rem]"
         />
 
-        <div aria-hidden="true" className="h-10 sm:h-16 md:h-24" />
+        <div aria-hidden="true" className="h-6 sm:h-10 md:h-16" />
 
         <DecryptTechHeading
           text="Arrows"
           reverse
+          outlineWidthEm={0}
+          haloBlurEm={0}
           className="h-16 w-72 sm:h-24 sm:w-96 md:h-32 md:w-[34rem]"
         />
 

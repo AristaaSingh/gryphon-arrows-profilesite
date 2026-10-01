@@ -28,7 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${gajrajOne.variable} ${spaceMono.variable} ${exo2.variable} h-full antialiased`}
+      className={`${gajrajOne.variable} ${spaceMono.variable} ${exo2.variable} h-full snap-y snap-mandatory antialiased`}
     >
       <body className="min-h-full flex flex-col font-body">{children}</body>
     </html>

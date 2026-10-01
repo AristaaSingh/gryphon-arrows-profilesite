@@ -1,14 +1,24 @@
+"use client";
+
 import Image from "next/image";
 import DecryptTechHeading from "@/components/DecryptTechHeading";
 import SiteNav from "@/components/SiteNav";
+import SpecularButton from "@/components/SpecularButton";
 import WebThreads from "@/components/WebThreads";
 
+const ABOUT_PLACEHOLDER =
+  "I am not crazy! I know he swapped those numbers. I knew it was 1216. One after Magna Carta. As if I could ever make such a mistake. Never. Never! I just – I just couldn’t prove it. He covered his tracks, he got that idiot at the copy shop to lie for him. You think this is something? You think this is bad? This? This chicanery? He’s done worse. That billboard! Are you telling me that a man just happens to fall like that? No! He orchestrated it! Jimmy! He defecated through a sunroof! And I saved him! And I shouldn’t have. I took him into my own firm!";
+
 export default function Home() {
+  const scrollToAbout = () => {
+    document.getElementById("about-section")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <>
       <SiteNav />
 
-      <main className="relative min-h-screen overflow-hidden bg-black text-zinc-100">
+      <main className="relative min-h-screen snap-start overflow-hidden bg-black text-zinc-100">
         <div className="animate-fade-in-up absolute inset-0">
           <WebThreads
             color1="#ff002c"
@@ -66,52 +76,51 @@ export default function Home() {
             />
           </div>
 
-          <p
-            className="animate-fade-in-up mt-6 max-w-sm font-body text-sm text-zinc-300"
-            style={{ animationDelay: "900ms" }}
-          >
-            Taking off soon, hang on!!
-          </p>
+          <div className="animate-fade-in-up mt-8" style={{ animationDelay: "700ms" }}>
+            <SpecularButton
+              size="md"
+              radius={14}
+              textColor="#f5f5f5"
+              lineColor="#ffc100"
+              baseColor="#3a1414"
+              intensity={1}
+              shineSize={12}
+              shineFade={45}
+              speed={0.3}
+              followMouse
+              proximity={260}
+              onClick={scrollToAbout}
+            >
+              Explore us
+            </SpecularButton>
+          </div>
         </div>
-
-        <a
-          href="#about-section"
-          className="animate-fade-in-up group absolute inset-x-0 bottom-8 z-10 flex flex-col items-center gap-2 font-mono text-xs uppercase tracking-[0.3em] text-zinc-300 transition-colors hover:text-[#e02828]"
-          style={{ animationDelay: "1100ms" }}
-        >
-          Explore us
-          <svg
-            aria-hidden="true"
-            viewBox="0 0 16 10"
-            className="h-2.5 w-4 animate-bounce fill-current"
-          >
-            <path d="M0 0l8 10 8-10z" />
-          </svg>
-        </a>
       </main>
 
       <section
         id="about-section"
-        className="relative scroll-mt-20 bg-black px-6 py-24 text-center text-zinc-100 sm:py-32"
+        className="relative min-h-screen snap-start scroll-mt-20 bg-black px-6 pt-28 pb-16 text-zinc-100 sm:px-12 sm:pt-32 md:px-20"
       >
-        <div className="mx-auto flex max-w-3xl flex-col items-center gap-20">
-          <div id="sponsors" className="flex flex-col items-center gap-4 scroll-mt-24">
-            <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
-              Sponsored by
-            </span>
-            <Image
-              src="/sponsors/menapia.webp"
-              alt="Menapia"
-              width={240}
-              height={106}
-              className="h-auto w-40 sm:w-48"
-            />
+        <div className="mx-auto max-w-5xl">
+          <div id="sponsors" className="flex scroll-mt-24 justify-end">
+            <div className="flex flex-col items-center gap-3 text-center">
+              <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
+                Sponsored by
+              </span>
+              <Image
+                src="/sponsors/menapia.webp"
+                alt="Menapia"
+                width={240}
+                height={106}
+                className="h-auto w-32 sm:w-40"
+              />
+            </div>
           </div>
 
-          <div id="about" className="flex flex-col items-center gap-4 scroll-mt-24">
+          <div id="about" className="mt-20 max-w-xl scroll-mt-24 text-left sm:mt-28">
             <h2 className="font-display text-2xl text-zinc-100 sm:text-3xl">About Us</h2>
-            <p className="max-w-xl font-body text-sm text-zinc-300 sm:text-base">
-              About us content
+            <p className="mt-4 font-body text-sm leading-relaxed text-zinc-300 sm:text-base">
+              {ABOUT_PLACEHOLDER}
             </p>
           </div>
         </div>

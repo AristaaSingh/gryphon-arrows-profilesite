@@ -121,36 +121,33 @@ export default function Home() {
         id="about-section"
         className="relative min-h-screen snap-start scroll-mt-20 overflow-hidden bg-black px-6 pt-28 pb-16 text-zinc-100 sm:px-12 sm:pt-32 md:px-20"
       >
-        {/* Normal document flow, not position:absolute — at this font
-            size (matching the logo's own height) an absolutely-positioned
-            box could overflow its bounds and overlap the About Us content
-            below it with no layout system to stop it. Keeping both in flow
-            means About Us is always pushed below, whatever the sponsor
-            row's actual rendered size turns out to be. */}
+        {/* Normal document flow, not position:absolute — keeps About Us
+            reliably pushed below the sponsor block regardless of its
+            rendered size, rather than two independently-floating boxes
+            with nothing to stop them overlapping. */}
         <div className="relative z-10 mx-auto max-w-5xl">
-          <ScrollFade id="sponsors" className="flex scroll-mt-24 items-center justify-end gap-4">
-            {/* Font size matches the logo's own rendered height at each
-                breakpoint (w-56/64/80 at this image's ~2500x1109 aspect
-                ratio -> ~99px/114px/142px tall), not an independent scale. */}
-            <FadeInText
-              text="Sponsored by"
-              className="font-display text-[99px] leading-none text-white sm:text-[114px] md:text-[142px]"
-              style={SPONSOR_GLOW}
-              staggerMs={40}
-              durationMs={500}
-              onComplete={() => setSponsorTextDone(true)}
-            />
-            <Image
-              src="/sponsors/menapia.webp"
-              alt="Menapia"
-              width={240}
-              height={106}
-              className="h-auto w-56 sm:w-64 md:w-80"
-              style={{
-                opacity: sponsorTextDone ? 1 : 0,
-                transition: `opacity ${LOGO_FADE_MS}ms ease`,
-              }}
-            />
+          <ScrollFade id="sponsors" className="flex scroll-mt-24 justify-end">
+            <div className="flex flex-col items-center gap-2">
+              <FadeInText
+                text="Sponsored by"
+                className="font-display text-xl text-white sm:text-2xl md:text-3xl"
+                style={SPONSOR_GLOW}
+                staggerMs={40}
+                durationMs={500}
+                onComplete={() => setSponsorTextDone(true)}
+              />
+              <Image
+                src="/sponsors/menapia.webp"
+                alt="Menapia"
+                width={240}
+                height={106}
+                className="h-auto w-56 sm:w-64 md:w-80"
+                style={{
+                  opacity: sponsorTextDone ? 1 : 0,
+                  transition: `opacity ${LOGO_FADE_MS}ms ease`,
+                }}
+              />
+            </div>
           </ScrollFade>
 
           {/* Kept mounted (not conditionally rendered) so the #about nav

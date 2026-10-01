@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import DecryptTechHeading from "@/components/DecryptTechHeading";
+import ScrollFade from "@/components/ScrollFade";
 import SiteNav from "@/components/SiteNav";
 import SpecularButton from "@/components/SpecularButton";
 import WebThreads from "@/components/WebThreads";
@@ -50,14 +51,13 @@ export default function Home() {
             of this section — the gap between the two words below is sized
             to leave that glow visible, not covered by either line. */}
         <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
-          <span
-            className="animate-fade-in-up mb-4 font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]"
-            style={{ animationDelay: "120ms" }}
-          >
-            University of Leeds IMechE UAS Challenge
-          </span>
+          <ScrollFade threshold={0.4}>
+            <span className="mb-4 block font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
+              University of Leeds IMechE UAS Challenge
+            </span>
+          </ScrollFade>
 
-          <div className="animate-fade-in-up flex flex-col items-center" style={{ animationDelay: "200ms" }}>
+          <ScrollFade threshold={0.3} className="flex flex-col items-center">
             <DecryptTechHeading
               text="Gryphon"
               outlineWidthEm={0}
@@ -74,9 +74,9 @@ export default function Home() {
               haloBlurEm={0}
               className="h-16 w-72 sm:h-24 sm:w-96 md:h-32 md:w-[34rem]"
             />
-          </div>
+          </ScrollFade>
 
-          <div className="animate-fade-in-up mt-8" style={{ animationDelay: "700ms" }}>
+          <ScrollFade threshold={0.4} className="mt-8">
             <SpecularButton
               size="md"
               radius={14}
@@ -93,7 +93,7 @@ export default function Home() {
             >
               Explore us
             </SpecularButton>
-          </div>
+          </ScrollFade>
         </div>
       </main>
 
@@ -102,7 +102,7 @@ export default function Home() {
         className="relative min-h-screen snap-start scroll-mt-20 bg-black px-6 pt-28 pb-16 text-zinc-100 sm:px-12 sm:pt-32 md:px-20"
       >
         <div className="mx-auto max-w-5xl">
-          <div id="sponsors" className="flex scroll-mt-24 justify-end">
+          <ScrollFade id="sponsors" className="flex scroll-mt-24 justify-end">
             <div className="flex flex-col items-center gap-3 text-center">
               <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
                 Sponsored by
@@ -115,14 +115,14 @@ export default function Home() {
                 className="h-auto w-32 sm:w-40"
               />
             </div>
-          </div>
+          </ScrollFade>
 
-          <div id="about" className="mt-20 max-w-xl scroll-mt-24 text-left sm:mt-28">
+          <ScrollFade id="about" className="mt-20 max-w-xl scroll-mt-24 text-left sm:mt-28">
             <h2 className="font-display text-2xl text-zinc-100 sm:text-3xl">About Us</h2>
             <p className="mt-4 font-body text-sm leading-relaxed text-zinc-300 sm:text-base">
               {ABOUT_PLACEHOLDER}
             </p>
-          </div>
+          </ScrollFade>
         </div>
       </section>
     </>

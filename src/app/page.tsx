@@ -33,17 +33,29 @@ export default function Home() {
 
       <SiteNav />
 
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center gap-3 px-6 text-center">
-        <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
+      {/* fanMode="center" + position={0.5} on WebThreads converges the
+          threads' brightest point at the exact horizontal/vertical center
+          of this section — the gap between the two words below is sized
+          to leave that glow visible, not covered by either line. */}
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
+        <span className="mb-4 font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
           IMechE UAS Challenge
         </span>
 
         <DecryptTechHeading
-          text="Gryphon Arrows"
-          className="h-20 w-full max-w-3xl sm:h-28 md:h-36"
+          text="Gryphon"
+          className="h-16 w-72 sm:h-24 sm:w-96 md:h-32 md:w-[34rem]"
         />
 
-        <p className="mt-2 max-w-sm font-body text-sm text-zinc-300">
+        <div aria-hidden="true" className="h-10 sm:h-16 md:h-24" />
+
+        <DecryptTechHeading
+          text="Arrows"
+          reverse
+          className="h-16 w-72 sm:h-24 sm:w-96 md:h-32 md:w-[34rem]"
+        />
+
+        <p className="mt-6 max-w-sm font-body text-sm text-zinc-300">
           Taking off soon, hang on!!
         </p>
       </div>

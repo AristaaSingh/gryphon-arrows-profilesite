@@ -24,6 +24,10 @@ interface DecryptTechHeadingProps {
   outlineColor?: string;
   /** Outline width as a fraction of the rendered font size. */
   outlineWidthEm?: number;
+  /** Soft dark halo behind each letter (text-shadow) — reads more reliably
+   *  than a thin stroke against a background whose brightness varies a lot
+   *  (e.g. glowing threads crossing behind the text). Set 0 to turn off. */
+  haloBlurEm?: number;
   letterSpacingEm?: number;
   minFontSize?: number;
   maxFontSize?: number;
@@ -57,7 +61,8 @@ export default function DecryptTechHeading({
   color = "#f4f4f5",
   accentColor = DEFAULT_ACCENT,
   outlineColor = "#000000",
-  outlineWidthEm = 0.022,
+  outlineWidthEm = 0.04,
+  haloBlurEm = 0.09,
   letterSpacingEm = 0.2,
   minFontSize = 24,
   maxFontSize = 160,
@@ -69,6 +74,17 @@ export default function DecryptTechHeading({
   const [resolvedCount, setResolvedCount] = useState(0);
   const [fontSize, setFontSize] = useState<number | null>(null);
   const decrypted = resolvedCount >= words.length;
+  // Layered rather than one soft shadow, which looks weak/washed out on
+  // its own — a tight dark ring plus two wider, fainter ones reads as a
+  // solid dark edge instead.
+  const halo =
+    fontSize && haloBlurEm > 0
+      ? [
+          `0 0 ${fontSize * haloBlurEm * 0.3}px rgba(0,0,0,0.95)`,
+          `0 0 ${fontSize * haloBlurEm * 0.7}px rgba(0,0,0,0.85)`,
+          `0 0 ${fontSize * haloBlurEm * 1.4}px rgba(0,0,0,0.6)`,
+        ].join(", ")
+      : undefined;
 
   // useLayoutEffect (not useEffect) so the size is measured and applied
   // before the browser paints, wherever possible — combined with the
@@ -129,10 +145,12 @@ export default function DecryptTechHeading({
               style={{
                 color,
                 WebkitTextStroke: `${fontSize * outlineWidthEm}px ${outlineColor}`,
+                textShadow: halo,
               }}
               scramblingStyle={{
                 color: accentColor,
                 WebkitTextStroke: `${fontSize * outlineWidthEm}px ${outlineColor}`,
+                textShadow: halo,
               }}
               speed={40}
               iterationsPerChar={10}

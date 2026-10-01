@@ -49,7 +49,7 @@ export default function Home() {
           className="h-16 w-72 sm:h-24 sm:w-96 md:h-32 md:w-[34rem]"
         />
 
-        <div aria-hidden="true" className="h-6 sm:h-10 md:h-16" />
+        <div aria-hidden="true" className="h-3 sm:h-5 md:h-8" />
 
         <DecryptTechHeading
           text="Arrows"

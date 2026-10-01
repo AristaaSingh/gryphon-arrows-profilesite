@@ -19,6 +19,11 @@ interface DecryptTechHeadingProps {
   style?: CSSProperties;
   color?: string;
   accentColor?: string;
+  /** Outline drawn around each letter — helps readability over a busy or
+   *  bright background. Set to "transparent" or width 0 to turn it off. */
+  outlineColor?: string;
+  /** Outline width as a fraction of the rendered font size. */
+  outlineWidthEm?: number;
   letterSpacingEm?: number;
   minFontSize?: number;
   maxFontSize?: number;
@@ -51,6 +56,8 @@ export default function DecryptTechHeading({
   style,
   color = "#f4f4f5",
   accentColor = DEFAULT_ACCENT,
+  outlineColor = "#000000",
+  outlineWidthEm = 0.022,
   letterSpacingEm = 0.2,
   minFontSize = 24,
   maxFontSize = 160,
@@ -119,8 +126,14 @@ export default function DecryptTechHeading({
               text={word}
               className=""
               scramblingClassName="opacity-70"
-              style={{ color }}
-              scramblingStyle={{ color: accentColor }}
+              style={{
+                color,
+                WebkitTextStroke: `${fontSize * outlineWidthEm}px ${outlineColor}`,
+              }}
+              scramblingStyle={{
+                color: accentColor,
+                WebkitTextStroke: `${fontSize * outlineWidthEm}px ${outlineColor}`,
+              }}
               speed={40}
               iterationsPerChar={10}
               staggerMs={70}

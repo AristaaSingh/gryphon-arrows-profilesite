@@ -5,7 +5,7 @@ import WebThreads from "@/components/WebThreads";
 export default function Home() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-zinc-100">
-      <div className="absolute inset-0">
+      <div className="animate-fade-in-up absolute inset-0">
         <WebThreads
           color1="#ff002c"
           color2="#ffc100"
@@ -38,28 +38,36 @@ export default function Home() {
           of this section — the gap between the two words below is sized
           to leave that glow visible, not covered by either line. */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
-        <span className="mb-4 font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
+        <span
+          className="animate-fade-in-up mb-4 font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]"
+          style={{ animationDelay: "120ms" }}
+        >
           University of Leeds IMechE UAS Challenge
         </span>
 
-        <DecryptTechHeading
-          text="Gryphon"
-          outlineWidthEm={0}
-          haloBlurEm={0}
-          className="h-16 w-72 sm:h-24 sm:w-96 md:h-32 md:w-[34rem]"
-        />
+        <div className="animate-fade-in-up flex flex-col items-center" style={{ animationDelay: "280ms" }}>
+          <DecryptTechHeading
+            text="Gryphon"
+            outlineWidthEm={0}
+            haloBlurEm={0}
+            className="h-16 w-72 sm:h-24 sm:w-96 md:h-32 md:w-[34rem]"
+          />
 
-        <div aria-hidden="true" className="h-4 sm:h-8 md:h-12" />
+          <div aria-hidden="true" className="h-4 sm:h-8 md:h-12" />
 
-        <DecryptTechHeading
-          text="Arrows"
-          reverse
-          outlineWidthEm={0}
-          haloBlurEm={0}
-          className="h-16 w-72 sm:h-24 sm:w-96 md:h-32 md:w-[34rem]"
-        />
+          <DecryptTechHeading
+            text="Arrows"
+            reverse
+            outlineWidthEm={0}
+            haloBlurEm={0}
+            className="h-16 w-72 sm:h-24 sm:w-96 md:h-32 md:w-[34rem]"
+          />
+        </div>
 
-        <p className="mt-6 max-w-sm font-body text-sm text-zinc-300">
+        <p
+          className="animate-fade-in-up mt-6 max-w-sm font-body text-sm text-zinc-300"
+          style={{ animationDelay: "900ms" }}
+        >
           Taking off soon, hang on!!
         </p>
       </div>

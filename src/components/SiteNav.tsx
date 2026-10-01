@@ -23,7 +23,7 @@ export default function SiteNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="absolute inset-x-0 top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-sm">
+    <nav className="animate-fade-in-up absolute inset-x-0 top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-sm">
       <div className="flex items-center justify-between px-6 py-4 sm:px-10">
         <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-300">
           Gryphon Arrows
@@ -31,7 +31,7 @@ export default function SiteNav() {
 
         {/* Desktop nav — hidden below sm, where it has no room and would
             squish against the wordmark. */}
-        <ul className="hidden items-center gap-8 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-300 sm:flex">
+        <ul className="hidden items-center gap-8 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300 sm:flex">
           <li className="group relative">
             <button
               type="button"
@@ -90,7 +90,7 @@ export default function SiteNav() {
 
       {/* Mobile panel */}
       {mobileOpen && (
-        <div className="flex flex-col gap-1 border-t border-white/10 px-6 py-4 font-mono text-xs uppercase tracking-[0.2em] text-zinc-300 sm:hidden">
+        <div className="flex flex-col gap-1 border-t border-white/10 px-6 py-4 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300 sm:hidden">
           <span className="px-1 py-2 text-zinc-500">Overview</span>
           {OVERVIEW_SECTIONS.map((item) => (
             <a

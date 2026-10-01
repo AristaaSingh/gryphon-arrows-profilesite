@@ -24,8 +24,8 @@ export default function ScrollFade({
   className = "",
   id,
   threshold = 0.2,
-  translateY = 16,
-  durationMs = 600,
+  translateY = 24,
+  durationMs = 1400,
 }: ScrollFadeProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);

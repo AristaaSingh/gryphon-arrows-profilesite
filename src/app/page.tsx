@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import DecryptTechHeading from "@/components/DecryptTechHeading";
+import DotGrid from "@/components/DotGrid";
 import ScrollFade from "@/components/ScrollFade";
 import SiteNav from "@/components/SiteNav";
 import SpecularButton from "@/components/SpecularButton";
@@ -99,12 +100,44 @@ export default function Home() {
 
       <section
         id="about-section"
-        className="relative min-h-screen snap-start scroll-mt-20 bg-black px-6 pt-28 pb-16 text-zinc-100 sm:px-12 sm:pt-32 md:px-20"
+        className="relative min-h-screen snap-start scroll-mt-20 overflow-hidden bg-black px-6 pt-28 pb-16 text-zinc-100 sm:px-12 sm:pt-32 md:px-20"
       >
-        <div className="mx-auto max-w-5xl">
+        <div className="absolute inset-0 z-0">
+          <DotGrid
+            dotSize={2}
+            gap={15}
+            baseColor="#EAB308"
+            activeColor="#EF4444"
+            proximity={140}
+            shockRadius={70}
+            shockStrength={3}
+            resistance={750}
+            returnDuration={0.6}
+            style={undefined}
+          />
+        </div>
+
+        {/* Dots should only read in the empty black space, not behind the
+            logo/heading/paragraph — rather than literally masking the
+            canvas (fiddly to union multiple CSS mask layers correctly),
+            this just paints soft black vignettes, matching the section's
+            own background, over the two content areas so the dots visually
+            fade out approaching them. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[1]"
+          style={{
+            backgroundImage: `
+              radial-gradient(ellipse 480px 300px at 88% 14%, #000 0%, #000 35%, transparent 75%),
+              radial-gradient(ellipse 520px 460px at 18% 62%, #000 0%, #000 35%, transparent 75%)
+            `,
+          }}
+        />
+
+        <div className="relative z-10 mx-auto max-w-5xl">
           <ScrollFade id="sponsors" className="flex scroll-mt-24 justify-end">
-            <div className="flex flex-col items-center gap-3 text-center">
-              <span className="font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <span className="font-display text-xl text-[#e02828] sm:text-2xl md:text-3xl">
                 Sponsored by
               </span>
               <Image
@@ -112,7 +145,7 @@ export default function Home() {
                 alt="Menapia"
                 width={240}
                 height={106}
-                className="h-auto w-32 sm:w-40"
+                className="h-auto w-56 sm:w-64 md:w-80"
               />
             </div>
           </ScrollFade>

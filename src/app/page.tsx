@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import DecryptedText from "@/components/DecryptedText";
 import DecryptTechHeading from "@/components/DecryptTechHeading";
+import FadeInText from "@/components/FadeInText";
 import ScrollFade from "@/components/ScrollFade";
 import SiteNav from "@/components/SiteNav";
 import SpecularButton from "@/components/SpecularButton";
@@ -121,53 +121,54 @@ export default function Home() {
         id="about-section"
         className="relative min-h-screen snap-start scroll-mt-20 overflow-hidden bg-black px-6 pt-28 pb-16 text-zinc-100 sm:px-12 sm:pt-32 md:px-20"
       >
-        <ScrollFade
-          id="sponsors"
-          className="absolute right-6 top-24 z-10 flex scroll-mt-24 items-center gap-4 sm:right-10 sm:top-28 md:right-16"
-        >
-          {/* Font size matches the logo's own rendered height at each
-              breakpoint (w-56/64/80 at this image's ~2500x1109 aspect ratio
-              -> ~99px/114px/142px tall), not an independent type scale. */}
-          <DecryptedText
-            text="Sponsored by"
-            className="font-display text-[99px] leading-none text-white sm:text-[114px] md:text-[142px]"
-            style={SPONSOR_GLOW}
-            scramblingStyle={SPONSOR_GLOW}
-            speed={45}
-            iterationsPerChar={12}
-            staggerMs={60}
-            onComplete={() => setSponsorTextDone(true)}
-          />
-          <Image
-            src="/sponsors/menapia.webp"
-            alt="Menapia"
-            width={240}
-            height={106}
-            className="h-auto w-56 sm:w-64 md:w-80"
-            style={{
-              opacity: sponsorTextDone ? 1 : 0,
-              transition: `opacity ${LOGO_FADE_MS}ms ease`,
-            }}
-          />
-        </ScrollFade>
-
-        {/* Kept mounted (not conditionally rendered) so the #about nav
-            anchor always resolves — only its visibility is gated, via a
-            plain opacity override sitting outside ScrollFade's own
-            scroll-driven opacity, so it can't appear before the logo has
-            finished fading in regardless of scroll position. */}
-        <div
-          className={`relative z-10 mx-auto max-w-5xl transition-opacity duration-300 ${
-            aboutReady ? "opacity-100" : "opacity-0"
-          }`}
-          style={!aboutReady ? { pointerEvents: "none" } : undefined}
-        >
-          <ScrollFade id="about" className="mt-10 max-w-xl scroll-mt-24 text-left sm:mt-14">
-            <h2 className="font-display text-2xl text-zinc-100 sm:text-3xl">About Us</h2>
-            <p className="mt-4 font-body text-sm leading-relaxed text-zinc-300 sm:text-base">
-              {ABOUT_PLACEHOLDER}
-            </p>
+        {/* Normal document flow, not position:absolute — at this font
+            size (matching the logo's own height) an absolutely-positioned
+            box could overflow its bounds and overlap the About Us content
+            below it with no layout system to stop it. Keeping both in flow
+            means About Us is always pushed below, whatever the sponsor
+            row's actual rendered size turns out to be. */}
+        <div className="relative z-10 mx-auto max-w-5xl">
+          <ScrollFade id="sponsors" className="flex scroll-mt-24 items-center justify-end gap-4">
+            {/* Font size matches the logo's own rendered height at each
+                breakpoint (w-56/64/80 at this image's ~2500x1109 aspect
+                ratio -> ~99px/114px/142px tall), not an independent scale. */}
+            <FadeInText
+              text="Sponsored by"
+              className="font-display text-[99px] leading-none text-white sm:text-[114px] md:text-[142px]"
+              style={SPONSOR_GLOW}
+              staggerMs={40}
+              durationMs={500}
+              onComplete={() => setSponsorTextDone(true)}
+            />
+            <Image
+              src="/sponsors/menapia.webp"
+              alt="Menapia"
+              width={240}
+              height={106}
+              className="h-auto w-56 sm:w-64 md:w-80"
+              style={{
+                opacity: sponsorTextDone ? 1 : 0,
+                transition: `opacity ${LOGO_FADE_MS}ms ease`,
+              }}
+            />
           </ScrollFade>
+
+          {/* Kept mounted (not conditionally rendered) so the #about nav
+              anchor always resolves — only its visibility is gated, via a
+              plain opacity override sitting outside ScrollFade's own
+              scroll-driven opacity, so it can't appear before the logo has
+              finished fading in regardless of scroll position. */}
+          <div
+            className={`transition-opacity duration-300 ${aboutReady ? "opacity-100" : "opacity-0"}`}
+            style={!aboutReady ? { pointerEvents: "none" } : undefined}
+          >
+            <ScrollFade id="about" className="mt-10 max-w-xl scroll-mt-24 text-left sm:mt-14">
+              <h2 className="font-display text-2xl text-zinc-100 sm:text-3xl">About Us</h2>
+              <p className="mt-4 font-body text-sm leading-relaxed text-zinc-300 sm:text-base">
+                {ABOUT_PLACEHOLDER}
+              </p>
+            </ScrollFade>
+          </div>
         </div>
       </section>
     </>

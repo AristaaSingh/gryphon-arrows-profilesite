@@ -28,6 +28,12 @@ interface DecryptTechHeadingProps {
    *  than a thin stroke against a background whose brightness varies a lot
    *  (e.g. glowing threads crossing behind the text). Set 0 to turn off. */
   haloBlurEm?: number;
+  /** Soft colored glow behind each letter (also text-shadow, layered with
+   *  the halo above if both are on) — two colors blended, matching a
+   *  background like WebThreads'. Set 0 to turn off. */
+  glowColor1?: string;
+  glowColor2?: string;
+  glowBlurEm?: number;
   letterSpacingEm?: number;
   minFontSize?: number;
   maxFontSize?: number;
@@ -43,6 +49,18 @@ interface DecryptTechHeadingProps {
 }
 
 const DEFAULT_ACCENT = "#e02828";
+const DEFAULT_GLOW_1 = "#ff3b3b";
+const DEFAULT_GLOW_2 = "#ffc100";
+
+function hexToRgba(hex: string, alpha: number) {
+  const clean = hex.replace("#", "");
+  const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+  const value = parseInt(full, 16);
+  const r = (value >> 16) & 255;
+  const g = (value >> 8) & 255;
+  const b = value & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 /**
  * Plays the DecryptedText scramble-in effect once per word. With
@@ -63,6 +81,9 @@ export default function DecryptTechHeading({
   outlineColor = "#000000",
   outlineWidthEm = 0.04,
   haloBlurEm = 0.09,
+  glowColor1 = DEFAULT_GLOW_1,
+  glowColor2 = DEFAULT_GLOW_2,
+  glowBlurEm = 0.14,
   letterSpacingEm = 0.2,
   minFontSize = 24,
   maxFontSize = 160,
@@ -85,6 +106,18 @@ export default function DecryptTechHeading({
           `0 0 ${fontSize * haloBlurEm * 1.4}px rgba(0,0,0,0.6)`,
         ].join(", ")
       : undefined;
+  // Soft, not sharp: bigger blur radii and lower opacity than the halo
+  // above, two colors so it reads as a warm red-to-yellow glow rather
+  // than a flat single-color blur — matching the WebThreads background.
+  const glow =
+    fontSize && glowBlurEm > 0
+      ? [
+          `0 0 ${fontSize * glowBlurEm * 0.3}px ${hexToRgba(glowColor1, 0.75)}`,
+          `0 0 ${fontSize * glowBlurEm * 0.8}px ${hexToRgba(glowColor2, 0.5)}`,
+          `0 0 ${fontSize * glowBlurEm * 1.6}px ${hexToRgba(glowColor1, 0.3)}`,
+        ].join(", ")
+      : undefined;
+  const textShadow = [halo, glow].filter(Boolean).join(", ") || undefined;
 
   // useLayoutEffect (not useEffect) so the size is measured and applied
   // before the browser paints, wherever possible — combined with the
@@ -145,12 +178,12 @@ export default function DecryptTechHeading({
               style={{
                 color,
                 WebkitTextStroke: `${fontSize * outlineWidthEm}px ${outlineColor}`,
-                textShadow: halo,
+                textShadow,
               }}
               scramblingStyle={{
                 color: accentColor,
                 WebkitTextStroke: `${fontSize * outlineWidthEm}px ${outlineColor}`,
-                textShadow: halo,
+                textShadow,
               }}
               speed={55}
               iterationsPerChar={14}

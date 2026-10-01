@@ -39,7 +39,7 @@ export default function Home() {
           to leave that glow visible, not covered by either line. */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
         <span className="mb-4 font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
-          IMechE UAS Challenge
+          University of Leeds IMechE UAS Challenge
         </span>
 
         <DecryptTechHeading

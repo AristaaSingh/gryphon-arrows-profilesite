@@ -1,16 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
+import DecryptedText from "@/components/DecryptedText";
 import DecryptTechHeading from "@/components/DecryptTechHeading";
 import ScrollFade from "@/components/ScrollFade";
 import SiteNav from "@/components/SiteNav";
 import SpecularButton from "@/components/SpecularButton";
 import WebThreads from "@/components/WebThreads";
 
+const SPONSOR_GLOW = {
+  textShadow: "0 0 10px rgba(255,255,255,0.85), 0 0 24px rgba(255,255,255,0.5), 0 0 48px rgba(255,255,255,0.3)",
+};
+
 const ABOUT_PLACEHOLDER =
   "I am not crazy! I know he swapped those numbers. I knew it was 1216. One after Magna Carta. As if I could ever make such a mistake. Never. Never! I just – I just couldn’t prove it. He covered his tracks, he got that idiot at the copy shop to lie for him. You think this is something? You think this is bad? This? This chicanery? He’s done worse. That billboard! Are you telling me that a man just happens to fall like that? No! He orchestrated it! Jimmy! He defecated through a sunroof! And I saved him! And I shouldn’t have. I took him into my own firm!";
 
 export default function Home() {
+  const [sponsorTextDone, setSponsorTextDone] = useState(false);
+
   const scrollToAbout = () => {
     document.getElementById("about-section")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -101,28 +109,34 @@ export default function Home() {
         id="about-section"
         className="relative min-h-screen snap-start scroll-mt-20 overflow-hidden bg-black px-6 pt-28 pb-16 text-zinc-100 sm:px-12 sm:pt-32 md:px-20"
       >
-        <div className="relative z-10 mx-auto max-w-5xl">
-          <ScrollFade id="sponsors" className="flex scroll-mt-24 justify-end">
-            <div className="flex flex-col items-center gap-4 text-center">
-              <span
-                className="font-display text-xl text-white sm:text-2xl md:text-3xl"
-                style={{
-                  textShadow:
-                    "0 0 10px rgba(255,255,255,0.85), 0 0 24px rgba(255,255,255,0.5), 0 0 48px rgba(255,255,255,0.3)",
-                }}
-              >
-                Sponsored by
-              </span>
-              <Image
-                src="/sponsors/menapia.webp"
-                alt="Menapia"
-                width={240}
-                height={106}
-                className="h-auto w-56 sm:w-64 md:w-80"
-              />
-            </div>
-          </ScrollFade>
+        <ScrollFade
+          id="sponsors"
+          className="absolute right-6 top-24 z-10 flex scroll-mt-24 items-center gap-4 sm:right-10 sm:top-28 md:right-16"
+        >
+          <DecryptedText
+            text="Sponsored by"
+            className="font-display text-xl text-white sm:text-2xl md:text-3xl"
+            style={SPONSOR_GLOW}
+            scramblingStyle={SPONSOR_GLOW}
+            speed={45}
+            iterationsPerChar={12}
+            staggerMs={60}
+            onComplete={() => setSponsorTextDone(true)}
+          />
+          <Image
+            src="/sponsors/menapia.webp"
+            alt="Menapia"
+            width={240}
+            height={106}
+            className="h-auto w-56 sm:w-64 md:w-80"
+            style={{
+              opacity: sponsorTextDone ? 1 : 0,
+              transition: "opacity 900ms ease",
+            }}
+          />
+        </ScrollFade>
 
+        <div className="relative z-10 mx-auto max-w-5xl">
           <ScrollFade id="about" className="mt-10 max-w-xl scroll-mt-24 text-left sm:mt-14">
             <h2 className="font-display text-2xl text-zinc-100 sm:text-3xl">About Us</h2>
             <p className="mt-4 font-body text-sm leading-relaxed text-zinc-300 sm:text-base">

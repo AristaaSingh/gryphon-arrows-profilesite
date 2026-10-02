@@ -8,6 +8,9 @@ import SpecularButton from "@/components/SpecularButton";
 import SponsorsRibbon from "@/components/SponsorsRibbon";
 import WebThreads from "@/components/WebThreads";
 
+const ABOUT_TEXT =
+  "Gryphon Arrows is a student-led UAV engineering team focused on innovation, hands-on design, and real-world aerospace development. We bring together multidisciplinary engineering talent to design, build, and test advanced unmanned aircraft, competing in the IMechE UAS Challenge while developing practical engineering skills and the next generation of aerospace engineers.";
+
 const TOC_ITEMS = [
   { id: "home", label: "Home" },
   { id: "sponsors", label: "Our Sponsors" },
@@ -109,14 +112,35 @@ export default function Home() {
 
       <section
         id="about"
-        className="relative flex min-h-screen scroll-mt-20 items-center bg-black px-6 py-28 text-zinc-100 sm:px-12 md:px-20"
+        className="relative flex min-h-screen scroll-mt-20 items-center bg-black px-6 py-28 text-zinc-100 sm:px-12 md:px-20 xl:pl-60"
       >
-        <ScrollFade className="mx-auto w-full max-w-3xl">
-          <h2 className="font-display text-3xl text-zinc-100 sm:text-4xl">About Us</h2>
-          <p className="mt-5 font-body text-base leading-relaxed text-zinc-300">
-            About us content
-          </p>
-        </ScrollFade>
+        <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
+          {/* Placeholder for the team photo (left). */}
+          <ScrollFade threshold={0.25}>
+            <div
+              role="img"
+              aria-label="Team photo placeholder"
+              className="relative flex aspect-[4/3] w-full items-center justify-center border border-dashed border-white/25 bg-zinc-950"
+              style={{
+                backgroundImage:
+                  "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
+                backgroundSize: "32px 32px",
+              }}
+            >
+              <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">
+                Team photo
+              </span>
+            </div>
+          </ScrollFade>
+
+          {/* About text (right). */}
+          <ScrollFade threshold={0.25}>
+            <h2 className="font-display text-3xl text-zinc-100 sm:text-4xl">About Us</h2>
+            <p className="mt-6 font-body text-base leading-relaxed text-zinc-300 sm:text-lg">
+              {ABOUT_TEXT}
+            </p>
+          </ScrollFade>
+        </div>
       </section>
     </>
   );

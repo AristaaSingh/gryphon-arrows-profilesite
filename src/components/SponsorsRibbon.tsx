@@ -13,7 +13,7 @@ const RED = "#ff002c";
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.18, delayChildren: 1.1 } },
+  show: { transition: { staggerChildren: 0.18, delayChildren: 0.9 } },
 };
 
 const card: Variants = {
@@ -70,21 +70,24 @@ function Corner({ className }: { className: string }) {
 }
 
 export default function SponsorsRibbon() {
-  // Watched on the flat wrapper, not the card: while the card is folded
-  // edge-on (rotateY ~95deg) it has almost no visible area, so observing
-  // the card itself would never fire and it would stay folded forever.
+  // Watched on the wrapper, not the card: while the card is fully clipped
+  // away it has no visible area, so observing it would never fire.
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { amount: 0.25 });
 
   return (
-    <div ref={wrapRef} className="relative w-full" style={{ perspective: 1800 }}>
-      {/* Full-width card that unfolds like a door hinged on its left edge. */}
+    <div ref={wrapRef} className="relative w-full overflow-hidden">
+      {/* Full-width card that wipes in from the left: a clip-path reveal
+          sweeping left to right while the card slides into place. */}
       <motion.div
-        initial={{ opacity: 0, rotateY: -95 }}
-        animate={inView ? { opacity: 1, rotateY: 0 } : { opacity: 0, rotateY: -95 }}
-        transition={{ type: "spring", stiffness: 55, damping: 15, mass: 1.1 }}
+        initial={{ clipPath: "inset(0 100% 0 0)", x: -60 }}
+        animate={
+          inView
+            ? { clipPath: "inset(0 0% 0 0)", x: 0 }
+            : { clipPath: "inset(0 100% 0 0)", x: -60 }
+        }
+        transition={{ duration: 1, ease: [0.77, 0, 0.175, 1] }}
         style={{
-          transformOrigin: "left center",
           backgroundImage:
             "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
           backgroundSize: "32px 32px",

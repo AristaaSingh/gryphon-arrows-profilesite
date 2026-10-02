@@ -2,6 +2,7 @@
 
 import DecryptTechHeading from "@/components/DecryptTechHeading";
 import ScrollFade from "@/components/ScrollFade";
+import SectionDivider from "@/components/SectionDivider";
 import SectionToc from "@/components/SectionToc";
 import SiteNav from "@/components/SiteNav";
 import SpecularButton from "@/components/SpecularButton";
@@ -124,6 +125,8 @@ export default function Home() {
         id="about"
         className="relative grid min-h-screen scroll-mt-20 bg-black text-zinc-100 md:grid-cols-2"
       >
+        <SectionDivider />
+
         {/* About text (left). */}
         <div className="flex items-center px-6 py-28 sm:px-12 md:pl-20 md:pr-12 xl:pl-60">
           <ScrollFade threshold={0.25} className="w-full max-w-xl">

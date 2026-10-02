@@ -103,6 +103,16 @@ export default function Home() {
             </SpecularButton>
           </ScrollFade>
         </div>
+
+        {/* Drawing-sheet annotations, matching the sponsors strip. */}
+        <div
+          aria-hidden="true"
+          className="animate-fade-in-up pointer-events-none absolute inset-x-0 top-[4.75rem] z-10 flex justify-between px-6 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-400 sm:px-10"
+          style={{ animationDelay: "1300ms" }}
+        >
+          <span>Sec. 01</span>
+          <span>Sheet 1/3</span>
+        </div>
       </main>
 
       {/* Sponsors ribbon, sitting between the landing and About Us. */}
@@ -117,6 +127,14 @@ export default function Home() {
         {/* About text (left). */}
         <div className="flex items-center px-6 py-28 sm:px-12 md:pl-20 md:pr-12 xl:pl-60">
           <ScrollFade threshold={0.25} className="w-full max-w-xl">
+            <div
+              aria-hidden="true"
+              className="mb-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500"
+            >
+              <span>Sec. 03</span>
+              <span className="h-px w-16 bg-[#ff002c]" />
+              <span>Sheet 3/3</span>
+            </div>
             <h2 className="font-display text-3xl text-zinc-100 sm:text-4xl">About Us</h2>
             <p className="mt-6 font-body text-base leading-relaxed text-zinc-300 sm:text-lg">
               {ABOUT_TEXT}

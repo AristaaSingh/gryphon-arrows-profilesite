@@ -103,7 +103,7 @@ export default function Home() {
       </main>
 
       {/* Sponsors ribbon, sitting between the landing and About Us. */}
-      <div id="sponsors" className="relative bg-black px-4 py-24 text-zinc-100 sm:px-10 sm:py-32">
+      <div id="sponsors" className="relative bg-black py-24 text-zinc-100 sm:py-32">
         <SponsorsRibbon />
       </div>
 

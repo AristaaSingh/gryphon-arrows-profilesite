@@ -36,7 +36,7 @@ export default function SectionToc({ items }: { items: TocItem[] }) {
   return (
     <nav
       aria-label="Page sections"
-      className="fixed left-8 top-1/2 z-40 hidden -translate-y-1/2 xl:block"
+      className="fixed left-8 top-1/2 z-[60] hidden -translate-y-1/2 xl:block"
     >
       <ul className="relative flex flex-col gap-6 border-l border-white/15 pl-5">
         {items.map((item) => {

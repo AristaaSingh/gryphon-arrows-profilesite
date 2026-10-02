@@ -1,38 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import DecryptTechHeading from "@/components/DecryptTechHeading";
-import FadeInText from "@/components/FadeInText";
 import ScrollFade from "@/components/ScrollFade";
 import SiteNav from "@/components/SiteNav";
 import SpecularButton from "@/components/SpecularButton";
+import SponsorsRibbon from "@/components/SponsorsRibbon";
 import WebThreads from "@/components/WebThreads";
 
-const SPONSOR_GLOW = {
-  textShadow: "0 0 10px rgba(255,255,255,0.85), 0 0 24px rgba(255,255,255,0.5), 0 0 48px rgba(255,255,255,0.3)",
-};
-
-const ABOUT_PLACEHOLDER =
-  "I am not crazy! I know he swapped those numbers. I knew it was 1216. One after Magna Carta. As if I could ever make such a mistake. Never. Never! I just – I just couldn’t prove it. He covered his tracks, he got that idiot at the copy shop to lie for him. You think this is something? You think this is bad? This? This chicanery? He’s done worse. That billboard! Are you telling me that a man just happens to fall like that? No! He orchestrated it! Jimmy! He defecated through a sunroof! And I saved him! And I shouldn’t have. I took him into my own firm!";
-
-// How long the logo takes to fade in once "Sponsored by" finishes
-// decrypting — About Us waits this long afterward before it's allowed
-// to start its own (otherwise-independent) scroll-fade reveal.
-const LOGO_FADE_MS = 900;
-
 export default function Home() {
-  const [sponsorTextDone, setSponsorTextDone] = useState(false);
-  const [aboutReady, setAboutReady] = useState(false);
-
-  useEffect(() => {
-    if (!sponsorTextDone) return;
-    const id = setTimeout(() => setAboutReady(true), LOGO_FADE_MS);
-    return () => clearTimeout(id);
-  }, [sponsorTextDone]);
-
-  const scrollToAbout = () => {
-    document.getElementById("about-section")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToSponsors = () => {
+    document.getElementById("sponsors")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -109,7 +86,7 @@ export default function Home() {
               speed={0.3}
               followMouse
               proximity={260}
-              onClick={scrollToAbout}
+              onClick={scrollToSponsors}
             >
               Explore us
             </SpecularButton>
@@ -118,55 +95,10 @@ export default function Home() {
       </main>
 
       <section
-        id="about-section"
-        className="relative min-h-screen snap-start scroll-mt-20 overflow-hidden bg-black px-6 pt-28 pb-16 text-zinc-100 sm:px-12 sm:pt-32 md:px-20"
+        id="sponsors"
+        className="relative flex min-h-screen snap-start scroll-mt-20 items-center overflow-hidden bg-black px-4 py-28 text-zinc-100 sm:px-10"
       >
-        {/* Normal document flow, not position:absolute — keeps About Us
-            reliably pushed below the sponsor block regardless of its
-            rendered size, rather than two independently-floating boxes
-            with nothing to stop them overlapping. */}
-        <div className="relative z-10 mx-auto max-w-5xl">
-          <ScrollFade id="sponsors" className="flex scroll-mt-24 justify-end">
-            <div className="flex flex-col items-center gap-2">
-              <FadeInText
-                text="Sponsored by"
-                className="font-display text-xl text-white sm:text-2xl md:text-3xl"
-                style={SPONSOR_GLOW}
-                staggerMs={40}
-                durationMs={500}
-                onComplete={() => setSponsorTextDone(true)}
-              />
-              <Image
-                src="/sponsors/menapia.webp"
-                alt="Menapia"
-                width={240}
-                height={106}
-                className="h-auto w-56 sm:w-64 md:w-80"
-                style={{
-                  opacity: sponsorTextDone ? 1 : 0,
-                  transition: `opacity ${LOGO_FADE_MS}ms ease`,
-                }}
-              />
-            </div>
-          </ScrollFade>
-
-          {/* Kept mounted (not conditionally rendered) so the #about nav
-              anchor always resolves — only its visibility is gated, via a
-              plain opacity override sitting outside ScrollFade's own
-              scroll-driven opacity, so it can't appear before the logo has
-              finished fading in regardless of scroll position. */}
-          <div
-            className={`transition-opacity duration-300 ${aboutReady ? "opacity-100" : "opacity-0"}`}
-            style={!aboutReady ? { pointerEvents: "none" } : undefined}
-          >
-            <ScrollFade id="about" className="mt-10 max-w-xl scroll-mt-24 text-left sm:mt-14">
-              <h2 className="font-display text-2xl text-zinc-100 sm:text-3xl">About Us</h2>
-              <p className="mt-4 font-body text-sm leading-relaxed text-zinc-300 sm:text-base">
-                {ABOUT_PLACEHOLDER}
-              </p>
-            </ScrollFade>
-          </div>
-        </div>
+        <SponsorsRibbon />
       </section>
     </>
   );

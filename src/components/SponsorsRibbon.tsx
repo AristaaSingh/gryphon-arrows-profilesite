@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView, useReducedMotion, type Variants } from "framer-motion";
 
 const SPONSORS = [
   { name: "Menapia", src: "/sponsors/menapia.webp", width: 2500, height: 1109 },
@@ -12,7 +13,7 @@ const MARQUEE_WORD = "Our Sponsors";
 
 const container: Variants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.18, delayChildren: 0.25 } },
+  show: { transition: { staggerChildren: 0.18, delayChildren: 0.7 } },
 };
 
 const card: Variants = {
@@ -58,16 +59,23 @@ function MarqueeRow({ reduceMotion }: { reduceMotion: boolean | null }) {
 
 export default function SponsorsRibbon() {
   const reduceMotion = useReducedMotion();
+  // Watched on the flat wrapper, not the card: while the card is folded
+  // edge-on (rotateY ~95deg) it has almost no visible area, so observing
+  // the card itself would never fire and it would stay folded forever.
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef, { amount: 0.25 });
 
   return (
-    <div className="relative mx-auto w-full max-w-6xl">
-      {/* The ribbon: a slightly tilted red-to-amber band carrying the
-          scrolling "Our Sponsors" marquee, with the cards sitting inside it. */}
+    <div ref={wrapRef} className="relative mx-auto w-full max-w-6xl" style={{ perspective: 1800 }}>
+      {/* The ribbon: a straight red-to-amber band carrying the scrolling
+          "Our Sponsors" marquee, with the cards inside it. The whole card
+          unfolds like a door hinged on its left edge (3D rotateY from
+          edge-on), which is why the parent sets a perspective. */}
       <motion.div
-        initial={{ opacity: 0, scaleX: 0.92, rotate: -4 }}
-        whileInView={{ opacity: 1, scaleX: 1, rotate: -1.5 }}
-        viewport={{ once: false, amount: 0.25 }}
-        transition={{ type: "spring", stiffness: 70, damping: 16 }}
+        initial={{ opacity: 0, rotateY: -95 }}
+        animate={inView ? { opacity: 1, rotateY: 0 } : { opacity: 0, rotateY: -95 }}
+        transition={{ type: "spring", stiffness: 55, damping: 15, mass: 1.1 }}
+        style={{ transformOrigin: "left center" }}
         className="overflow-hidden rounded-sm border border-white/10 bg-zinc-950 shadow-[0_0_80px_rgba(255,0,44,0.18)]"
       >
         <div className="bg-gradient-to-r from-[#ff002c] via-[#ff6a1a] to-[#ffc100]">
@@ -77,8 +85,7 @@ export default function SponsorsRibbon() {
         <motion.ul
           variants={container}
           initial="hidden"
-          whileInView="show"
-          viewport={{ once: false, amount: 0.3 }}
+          animate={inView ? "show" : "hidden"}
           className="flex flex-col items-center justify-center gap-8 px-6 py-12 sm:flex-row sm:gap-12 sm:py-16"
         >
           {SPONSORS.map((s) => (

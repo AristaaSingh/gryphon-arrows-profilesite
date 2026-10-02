@@ -112,35 +112,36 @@ export default function Home() {
 
       <section
         id="about"
-        className="relative flex min-h-screen scroll-mt-20 items-center bg-black px-6 py-28 text-zinc-100 sm:px-12 md:px-20 xl:pl-60"
+        className="relative grid min-h-screen scroll-mt-20 bg-black text-zinc-100 md:grid-cols-2"
       >
-        <div className="mx-auto grid w-full max-w-6xl items-center gap-10 md:grid-cols-2 md:gap-16">
-          {/* Placeholder for the team photo (left). */}
-          <ScrollFade threshold={0.25}>
-            <div
-              role="img"
-              aria-label="Team photo placeholder"
-              className="relative flex aspect-[4/3] w-full items-center justify-center border border-dashed border-white/25 bg-zinc-950"
-              style={{
-                backgroundImage:
-                  "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
-                backgroundSize: "32px 32px",
-              }}
-            >
-              <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">
-                Team photo
-              </span>
-            </div>
-          </ScrollFade>
-
-          {/* About text (right). */}
-          <ScrollFade threshold={0.25}>
+        {/* About text (left). */}
+        <div className="flex items-center px-6 py-28 sm:px-12 md:pl-20 md:pr-12 xl:pl-60">
+          <ScrollFade threshold={0.25} className="w-full max-w-xl">
             <h2 className="font-display text-3xl text-zinc-100 sm:text-4xl">About Us</h2>
             <p className="mt-6 font-body text-base leading-relaxed text-zinc-300 sm:text-lg">
               {ABOUT_TEXT}
             </p>
           </ScrollFade>
         </div>
+
+        {/* Placeholder for the team photo: the whole right half of the
+            screen, flush to the edge, full section height. */}
+        <ScrollFade threshold={0.15} className="relative min-h-[22rem] md:min-h-full">
+          <div
+            role="img"
+            aria-label="Team photo placeholder"
+            className="absolute inset-0 flex items-center justify-center border-l border-dashed border-white/25 bg-zinc-950"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
+              backgroundSize: "32px 32px",
+            }}
+          >
+            <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">
+              Team photo
+            </span>
+          </div>
+        </ScrollFade>
       </section>
     </>
   );

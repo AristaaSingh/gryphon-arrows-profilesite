@@ -2,21 +2,30 @@
 
 import DecryptTechHeading from "@/components/DecryptTechHeading";
 import ScrollFade from "@/components/ScrollFade";
+import SectionToc from "@/components/SectionToc";
 import SiteNav from "@/components/SiteNav";
 import SpecularButton from "@/components/SpecularButton";
 import SponsorsRibbon from "@/components/SponsorsRibbon";
 import WebThreads from "@/components/WebThreads";
 
+// Only the sections scrolling snaps to — the sponsors ribbon between them
+// is a divider you pass through, not a stop, so it isn't listed.
+const TOC_ITEMS = [
+  { id: "home", label: "Home" },
+  { id: "about", label: "About Us" },
+];
+
 export default function Home() {
-  const scrollToSponsors = () => {
-    document.getElementById("sponsors")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToAbout = () => {
+    document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
     <>
       <SiteNav />
+      <SectionToc items={TOC_ITEMS} />
 
-      <main className="relative min-h-screen snap-start overflow-hidden bg-black text-zinc-100">
+      <main id="home" className="relative min-h-screen snap-start overflow-hidden bg-black text-zinc-100">
         <div className="animate-fade-in-up absolute inset-0">
           <WebThreads
             color1="#ff002c"
@@ -86,7 +95,7 @@ export default function Home() {
               speed={0.3}
               followMouse
               proximity={260}
-              onClick={scrollToSponsors}
+              onClick={scrollToAbout}
             >
               Explore us
             </SpecularButton>
@@ -94,11 +103,23 @@ export default function Home() {
         </div>
       </main>
 
-      <section
-        id="sponsors"
-        className="relative flex min-h-screen snap-start scroll-mt-20 items-center overflow-hidden bg-black px-4 py-28 text-zinc-100 sm:px-10"
-      >
+      {/* Divider between the landing and About Us sections. Deliberately
+          not a snap point: scrolling snaps from Home straight to About Us,
+          and this band is what you pass through on the way. */}
+      <div id="sponsors" className="relative bg-black px-4 py-24 text-zinc-100 sm:px-10 sm:py-32">
         <SponsorsRibbon />
+      </div>
+
+      <section
+        id="about"
+        className="relative flex min-h-screen snap-start scroll-mt-20 items-center bg-black px-6 py-28 text-zinc-100 sm:px-12 md:px-20"
+      >
+        <ScrollFade className="mx-auto w-full max-w-3xl">
+          <h2 className="font-display text-3xl text-zinc-100 sm:text-4xl">About Us</h2>
+          <p className="mt-5 font-body text-base leading-relaxed text-zinc-300">
+            About us content
+          </p>
+        </ScrollFade>
       </section>
     </>
   );

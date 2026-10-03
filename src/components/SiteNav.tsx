@@ -1,13 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { SITE_LINKS } from "@/content/site-links";
 
 // Placeholder nav: these are separate pages that don't exist yet (linked
 // with "#" so they don't 404). The Explore dropdown was removed for now.
-const PAGES = [
-  { label: "Gallery", href: "#" },
-  { label: "Contact", href: "#" },
-];
+const PAGES = [{ label: "Contact", href: "#" }];
+
+// The "Join Us" link lives in src/content/site-links.ts so it can be edited
+// without touching this component.
+const JOIN_HREF = SITE_LINKS.joinForm || "#";
+const JOIN_PROPS = SITE_LINKS.joinForm
+  ? { target: "_blank", rel: "noopener noreferrer" }
+  : {};
 
 export default function SiteNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -29,6 +34,15 @@ export default function SiteNav() {
               </a>
             </li>
           ))}
+          <li>
+            <a
+              href={JOIN_HREF}
+              {...JOIN_PROPS}
+              className="rounded-sm border border-[#e02828] bg-[#e02828]/10 px-4 py-1.5 text-white transition-colors hover:bg-[#e02828]"
+            >
+              Join Us
+            </a>
+          </li>
         </ul>
 
         {/* Mobile hamburger — only this + the wordmark occupy the row below
@@ -61,6 +75,13 @@ export default function SiteNav() {
               {item.label}
             </a>
           ))}
+          <a
+            href={JOIN_HREF}
+            {...JOIN_PROPS}
+            className="mt-2 rounded-sm border border-[#e02828] bg-[#e02828]/10 px-3 py-2 text-center text-white transition-colors hover:bg-[#e02828]"
+          >
+            Join Us
+          </a>
         </div>
       )}
     </nav>

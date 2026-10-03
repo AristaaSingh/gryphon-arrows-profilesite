@@ -166,6 +166,9 @@ export default function Home() {
               className="-translate-y-[6%] scale-[1.04] object-cover object-[55%_80%]"
             />
           </div>
+          {/* Single-column (mobile) layout: the photo starts mid-section, so it
+              needs its own soft top edge. */}
+          <SectionDivider className="md:hidden" label="Ref. 03.C" />
         </ScrollFade>
       </section>
 

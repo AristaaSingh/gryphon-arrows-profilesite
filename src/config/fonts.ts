@@ -21,7 +21,7 @@
  *    3. If the new font has several weights, you may need to add
  *       `weight: ["400", "700"]` (look at monoFont for an example).
  *
- *  Nothing else needs touching. See DESIGN.md for the current choices.
+ *  Nothing else needs touching. See fonts.md (next to this file) for the current choices.
  */
 import { Gajraj_One, Space_Mono, Exo_2 } from "next/font/google";
 

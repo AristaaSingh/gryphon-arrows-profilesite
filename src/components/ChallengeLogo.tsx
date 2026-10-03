@@ -6,10 +6,10 @@ import { motion, useInView } from "framer-motion";
 
 /**
  * Left half of The Challenge: the UAS Challenge logo on a blueprint panel.
- * The logo's text is dark maroon, so it sits on a white card (same idea as
- * the sponsor cards) instead of directly on the black page. The card slides
- * in from the left; the caption follows. Watched on the outer wrapper (not
- * the card) so the observer still fires while the card is offscreen.
+ * The logo is transparent and sits straight on the panel (no card). It
+ * slides in from the bottom left; the caption follows. Watched on the outer
+ * wrapper (not the logo) so the observer still fires while the logo is
+ * offscreen.
  */
 export default function ChallengeLogo() {
   const ref = useRef<HTMLDivElement>(null);
@@ -25,12 +25,14 @@ export default function ChallengeLogo() {
         backgroundSize: "32px 32px",
       }}
     >
-      <div className="flex w-full max-w-sm flex-col items-center">
+      <div className="flex w-full max-w-md flex-col items-center">
         <motion.div
-          initial={{ x: -140, opacity: 0 }}
-          animate={inView ? { x: 0, opacity: 1 } : { x: -140, opacity: 0 }}
+          initial={{ x: -140, y: 120, opacity: 0 }}
+          animate={
+            inView ? { x: 0, y: 0, opacity: 1 } : { x: -140, y: 120, opacity: 0 }
+          }
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full rounded-xl bg-white p-8 shadow-[0_0_80px_rgba(255,0,44,0.2)] ring-1 ring-white/20 sm:p-10"
+          className="w-full"
         >
           <Image
             src="/challenge/uas-challenge-logo.png"

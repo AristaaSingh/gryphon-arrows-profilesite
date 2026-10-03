@@ -17,4 +17,8 @@ export const SITE_LINKS = {
   // While this is empty, the button does nothing.
   joinForm:
     "https://forms.cloud.microsoft/pages/responsepage.aspx?id=qO3qvR3IzkWGPlIypTW3y2wdMMSuRRxFn8GT83u_UmRURU1WREdSUUZQUlVKME5YRk1RSFNXUVU3Sy4u&route=shorturl",
+
+  // Footer social icons. While empty, the icon is shown but does nothing.
+  instagram: "",
+  linkedin: "",
 };

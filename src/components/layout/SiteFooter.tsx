@@ -58,7 +58,7 @@ export default function SiteFooter() {
             className="h-12 w-auto"
           />
           <div className="flex flex-col gap-1 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-400">
-            <span className="text-xs tracking-[0.3em] text-zinc-300">
+            <span className="font-display text-lg uppercase tracking-wide text-zinc-100">
               Gryphon Arrows
             </span>
             <span>University of Leeds</span>

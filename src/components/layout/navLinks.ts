@@ -18,3 +18,8 @@ export const JOIN_PROPS = SITE_LINKS.joinForm
 // keeps it inside the link).
 export const LINK_HOVER =
   "relative isolate overflow-hidden rounded-sm px-3 py-1.5 transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:bg-[#ffc100] before:transition-transform before:duration-300 before:ease-out hover:text-black hover:before:scale-x-100 focus-visible:text-black focus-visible:before:scale-x-100 active:text-black active:before:scale-x-100";
+
+// Footer links are calmer than the menu's wipe fill: a yellow underline
+// slides in on hover/focus, and the text turns yellow while pressed.
+export const FOOTER_LINK_HOVER =
+  "relative px-1 py-1 transition-colors duration-200 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:scale-x-0 after:bg-[#ffc100] after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100 focus-visible:after:scale-x-100 active:text-[#ffc100]";

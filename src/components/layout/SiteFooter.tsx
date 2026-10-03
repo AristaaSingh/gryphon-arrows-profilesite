@@ -2,11 +2,11 @@ import Image from "next/image";
 import {
   JOIN_HREF,
   JOIN_PROPS,
-  LINK_HOVER,
+  FOOTER_LINK_HOVER,
   PAGES,
 } from "@/components/layout/navLinks";
 
-/** Bottom bar, styled like the top menu (glass, logo, same link buttons). */
+/** Bottom bar, styled like the top menu (glass, logo) with calmer underline links. */
 export default function SiteFooter() {
   return (
     <footer className="border-t border-white/10 bg-black/20 backdrop-blur-xl backdrop-saturate-150">
@@ -27,16 +27,16 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <ul className="flex items-center gap-2 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300">
+        <ul className="flex items-center gap-6 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300">
           {PAGES.map((item) => (
             <li key={item.label}>
-              <a href={item.href} className={LINK_HOVER}>
+              <a href={item.href} className={FOOTER_LINK_HOVER}>
                 {item.label}
               </a>
             </li>
           ))}
           <li>
-            <a href={JOIN_HREF} {...JOIN_PROPS} className={LINK_HOVER}>
+            <a href={JOIN_HREF} {...JOIN_PROPS} className={FOOTER_LINK_HOVER}>
               Join Us
             </a>
           </li>

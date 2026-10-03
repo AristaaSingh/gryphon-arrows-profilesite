@@ -3,9 +3,12 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-const FADE_MASK_TOP = "linear-gradient(to bottom, black 0%, black 35%, transparent 100%)";
-const FADE_MASK_BOTTOM = "linear-gradient(to top, black 0%, black 35%, transparent 100%)";
-const EDGE_MASK = "linear-gradient(90deg, transparent 0%, black 12%, black 88%, transparent 100%)";
+const FADE_MASK_TOP =
+  "linear-gradient(to bottom, black 0%, black 35%, transparent 100%)";
+const FADE_MASK_BOTTOM =
+  "linear-gradient(to top, black 0%, black 35%, transparent 100%)";
+const EDGE_MASK =
+  "linear-gradient(90deg, transparent 0%, black 12%, black 88%, transparent 100%)";
 
 /**
  * Soft top edge for a section whose content (e.g. a full-bleed photo) would

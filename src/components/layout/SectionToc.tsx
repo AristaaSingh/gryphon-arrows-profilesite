@@ -24,7 +24,7 @@ export default function SectionToc({ items }: { items: TocItem[] }) {
           if (entry.isIntersecting) setActive(entry.target.id);
         }
       },
-      { rootMargin: "-50% 0px -50% 0px", threshold: 0 }
+      { rootMargin: "-50% 0px -50% 0px", threshold: 0 },
     );
     for (const { id } of items) {
       const el = document.getElementById(id);

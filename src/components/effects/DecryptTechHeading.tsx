@@ -1,8 +1,8 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState, type CSSProperties } from "react";
-import DecryptedText from "@/components/DecryptedText";
-import TechText from "@/components/TechText";
+import DecryptedText from "@/components/effects/DecryptedText";
+import TechText from "@/components/effects/TechText";
 
 interface DecryptTechHeadingProps {
   /** Space-separated words. Each word decrypts independently, in order. */

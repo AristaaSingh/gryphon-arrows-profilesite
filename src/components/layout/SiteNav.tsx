@@ -3,24 +3,12 @@
 import Image from "next/image";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { SITE_LINKS } from "@/content/site-links";
-
-// Placeholder nav: these are separate pages that don't exist yet (linked
-// with "#" so they don't 404). The Explore dropdown was removed for now.
-// Hover / focus / press: a yellow fill wipes in from the left and the text
-// flips to black. The fill is a ::before layer behind the text (`isolate`
-// keeps it inside the link).
-const LINK_HOVER =
-  "relative isolate overflow-hidden rounded-sm px-3 py-1.5 transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:bg-[#ffc100] before:transition-transform before:duration-300 before:ease-out hover:text-black hover:before:scale-x-100 focus-visible:text-black focus-visible:before:scale-x-100 active:text-black active:before:scale-x-100";
-
-const PAGES = [{ label: "Contact", href: "#" }];
-
-// The "Join Us" link lives in src/content/site-links.ts so it can be edited
-// without touching this component.
-const JOIN_HREF = SITE_LINKS.joinForm || "#";
-const JOIN_PROPS = SITE_LINKS.joinForm
-  ? { target: "_blank", rel: "noopener noreferrer" }
-  : {};
+import {
+  JOIN_HREF,
+  JOIN_PROPS,
+  LINK_HOVER,
+  PAGES,
+} from "@/components/layout/navLinks";
 
 export default function SiteNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -53,11 +41,7 @@ export default function SiteNav() {
             </li>
           ))}
           <li>
-            <a
-              href={JOIN_HREF}
-              {...JOIN_PROPS}
-              className={LINK_HOVER}
-            >
+            <a href={JOIN_HREF} {...JOIN_PROPS} className={LINK_HOVER}>
               Join Us
             </a>
           </li>
@@ -73,20 +57,20 @@ export default function SiteNav() {
           >
             Join Us
           </a>
-        <button
-          type="button"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-          onClick={() => setMobileOpen((v) => !v)}
-          className="flex h-8 w-8 flex-col items-center justify-center gap-1.5 sm:hidden"
-        >
-          <span
-            className={`h-px w-5 bg-zinc-300 transition-transform ${mobileOpen ? "translate-y-[3.5px] rotate-45" : ""}`}
-          />
-          <span
-            className={`h-px w-5 bg-zinc-300 transition-transform ${mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""}`}
-          />
-        </button>
+          <button
+            type="button"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen((v) => !v)}
+            className="flex h-8 w-8 flex-col items-center justify-center gap-1.5 sm:hidden"
+          >
+            <span
+              className={`h-px w-5 bg-zinc-300 transition-transform ${mobileOpen ? "translate-y-[3.5px] rotate-45" : ""}`}
+            />
+            <span
+              className={`h-px w-5 bg-zinc-300 transition-transform ${mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""}`}
+            />
+          </button>
         </div>
       </div>
 

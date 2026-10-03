@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gryphon Arrows website
 
-## Getting Started
-
-First, run the development server:
+Single-page outreach site for the Gryphon Arrows UAS Challenge team.
+Built with Next.js, Tailwind and Framer Motion; deployed on Vercel (every push
+to `main` goes live automatically).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+> This is a recent Next.js with breaking changes from older versions. Check
+> `node_modules/next/dist/docs/` before relying on older habits.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Where to edit what
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The page (`src/app/page.tsx`) is just a list of sections in order. **Each
+section is its own file** and has an `EDIT HERE` block at the top with its text.
 
-## Learn More
+| I want to change…                      | Edit this file                                  |
+| -------------------------------------- | ----------------------------------------------- |
+| Landing text / button label            | `src/components/sections/LandingSection.tsx`    |
+| Sponsors (add a logo)                  | `src/components/sections/SponsorsSection.tsx`   |
+| About Us text / team photo             | `src/components/sections/AboutSection.tsx`      |
+| Stuff We Do / Experience You Gain cards | `src/components/sections/OfferSection.tsx`      |
+| The Challenge text / logo              | `src/components/sections/ChallengeSection.tsx`  |
+| **Join form link**                     | `src/content/site-links.ts`                     |
+| **Fonts** (see `src/config/fonts.md`)  | `src/config/fonts.ts`                           |
+| Side menu entries, "Sheet x/N" total   | `src/content/sections.ts`                       |
+| Top menu / footer                      | `src/components/layout/SiteNav.tsx`, `SiteFooter.tsx` (shared links in `navLinks.ts`) |
+| Images                                 | `public/` (`sponsors/`, `team/`, `challenge/`)  |
 
-To learn more about Next.js, take a look at the following resources:
+## Folder map
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+  app/            page.tsx (section order), layout.tsx, globals.css
+  components/
+    sections/     one file per page section
+    layout/       top menu, footer, side contents menu
+    ui/           small reusable pieces (scroll fade, blurred divider,
+                  drawing-sheet parts, standard text block)
+    effects/      fancy animated components (threads, decrypt text, button
+                  shine). Several are copied from reactbits.dev; leave alone.
+  content/        links and section list
+  config/         fonts
+public/           images
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Adding a section
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Create `src/components/sections/YourSection.tsx` (copy `AboutSection.tsx` as a start).
+2. Add it to the list in `src/app/page.tsx`.
+3. Add its `id` and label to `src/content/sections.ts` and bump `SHEET_TOTAL`.

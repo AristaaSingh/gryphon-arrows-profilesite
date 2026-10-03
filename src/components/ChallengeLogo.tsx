@@ -19,7 +19,7 @@ export default function ChallengeLogo() {
   return (
     <div
       ref={ref}
-      className="relative flex min-h-[22rem] items-center justify-center overflow-hidden border-r border-dashed border-white/25 bg-zinc-950 px-6 pb-16 pt-48 sm:pt-56 md:min-h-full xl:pl-56 xl:pr-12"
+      className="relative flex min-h-[22rem] items-center justify-center overflow-hidden border-r border-dashed border-white/25 bg-zinc-950 px-6 pb-4 pt-48 sm:pt-56 md:min-h-full md:items-start md:justify-start md:pb-16 md:pl-16 xl:pl-56 xl:pr-12"
       style={{
         backgroundImage:
           "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",

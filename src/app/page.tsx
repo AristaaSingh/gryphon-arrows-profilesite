@@ -201,7 +201,7 @@ export default function Home() {
             the text fades in after it. */}
         <ChallengeLogo />
 
-        <div className="flex items-center px-6 py-16 sm:px-12 md:py-28 md:pl-14 md:pr-12 xl:pr-32">
+        <div className="flex items-center px-6 pb-16 pt-4 sm:px-12 md:items-end md:justify-end md:pb-32 md:pl-14 md:pr-12 md:pt-28 xl:pr-32">
           <ScrollFade threshold={0.25} delayMs={700} className="w-full max-w-xl">
             <div
               aria-hidden="true"

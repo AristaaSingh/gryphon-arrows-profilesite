@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import DecryptTechHeading from "@/components/DecryptTechHeading";
 import ScrollFade from "@/components/ScrollFade";
 import SectionDivider from "@/components/SectionDivider";
@@ -152,22 +153,18 @@ export default function Home() {
           </ScrollFade>
         </div>
 
-        {/* Placeholder for the team photo: the whole right half of the
-            screen, flush to the edge, full section height. */}
+        {/* Team photo: the whole right half of the screen, flush to the
+            edge, full section height. Cropped to the people (bottom-weighted)
+            rather than the ceiling. */}
         <ScrollFade threshold={0.15} className="relative min-h-[22rem] md:min-h-full">
-          <div
-            role="img"
-            aria-label="Team photo placeholder"
-            className="absolute inset-0 flex items-center justify-center border-l border-dashed border-white/25 bg-zinc-950"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
-              backgroundSize: "32px 32px",
-            }}
-          >
-            <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">
-              Team photo
-            </span>
+          <div className="absolute inset-0 border-l border-dashed border-white/25 bg-zinc-950">
+            <Image
+              src="/team/team-photo.jpg"
+              alt="The Gryphon Arrows team in their red kit"
+              fill
+              sizes="(min-width: 768px) 50vw, 100vw"
+              className="object-cover object-[55%_80%]"
+            />
           </div>
         </ScrollFade>
       </section>

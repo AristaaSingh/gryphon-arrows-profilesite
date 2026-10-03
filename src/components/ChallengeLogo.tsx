@@ -5,9 +5,10 @@ import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 
 /**
- * Left half of The Challenge: the UAS Challenge logo on a blueprint panel.
+ * Left half of The Challenge: the UAS Challenge logo on a blueprint panel,
+ * kept clear of the blurred divider along the section's top edge.
  * The logo is transparent and sits straight on the panel (no card). It
- * slides in from the bottom left; the caption follows. Watched on the outer
+ * slides in from the bottom left. Watched on the outer
  * wrapper (not the logo) so the observer still fires while the logo is
  * offscreen.
  */
@@ -18,7 +19,7 @@ export default function ChallengeLogo() {
   return (
     <div
       ref={ref}
-      className="relative flex min-h-[22rem] items-center justify-center overflow-hidden border-r border-dashed border-white/25 bg-zinc-950 px-6 py-16 md:min-h-full xl:pl-56 xl:pr-12"
+      className="relative flex min-h-[22rem] items-center justify-center overflow-hidden border-r border-dashed border-white/25 bg-zinc-950 px-6 pb-16 pt-48 sm:pt-56 md:min-h-full xl:pl-56 xl:pr-12"
       style={{
         backgroundImage:
           "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
@@ -42,15 +43,6 @@ export default function ChallengeLogo() {
             className="h-auto w-full"
           />
         </motion.div>
-        <motion.p
-          aria-hidden="true"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: inView ? 1 : 0 }}
-          transition={{ duration: 0.6, delay: inView ? 0.6 : 0 }}
-          className="mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500"
-        >
-          Fig. 05 — IMechE UAS Challenge
-        </motion.p>
       </div>
     </div>
   );

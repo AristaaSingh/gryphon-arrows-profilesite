@@ -157,7 +157,7 @@ export default function Home() {
             edge, full section height. Cropped to the people (bottom-weighted)
             rather than the ceiling. */}
         <ScrollFade threshold={0.15} className="relative min-h-[22rem] md:min-h-full">
-          <div className="absolute inset-0 border-l border-dashed border-white/25 bg-zinc-950">
+          <div className="absolute inset-0 overflow-hidden border-l border-dashed border-white/25 bg-zinc-950">
             <Image
               src="/team/team-photo.jpg"
               alt="The Gryphon Arrows team in their red kit"

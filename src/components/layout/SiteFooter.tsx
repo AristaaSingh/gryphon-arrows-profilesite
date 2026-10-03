@@ -34,6 +34,9 @@ const SOCIALS: { label: string; href: string; icon: ReactNode }[] = [
   },
 ];
 
+// Every link row is the same fixed height, so the two columns line up.
+const ROW = "flex h-9 items-center";
+
 const HEADING =
   "mb-3 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500";
 
@@ -65,15 +68,15 @@ export default function SiteFooter() {
         <div className="grid grid-cols-2 gap-10 border-t border-white/10 pt-8 sm:gap-16 sm:border-t-0 sm:pt-0">
           <nav aria-label="Footer">
             <h2 className={HEADING}>Navigate</h2>
-            <ul className="-ml-1 flex flex-col items-start gap-2 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300">
+            <ul className="-ml-1 flex flex-col items-start font-mono text-sm uppercase tracking-[0.2em] text-zinc-300">
               {PAGES.map((item) => (
-                <li key={item.label}>
+                <li key={item.label} className={ROW}>
                   <a href={item.href} className={FOOTER_LINK_HOVER}>
                     {item.label}
                   </a>
                 </li>
               ))}
-              <li>
+              <li className={ROW}>
                 <a
                   href={JOIN_HREF}
                   {...JOIN_PROPS}
@@ -87,9 +90,9 @@ export default function SiteFooter() {
 
           <div>
             <h2 className={HEADING}>Follow us</h2>
-            <ul className="-ml-1 flex flex-col items-start gap-2 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300">
+            <ul className="-ml-1 flex flex-col items-start font-mono text-sm uppercase tracking-[0.2em] text-zinc-300">
               {SOCIALS.map((social) => (
-                <li key={social.label}>
+                <li key={social.label} className={ROW}>
                   <a
                     href={social.href || "#"}
                     {...(social.href

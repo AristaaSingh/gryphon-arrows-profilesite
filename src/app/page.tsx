@@ -115,7 +115,7 @@ export default function Home() {
         {/* Drawing-sheet annotations, matching the sponsors strip. */}
         <div
           aria-hidden="true"
-          className="animate-fade-in-up pointer-events-none absolute inset-x-0 top-[4.75rem] z-10 flex justify-between px-6 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-400 sm:px-10"
+          className="animate-fade-in-up pointer-events-none absolute inset-x-0 top-[5.5rem] sm:top-[6rem] z-10 flex justify-between px-6 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-400 sm:px-10"
           style={{ animationDelay: "1300ms" }}
         >
           <span>Sec. 01</span>

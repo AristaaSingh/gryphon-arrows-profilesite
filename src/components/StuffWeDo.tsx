@@ -136,7 +136,9 @@ function ZigCard({ item }: { item: Item }) {
       {/* Node on the centre spine. */}
       <span
         aria-hidden="true"
-        className="absolute left-1/2 top-9 hidden h-2.5 w-2.5 -translate-x-1/2 rounded-full border border-[#ff002c] bg-black md:block"
+        className={`absolute top-9 hidden h-2.5 w-2.5 rounded-full border border-[#ff002c] bg-black md:block ${
+          right ? "left-1/2 ml-3" : "right-1/2 mr-3"
+        }`}
       />
     </li>
   );
@@ -199,17 +201,17 @@ export default function StuffWeDo() {
       </div>
 
       <div className="relative px-6 pt-8 sm:px-10 sm:pt-14 xl:pl-56 xl:pr-40">
+        <ul ref={listRef} className="relative space-y-6 md:space-y-20">
         {/* Spine that draws down as you scroll. */}
         <div
           aria-hidden="true"
-          className="absolute bottom-0 left-1/2 top-14 hidden w-px -translate-x-1/2 bg-white/10 md:block"
+          className="absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-white/10 md:block"
         >
           <motion.div
             className="h-full w-full origin-top"
             style={{ scaleY: spine, background: RED }}
           />
         </div>
-        <ul ref={listRef} className="relative space-y-6 md:space-y-20">
           {ITEMS.map((item) => (
             <ZigCard key={item.tag} item={item} />
           ))}

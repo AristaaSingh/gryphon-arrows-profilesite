@@ -163,7 +163,7 @@ export default function Home() {
               alt="The Gryphon Arrows team in their red kit"
               fill
               sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover object-[55%_80%]"
+              className="-translate-y-[6%] scale-[1.04] object-cover object-[55%_80%]"
             />
           </div>
         </ScrollFade>

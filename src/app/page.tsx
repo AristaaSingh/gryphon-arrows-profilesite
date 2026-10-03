@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import Image from "next/image";
+import ChallengeLogo from "@/components/ChallengeLogo";
 import DecryptTechHeading from "@/components/DecryptTechHeading";
 import ScrollFade from "@/components/ScrollFade";
 import SectionDivider from "@/components/SectionDivider";
@@ -196,8 +197,12 @@ export default function Home() {
       >
         <SectionDivider label="Ref. 05.A" />
 
-        <div className="flex items-center px-6 py-28 sm:px-12 md:pl-20 md:pr-12 xl:pl-60">
-          <ScrollFade threshold={0.25} className="w-full max-w-xl">
+        {/* Logo first (left, and first in the DOM so it also leads on mobile);
+            the text fades in after it. */}
+        <ChallengeLogo />
+
+        <div className="flex items-center px-6 py-16 sm:px-12 md:py-28 md:pl-14 md:pr-12 xl:pr-32">
+          <ScrollFade threshold={0.25} delayMs={700} className="w-full max-w-xl">
             <div
               aria-hidden="true"
               className="mb-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500"
@@ -212,23 +217,6 @@ export default function Home() {
             </p>
           </ScrollFade>
         </div>
-
-        <ScrollFade threshold={0.15} className="relative min-h-[22rem] md:min-h-full">
-          <div
-            role="img"
-            aria-label="Challenge image placeholder"
-            className="absolute inset-0 flex items-center justify-center border-l border-dashed border-white/25 bg-zinc-950"
-            style={{
-              backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
-              backgroundSize: "32px 32px",
-            }}
-          >
-            <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">
-              Challenge image
-            </span>
-          </div>
-        </ScrollFade>
       </section>
     </>
   );

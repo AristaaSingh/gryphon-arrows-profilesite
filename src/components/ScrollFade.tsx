@@ -11,6 +11,8 @@ interface ScrollFadeProps {
   /** Px the content eases up/down by while fading. */
   translateY?: number;
   durationMs?: number;
+  /** Wait this long after becoming visible before fading in. */
+  delayMs?: number;
 }
 
 /**
@@ -26,6 +28,7 @@ export default function ScrollFade({
   threshold = 0.2,
   translateY = 24,
   durationMs = 1400,
+  delayMs = 0,
 }: ScrollFadeProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
@@ -55,7 +58,7 @@ export default function ScrollFade({
     : {
         opacity: visible ? 1 : 0,
         transform: visible ? "translateY(0)" : `translateY(${translateY}px)`,
-        transition: `opacity ${durationMs}ms cubic-bezier(0.16, 1, 0.3, 1), transform ${durationMs}ms cubic-bezier(0.16, 1, 0.3, 1)`,
+        transition: `opacity ${durationMs}ms cubic-bezier(0.16, 1, 0.3, 1) ${visible ? delayMs : 0}ms, transform ${durationMs}ms cubic-bezier(0.16, 1, 0.3, 1) ${visible ? delayMs : 0}ms`,
       };
 
   return (

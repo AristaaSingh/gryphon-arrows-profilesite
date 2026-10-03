@@ -101,7 +101,7 @@ function ZigCard({ item }: { item: Item }) {
     offset: ["start 100%", "start 55%"],
   });
   const dir = item.side === "left" ? -1 : 1;
-  const x = useTransform(scrollYProgress, [0, 1], [dir * 140, 0]);
+  const x = useTransform(scrollYProgress, [0, 1], [dir * 80, 0]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [0, 1]);
   const right = item.side === "right";
 
@@ -109,7 +109,7 @@ function ZigCard({ item }: { item: Item }) {
     <li ref={ref} className="relative md:grid md:grid-cols-2">
       <motion.div
         style={{ x, opacity }}
-        className={`group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-7 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] transition-colors hover:border-[#ff002c]/60 sm:p-8 md:mx-0 ${
+        className={`group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-4 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] transition-colors hover:border-[#ff002c]/60 sm:p-8 md:mx-0 ${
           right ? "md:col-start-2 md:ml-10" : "md:mr-10"
         }`}
       >
@@ -118,15 +118,15 @@ function ZigCard({ item }: { item: Item }) {
           <span>{item.group}</span>
           <span className="h-px flex-1 bg-white/15" />
         </div>
-        <h4 className="mt-5 font-display text-2xl text-zinc-100 sm:text-3xl">{item.title}</h4>
+        <h4 className="mt-3 font-display text-lg text-zinc-100 sm:mt-5 sm:text-3xl">{item.title}</h4>
         {item.text && (
-          <p className="mt-4 font-body text-lg leading-relaxed text-zinc-300">{item.text}</p>
+          <p className="mt-2 font-body text-sm leading-relaxed sm:mt-4 sm:text-lg text-zinc-300">{item.text}</p>
         )}
         {item.points && (
-          <ul className="mt-5 space-y-3 font-body text-lg text-zinc-300">
+          <ul className="mt-3 space-y-1.5 font-body text-sm text-zinc-300 sm:mt-5 sm:space-y-3 sm:text-lg">
             {item.points.map((pt) => (
               <li key={pt} className="flex items-start gap-3">
-                <span className="mt-3 h-px w-4 shrink-0" style={{ background: RED }} />
+                <span className="mt-2 h-px w-3 shrink-0 sm:mt-3 sm:w-4" style={{ background: RED }} />
                 {pt}
               </li>
             ))}
@@ -198,7 +198,7 @@ export default function StuffWeDo() {
         </motion.div>
       </div>
 
-      <div className="relative px-6 pt-14 sm:px-10 xl:pl-56 xl:pr-40">
+      <div className="relative px-6 pt-8 sm:px-10 sm:pt-14 xl:pl-56 xl:pr-40">
         {/* Spine that draws down as you scroll. */}
         <div
           aria-hidden="true"
@@ -209,7 +209,7 @@ export default function StuffWeDo() {
             style={{ scaleY: spine, background: RED }}
           />
         </div>
-        <ul ref={listRef} className="relative space-y-12 md:space-y-20">
+        <ul ref={listRef} className="relative space-y-6 md:space-y-20">
           {ITEMS.map((item) => (
             <ZigCard key={item.tag} item={item} />
           ))}

@@ -53,7 +53,7 @@ export default function SectionToc({ items }: { items: TocItem[] }) {
               <a
                 href={`#${item.id}`}
                 aria-current={isActive ? "true" : undefined}
-                className={`block font-mono text-xs uppercase tracking-[0.25em] transition-all duration-300 ${
+                className={`relative block font-mono text-xs uppercase tracking-[0.25em] transition-all duration-300 after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-[#ff002c] after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100 focus-visible:after:scale-x-100 ${
                   isActive
                     ? "translate-x-1 text-white [text-shadow:0_0_14px_rgba(255,255,255,0.55)]"
                     : "text-zinc-500 hover:text-zinc-200"

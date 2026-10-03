@@ -2,6 +2,7 @@
 
 import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
+import { SHEET_TOTAL } from "@/content/sections";
 
 /** Shared bits of the "engineering drawing sheet" look used by the sponsors
  *  and offer strips (and the logo panel on mobile). */
@@ -65,5 +66,22 @@ export function Corner({ className }: { className: string }) {
       className={`pointer-events-none absolute h-3.5 w-3.5 ${className}`}
       style={{ borderColor: `${RED}b3` }}
     />
+  );
+}
+
+/** "Sec. 02 ── Sheet 2/5" row for phones, where the strip's title bar has no
+ *  room for those labels. Hidden from `sm` up (the title bar shows them). */
+export function MobileSheetRow({ sec, sheet }: { sec: string; sheet: number }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="flex items-center gap-3 px-8 pb-1 pt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:hidden"
+    >
+      <span>Sec. {sec}</span>
+      <span className="h-px flex-1" style={{ background: `${RED}99` }} />
+      <span>
+        Sheet {sheet}/{SHEET_TOTAL}
+      </span>
+    </div>
   );
 }

@@ -6,6 +6,7 @@ import {
   BLUEPRINT_GRID,
   Corner,
   DimLine,
+  MobileSheetRow,
   RED,
 } from "@/components/ui/DrawingSheet";
 import { SHEET_TOTAL } from "@/content/sections";
@@ -156,6 +157,7 @@ export default function OfferSection() {
             <Corner className="bottom-3 left-3 border-b border-l" />
             <Corner className="bottom-3 right-3 border-b border-r" />
 
+            <MobileSheetRow sec="04" sheet={4} />
             <div className="flex h-14 items-center gap-4 bg-black/40 px-6 sm:h-16 sm:px-10">
               <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:block">
                 Sec. 04

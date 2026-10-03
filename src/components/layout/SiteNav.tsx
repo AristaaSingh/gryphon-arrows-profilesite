@@ -25,7 +25,7 @@ export default function SiteNav() {
             priority
             className="h-10 w-auto sm:h-12"
           />
-          <span className="hidden font-mono text-xs uppercase tracking-[0.3em] text-zinc-300 min-[430px]:inline">
+          <span className="hidden font-display text-lg tracking-wide text-zinc-100 sm:text-xl min-[430px]:inline">
             Gryphon Arrows
           </span>
         </a>

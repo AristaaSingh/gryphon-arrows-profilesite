@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import Image from "next/image";
 import DecryptTechHeading from "@/components/DecryptTechHeading";
 import ScrollFade from "@/components/ScrollFade";
@@ -17,6 +18,17 @@ const ABOUT_TEXT =
 const CHALLENGE_TEXT =
   "The IMechE UAS Challenge is an annual international student engineering competition organized by the Institution of Mechanical Engineers (IMechE). It tasks undergraduate and postgraduate university teams with designing, building, and operating an autonomous Unmanned Aerial System (UAS).";
 
+// True on touch-first devices (phones/tablets), where there is no hover to
+// light up the Explore button. Mouse users keep the hover-driven shine.
+const TOUCH_QUERY = "(hover: none)";
+function subscribeTouch(onChange: () => void) {
+  const mq = window.matchMedia(TOUCH_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+const getIsTouch = () => window.matchMedia(TOUCH_QUERY).matches;
+const getIsTouchServer = () => false;
+
 const TOC_ITEMS = [
   { id: "home", label: "Home" },
   { id: "sponsors", label: "Our Sponsors" },
@@ -26,6 +38,7 @@ const TOC_ITEMS = [
 ];
 
 export default function Home() {
+  const isTouch = useSyncExternalStore(subscribeTouch, getIsTouch, getIsTouchServer);
   const scrollToNext = () => {
     document.getElementById("sponsors")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -104,6 +117,7 @@ export default function Home() {
               shineFade={45}
               speed={0.3}
               followMouse
+              autoAnimate={isTouch}
               proximity={260}
               onClick={scrollToNext}
             >

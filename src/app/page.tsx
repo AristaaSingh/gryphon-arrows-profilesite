@@ -7,15 +7,21 @@ import SectionToc from "@/components/SectionToc";
 import SiteNav from "@/components/SiteNav";
 import SpecularButton from "@/components/SpecularButton";
 import SponsorsRibbon from "@/components/SponsorsRibbon";
+import StuffWeDo from "@/components/StuffWeDo";
 import WebThreads from "@/components/WebThreads";
 
 const ABOUT_TEXT =
   "Gryphon Arrows is a student-led UAV engineering team focused on innovation, hands-on design, and real-world aerospace development. We bring together multidisciplinary engineering talent to design, build, and test advanced unmanned aircraft, competing in the IMechE UAS Challenge while developing practical engineering skills and the next generation of aerospace engineers.";
 
+const CHALLENGE_TEXT =
+  "The IMechE UAS Challenge is an annual international student engineering competition organized by the Institution of Mechanical Engineers (IMechE). It tasks undergraduate and postgraduate university teams with designing, building, and operating an autonomous Unmanned Aerial System (UAS).";
+
 const TOC_ITEMS = [
   { id: "home", label: "Home" },
   { id: "sponsors", label: "Our Sponsors" },
   { id: "about", label: "About Us" },
+  { id: "stuff", label: "Stuff We Do" },
+  { id: "challenge", label: "The Challenge" },
 ];
 
 export default function Home() {
@@ -61,7 +67,7 @@ export default function Home() {
             to leave that glow visible, not covered by either line. */}
         <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-6 text-center">
           <ScrollFade threshold={0.4}>
-            <span className="mb-4 block font-mono text-xs uppercase tracking-[0.3em] text-[#e02828]">
+            <span className="mb-4 block font-body text-sm tracking-wide text-zinc-100 sm:text-base">
               University of Leeds IMechE UAS Challenge
             </span>
           </ScrollFade>
@@ -112,7 +118,7 @@ export default function Home() {
           style={{ animationDelay: "1300ms" }}
         >
           <span>Sec. 01</span>
-          <span>Sheet 1/3</span>
+          <span>Sheet 1/5</span>
         </div>
       </main>
 
@@ -136,7 +142,7 @@ export default function Home() {
             >
               <span>Sec. 03</span>
               <span className="h-px w-16 bg-[#ff002c]" />
-              <span>Sheet 3/3</span>
+              <span>Sheet 3/5</span>
             </div>
             <h2 className="font-display text-3xl text-zinc-100 sm:text-4xl">About Us</h2>
             <p className="mt-6 font-body text-base leading-relaxed text-zinc-300 sm:text-lg">
@@ -160,6 +166,51 @@ export default function Home() {
           >
             <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">
               Team photo
+            </span>
+          </div>
+        </ScrollFade>
+      </section>
+
+      <div id="stuff" className="relative scroll-mt-20 bg-black py-24 text-zinc-100 sm:py-32">
+        <StuffWeDo />
+      </div>
+
+      <section
+        id="challenge"
+        className="relative grid min-h-screen scroll-mt-20 bg-black text-zinc-100 md:grid-cols-2"
+      >
+        <SectionDivider label="Ref. 05.A" />
+
+        <div className="flex items-center px-6 py-28 sm:px-12 md:pl-20 md:pr-12 xl:pl-60">
+          <ScrollFade threshold={0.25} className="w-full max-w-xl">
+            <div
+              aria-hidden="true"
+              className="mb-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500"
+            >
+              <span>Sec. 05</span>
+              <span className="h-px w-16 bg-[#ff002c]" />
+              <span>Sheet 5/5</span>
+            </div>
+            <h2 className="font-display text-3xl text-zinc-100 sm:text-4xl">The Challenge</h2>
+            <p className="mt-6 font-body text-base leading-relaxed text-zinc-300 sm:text-lg">
+              {CHALLENGE_TEXT}
+            </p>
+          </ScrollFade>
+        </div>
+
+        <ScrollFade threshold={0.15} className="relative min-h-[22rem] md:min-h-full">
+          <div
+            role="img"
+            aria-label="Challenge image placeholder"
+            className="absolute inset-0 flex items-center justify-center border-l border-dashed border-white/25 bg-zinc-950"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
+              backgroundSize: "32px 32px",
+            }}
+          >
+            <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-500">
+              Challenge image
             </span>
           </div>
         </ScrollFade>

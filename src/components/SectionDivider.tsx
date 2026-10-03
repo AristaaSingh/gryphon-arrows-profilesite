@@ -18,10 +18,12 @@ export default function SectionDivider({
   label = "Ref. 03.A",
   edge = "top",
   className = "",
+  heightClass = "h-40 sm:h-48",
 }: {
   label?: string;
   edge?: "top" | "bottom";
   className?: string;
+  heightClass?: string;
 }) {
   const bottom = edge === "bottom";
   const FADE_MASK = bottom ? FADE_MASK_BOTTOM : FADE_MASK_TOP;
@@ -32,7 +34,7 @@ export default function SectionDivider({
     <div
       ref={ref}
       aria-hidden="true"
-      className={`pointer-events-none absolute inset-x-0 z-20 h-40 sm:h-48 ${bottom ? "bottom-0" : "top-0"} ${className}`}
+      className={`pointer-events-none absolute inset-x-0 z-20 ${heightClass} ${bottom ? "bottom-0" : "top-0"} ${className}`}
     >
       {/* Blur that eases off toward the bottom, so the photo sharpens as it
           gets further from the edge instead of starting with a hard cut. */}

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { SITE_LINKS } from "@/content/site-links";
 
@@ -24,9 +25,19 @@ export default function SiteNav() {
   return (
     <nav className="animate-fade-in-up fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-sm">
       <div className="flex items-center justify-between px-6 py-4 sm:px-10">
-        <span className="font-mono text-xs uppercase tracking-[0.3em] text-zinc-300">
-          Gryphon Arrows
-        </span>
+        <a href="#home" className="flex items-center gap-3">
+          <Image
+            src="/team/griff-logo.png"
+            alt="Gryphon Arrows logo"
+            width={1080}
+            height={1025}
+            priority
+            className="h-10 w-auto sm:h-12"
+          />
+          <span className="hidden font-mono text-xs uppercase tracking-[0.3em] text-zinc-300 min-[430px]:inline">
+            Gryphon Arrows
+          </span>
+        </a>
 
         {/* Desktop nav — hidden below sm, where it has no room and would
             squish against the wordmark. */}
@@ -49,8 +60,16 @@ export default function SiteNav() {
           </li>
         </ul>
 
-        {/* Mobile hamburger — only this + the wordmark occupy the row below
-            sm, so nothing squishes. */}
+        {/* Mobile: "Join Us" stays in the bar itself so it's visible the
+            moment the page opens, next to the hamburger. */}
+        <div className="flex items-center gap-3 sm:hidden">
+          <a
+            href={JOIN_HREF}
+            {...JOIN_PROPS}
+            className={`${LINK_HOVER} rounded-sm border border-white/30 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-zinc-100`}
+          >
+            Join Us
+          </a>
         <button
           type="button"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -65,6 +84,7 @@ export default function SiteNav() {
             className={`h-px w-5 bg-zinc-300 transition-transform ${mobileOpen ? "-translate-y-[3.5px] -rotate-45" : ""}`}
           />
         </button>
+        </div>
       </div>
 
       {/* Mobile panel */}
@@ -79,13 +99,6 @@ export default function SiteNav() {
               {item.label}
             </a>
           ))}
-          <a
-            href={JOIN_HREF}
-            {...JOIN_PROPS}
-            className={`${LINK_HOVER} rounded-sm px-1 py-2`}
-          >
-            Join Us
-          </a>
         </div>
       )}
     </nav>

@@ -193,7 +193,7 @@ export default function Home() {
 
       <section
         id="challenge"
-        className="relative grid min-h-screen scroll-mt-20 bg-black text-zinc-100 md:grid-cols-2"
+        className="relative grid min-h-screen scroll-mt-20 bg-black text-zinc-100 md:h-[46rem] md:min-h-0 md:grid-cols-2"
       >
         <SectionDivider label="Ref. 05.A" />
 
@@ -201,8 +201,8 @@ export default function Home() {
             the text fades in after it. */}
         <ChallengeLogo />
 
-        <div className="flex items-center px-6 pb-16 pt-4 sm:px-12 md:items-end md:justify-end md:pb-32 md:pl-14 md:pr-12 md:pt-28 xl:pr-32">
-          <ScrollFade threshold={0.25} delayMs={700} className="w-full max-w-xl">
+        <div className="flex items-center px-6 pb-16 pt-4 sm:px-12 md:items-end md:justify-end md:pb-40 md:pl-14 md:pr-12 md:pt-28 xl:pr-32">
+          <ScrollFade threshold={0.25} delayMs={350} className="w-full max-w-xl">
             <div
               aria-hidden="true"
               className="mb-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500"

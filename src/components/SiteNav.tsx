@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { SITE_LINKS } from "@/content/site-links";
 
 // Placeholder nav: these are separate pages that don't exist yet (linked
@@ -89,20 +90,34 @@ export default function SiteNav() {
         </div>
       </div>
 
-      {/* Mobile panel */}
-      {mobileOpen && (
-        <div className="flex flex-col gap-1 border-t border-white/10 px-6 py-4 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300 sm:hidden">
-          {PAGES.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className={`${LINK_HOVER} py-2`}
-            >
-              {item.label}
-            </a>
-          ))}
-        </div>
-      )}
+      {/* Mobile panel: height + fade open/close, links stagger in. */}
+      <AnimatePresence initial={false}>
+        {mobileOpen && (
+          <motion.div
+            key="mobile-panel"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-t border-white/10 sm:hidden"
+          >
+            <div className="flex flex-col gap-1 px-6 py-4 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300">
+              {PAGES.map((item, i) => (
+                <motion.a
+                  key={item.label}
+                  href={item.href}
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.08 + i * 0.06, duration: 0.3 }}
+                  className={`${LINK_HOVER} py-2`}
+                >
+                  {item.label}
+                </motion.a>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

@@ -5,6 +5,10 @@ import { SITE_LINKS } from "@/content/site-links";
 
 // Placeholder nav: these are separate pages that don't exist yet (linked
 // with "#" so they don't 404). The Explore dropdown was removed for now.
+// Hover / focus / press: a soft yellow glow, readable on the dark background.
+const LINK_HOVER =
+  "transition-all duration-300 hover:text-[#ffc100] hover:[text-shadow:0_0_12px_rgba(255,193,0,0.75)] focus-visible:text-[#ffc100] focus-visible:[text-shadow:0_0_12px_rgba(255,193,0,0.75)] active:text-[#ffc100]";
+
 const PAGES = [{ label: "Contact", href: "#" }];
 
 // The "Join Us" link lives in src/content/site-links.ts so it can be edited
@@ -29,7 +33,7 @@ export default function SiteNav() {
         <ul className="hidden items-center gap-8 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300 sm:flex">
           {PAGES.map((item) => (
             <li key={item.label}>
-              <a href={item.href} className="transition-colors hover:text-[#e02828]">
+              <a href={item.href} className={LINK_HOVER}>
                 {item.label}
               </a>
             </li>
@@ -38,7 +42,7 @@ export default function SiteNav() {
             <a
               href={JOIN_HREF}
               {...JOIN_PROPS}
-              className="rounded-sm border border-[#e02828] bg-[#e02828]/10 px-4 py-1.5 text-white transition-colors hover:bg-[#e02828]"
+              className={LINK_HOVER}
             >
               Join Us
             </a>
@@ -70,7 +74,7 @@ export default function SiteNav() {
             <a
               key={item.label}
               href={item.href}
-              className="rounded-sm px-1 py-2 transition-colors hover:text-[#e02828]"
+              className={`${LINK_HOVER} rounded-sm px-1 py-2`}
             >
               {item.label}
             </a>
@@ -78,7 +82,7 @@ export default function SiteNav() {
           <a
             href={JOIN_HREF}
             {...JOIN_PROPS}
-            className="mt-2 rounded-sm border border-[#e02828] bg-[#e02828]/10 px-3 py-2 text-center text-white transition-colors hover:bg-[#e02828]"
+            className={`${LINK_HOVER} rounded-sm px-1 py-2`}
           >
             Join Us
           </a>

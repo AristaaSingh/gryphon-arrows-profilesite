@@ -132,6 +132,7 @@ export default function Home() {
         className="relative grid min-h-screen scroll-mt-20 bg-black text-zinc-100 md:grid-cols-2"
       >
         <SectionDivider />
+        <SectionDivider edge="bottom" label="Ref. 03.B" />
 
         {/* About text (left). */}
         <div className="flex items-center px-6 py-28 sm:px-12 md:pl-20 md:pr-12 xl:pl-60">

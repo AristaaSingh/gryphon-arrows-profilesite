@@ -61,7 +61,7 @@ export default function SiteFooter() {
             <span className="text-xs tracking-[0.3em] text-zinc-300">
               Gryphon Arrows
             </span>
-            <span>University of Leeds · IMechE UAS Challenge</span>
+            <span>University of Leeds</span>
           </div>
         </div>
 

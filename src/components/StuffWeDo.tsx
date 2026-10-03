@@ -166,11 +166,11 @@ export default function StuffWeDo() {
   return (
     <div ref={wrapRef} className="relative w-full overflow-hidden">
       <motion.div
-        initial={{ clipPath: "inset(0 100% 0 0)", x: -60 }}
+        initial={{ clipPath: "inset(0 0 0 100%)", x: 60 }}
         animate={
           inView
             ? { clipPath: "inset(0 0% 0 0)", x: 0 }
-            : { clipPath: "inset(0 100% 0 0)", x: -60 }
+            : { clipPath: "inset(0 0 0 100%)", x: 60 }
         }
         transition={{ duration: 1, ease: [0.77, 0, 0.175, 1] }}
         style={{

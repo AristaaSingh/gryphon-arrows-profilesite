@@ -1,36 +1,43 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView, type Variants } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 
 interface Item {
-  num: string;
+  tag: string;
+  group: string;
   title: string;
   text?: string;
   points?: string[];
+  side: "left" | "right";
 }
 
-const STUFF: Item[] = [
+// Zig-zag order: 4.01a left, 4.02a right, 4.01b left, 4.02b right.
+const ITEMS: Item[] = [
   {
-    num: "01",
+    tag: "4.01a",
+    group: "Stuff We Do",
     title: "Year-round build",
     text: "We work towards the IMechE UAS Challenge all year.",
+    side: "left",
   },
   {
-    num: "02",
-    title: "The fun side",
-    text: "Collaborate with people across disciplines, and come along to our fun socials!",
-  },
-];
-
-const EXPERIENCE: Item[] = [
-  {
-    num: "01",
+    tag: "4.02a",
+    group: "Experience You Gain",
     title: "People skills",
     points: ["Teamwork", "Leadership & Responsibility", "Communication", "Project & Time Management"],
+    side: "right",
   },
   {
-    num: "02",
+    tag: "4.01b",
+    group: "Stuff We Do",
+    title: "The fun side",
+    text: "Collaborate with people across disciplines, and come along to our fun socials!",
+    side: "left",
+  },
+  {
+    tag: "4.02b",
+    group: "Experience You Gain",
     title: "Engineering skills",
     points: [
       "Practical Design",
@@ -38,25 +45,11 @@ const EXPERIENCE: Item[] = [
       "Multidisciplinary engineering",
       "Engineering Design Lifecycle",
     ],
+    side: "right",
   },
 ];
 
 const RED = "#ff002c";
-
-const container: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.18, delayChildren: 0.9 } },
-};
-
-const card: Variants = {
-  hidden: { opacity: 0, y: 40, scale: 0.95 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 90, damping: 16 },
-  },
-};
 
 function DimLine({ side, inView }: { side: "left" | "right"; inView: boolean }) {
   const left = side === "left";
@@ -99,128 +92,129 @@ function Corner({ className }: { className: string }) {
   );
 }
 
-/** One drawing-sheet strip split down the middle: 4.01 left, 4.02 right. */
-function Half({
-  sub,
-  title,
-  items,
-  className = "",
-}: {
-  sub: string;
-  title: string;
-  items: Item[];
-  className?: string;
-}) {
+/** A card whose slide-in is tied to scroll position: it travels in from its
+ *  own side as it rises through the viewport, and reverses on the way back. */
+function ZigCard({ item }: { item: Item }) {
+  const ref = useRef<HTMLLIElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start 100%", "start 55%"],
+  });
+  const dir = item.side === "left" ? -1 : 1;
+  const x = useTransform(scrollYProgress, [0, 1], [dir * 140, 0]);
+  const opacity = useTransform(scrollYProgress, [0, 0.7], [0, 1]);
+  const right = item.side === "right";
+
   return (
-    <div className={className}>
-      <div className="mb-5 flex items-baseline gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.25em]" style={{ color: RED }}>
-          {sub}
-        </span>
-        <h3 className="font-display text-xl uppercase tracking-[0.15em] text-white sm:text-2xl">
-          {title}
-        </h3>
-      </div>
-      <motion.ul variants={container} className="space-y-5">
-        {items.map((item) => (
-          <motion.li
-            key={item.num}
-            variants={card}
-            whileHover={{ y: -6, scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 260, damping: 18 }}
-            className="group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] transition-colors hover:border-[#ff002c]/60"
-          >
-            <span
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
-            />
-            <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500">
-              <span style={{ color: RED }}>{item.num}</span>
-              <span className="h-px flex-1 bg-white/15" />
-            </div>
-            <h4 className="mt-4 font-display text-lg text-zinc-100 sm:text-xl">{item.title}</h4>
-            {item.text && (
-              <p className="mt-3 font-body text-base leading-relaxed text-zinc-300">{item.text}</p>
-            )}
-            {item.points && (
-              <ul className="mt-4 space-y-2 font-body text-base text-zinc-300">
-                {item.points.map((pt) => (
-                  <li key={pt} className="flex items-start gap-3">
-                    <span className="mt-2.5 h-px w-4 shrink-0" style={{ background: RED }} />
-                    {pt}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </motion.li>
-        ))}
-      </motion.ul>
-    </div>
+    <li ref={ref} className="relative md:grid md:grid-cols-2">
+      <motion.div
+        style={{ x, opacity }}
+        className={`group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-7 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] transition-colors hover:border-[#ff002c]/60 sm:p-8 md:mx-0 ${
+          right ? "md:col-start-2 md:ml-10" : "md:mr-10"
+        }`}
+      >
+        <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500">
+          <span style={{ color: RED }}>{item.tag}</span>
+          <span>{item.group}</span>
+          <span className="h-px flex-1 bg-white/15" />
+        </div>
+        <h4 className="mt-5 font-display text-2xl text-zinc-100 sm:text-3xl">{item.title}</h4>
+        {item.text && (
+          <p className="mt-4 font-body text-lg leading-relaxed text-zinc-300">{item.text}</p>
+        )}
+        {item.points && (
+          <ul className="mt-5 space-y-3 font-body text-lg text-zinc-300">
+            {item.points.map((pt) => (
+              <li key={pt} className="flex items-start gap-3">
+                <span className="mt-3 h-px w-4 shrink-0" style={{ background: RED }} />
+                {pt}
+              </li>
+            ))}
+          </ul>
+        )}
+      </motion.div>
+      {/* Node on the centre spine. */}
+      <span
+        aria-hidden="true"
+        className="absolute left-1/2 top-9 hidden h-2.5 w-2.5 -translate-x-1/2 rounded-full border border-[#ff002c] bg-black md:block"
+      />
+    </li>
   );
 }
 
 export default function StuffWeDo() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { amount: 0.25 });
+  const listRef = useRef<HTMLUListElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: listRef,
+    offset: ["start 70%", "end 60%"],
+  });
+  const spine = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <div ref={wrapRef} className="relative w-full overflow-hidden">
-      <motion.div
-        initial={{ clipPath: "inset(0 0 0 100%)", x: 60 }}
-        animate={
-          inView
-            ? { clipPath: "inset(0 0% 0 0)", x: 0 }
-            : { clipPath: "inset(0 0 0 100%)", x: 60 }
-        }
-        transition={{ duration: 1, ease: [0.77, 0, 0.175, 1] }}
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-        }}
-        className="relative overflow-hidden border-y border-white/10 bg-zinc-950 shadow-[0_0_80px_rgba(255,0,44,0.18)]"
-      >
-        <Corner className="left-3 top-3 border-l border-t" />
-        <Corner className="right-3 top-3 border-r border-t" />
-        <Corner className="bottom-3 left-3 border-b border-l" />
-        <Corner className="bottom-3 right-3 border-b border-r" />
-
-        <div className="flex h-14 items-center gap-4 border-b border-white/10 bg-black/40 px-6 sm:h-16 sm:px-10">
-          <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:block">
-            Sec. 04
-          </span>
-          <div className="flex min-w-0 flex-1 items-center gap-4">
-            <DimLine side="left" inView={inView} />
-            <motion.span
-              className="whitespace-nowrap font-display text-lg uppercase tracking-[0.3em] text-white sm:text-2xl"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: inView ? 1 : 0 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-            >
-              What We Offer
-            </motion.span>
-            <DimLine side="right" inView={inView} />
-          </div>
-          <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:block">
-            Sheet 4/5
-          </span>
-        </div>
-
+    <div className="relative w-full overflow-hidden">
+      <div ref={wrapRef}>
         <motion.div
-          variants={container}
-          initial="hidden"
-          animate={inView ? "show" : "hidden"}
-          className="grid grid-cols-1 px-6 py-8 sm:py-10 md:grid-cols-2 xl:pl-56 xl:pr-40"
+          initial={{ clipPath: "inset(0 0 0 100%)", x: 60 }}
+          animate={
+            inView
+              ? { clipPath: "inset(0 0% 0 0)", x: 0 }
+              : { clipPath: "inset(0 0 0 100%)", x: 60 }
+          }
+          transition={{ duration: 1, ease: [0.77, 0, 0.175, 1] }}
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+          }}
+          className="relative overflow-hidden border-y border-white/10 bg-zinc-950 shadow-[0_0_80px_rgba(255,0,44,0.18)]"
         >
-          <Half sub="4.01" title="Stuff We Do" items={STUFF} className="md:pr-8 xl:pr-12" />
-          <Half
-            sub="4.02"
-            title="Experience You Gain"
-            items={EXPERIENCE}
-            className="mt-10 border-white/15 md:mt-0 md:border-l md:border-dashed md:pl-8 xl:pl-12"
-          />
+          <Corner className="left-3 top-3 border-l border-t" />
+          <Corner className="right-3 top-3 border-r border-t" />
+          <Corner className="bottom-3 left-3 border-b border-l" />
+          <Corner className="bottom-3 right-3 border-b border-r" />
+
+          <div className="flex h-14 items-center gap-4 bg-black/40 px-6 sm:h-16 sm:px-10">
+            <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:block">
+              Sec. 04
+            </span>
+            <div className="flex min-w-0 flex-1 items-center gap-4">
+              <DimLine side="left" inView={inView} />
+              <motion.span
+                className="whitespace-nowrap font-display text-lg uppercase tracking-[0.3em] text-white sm:text-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: inView ? 1 : 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+              >
+                What We Offer
+              </motion.span>
+              <DimLine side="right" inView={inView} />
+            </div>
+            <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:block">
+              Sheet 4/5
+            </span>
+          </div>
         </motion.div>
-      </motion.div>
+      </div>
+
+      <div className="relative px-6 pt-14 sm:px-10 xl:pl-56 xl:pr-40">
+        {/* Spine that draws down as you scroll. */}
+        <div
+          aria-hidden="true"
+          className="absolute bottom-0 left-1/2 top-14 hidden w-px -translate-x-1/2 bg-white/10 md:block"
+        >
+          <motion.div
+            className="h-full w-full origin-top"
+            style={{ scaleY: spine, background: RED }}
+          />
+        </div>
+        <ul ref={listRef} className="relative space-y-12 md:space-y-20">
+          {ITEMS.map((item) => (
+            <ZigCard key={item.tag} item={item} />
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

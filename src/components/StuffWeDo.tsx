@@ -109,7 +109,7 @@ function ZigCard({ item }: { item: Item }) {
     <li ref={ref} className="relative md:grid md:grid-cols-2">
       <motion.div
         style={{ x, opacity }}
-        className={`group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-4 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] transition-colors hover:border-[#ff002c]/60 sm:p-8 md:mx-0 ${
+        className={`transform-gpu will-change-transform group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-4 transition-colors md:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] hover:border-[#ff002c]/60 sm:p-8 md:mx-0 ${
           right ? "md:col-start-2 md:ml-10" : "md:mr-10"
         }`}
       >
@@ -201,7 +201,7 @@ export default function StuffWeDo() {
       </div>
 
       <div className="relative px-6 pt-8 sm:px-10 sm:pt-14 xl:pl-56 xl:pr-40">
-        <ul ref={listRef} className="relative space-y-6 md:space-y-20">
+        <ul ref={listRef} className="relative space-y-6 md:space-y-8">
         {/* Spine that draws down as you scroll. */}
         <div
           aria-hidden="true"

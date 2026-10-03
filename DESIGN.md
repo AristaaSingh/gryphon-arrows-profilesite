@@ -29,7 +29,12 @@ their own CLI does the same copy). This only became viable after dropping
 Rubik 80s Fade — TechText renders via Canvas, and canvas text painting
 doesn't support COLR color fonts.
 
-Loaded via `next/font/google` in `src/app/layout.tsx` (self-hosted at build
+**To change a font, edit `src/config/fonts.ts`** — it is the single place
+fonts are defined, organised by role (heading / mono / body), with
+step-by-step instructions at the top. Components only ever use the role
+classes (`font-display`, `font-mono`, `font-body`), never a font name.
+
+Loaded via `next/font/google` in `src/config/fonts.ts` (self-hosted at build
 time, no runtime request to Google Fonts), exposed as CSS variables
 `--font-display`, `--font-mono`, `--font-body`, and wired into Tailwind as
 `font-display` / `font-mono` / `font-body` utility classes via

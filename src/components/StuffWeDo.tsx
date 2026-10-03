@@ -3,21 +3,41 @@
 import { useRef } from "react";
 import { motion, useInView, type Variants } from "framer-motion";
 
-const ITEMS = [
+interface Item {
+  num: string;
+  title: string;
+  text?: string;
+  points?: string[];
+}
+
+const STUFF: Item[] = [
   {
     num: "01",
     title: "Year-round build",
-    text: "We work towards the IMechE UAS Challenge throughout the year.",
+    text: "We work towards the IMechE UAS Challenge all year.",
   },
   {
     num: "02",
-    title: "Real skills",
-    text: "You gain experience in teamwork, problem solving and hands-on practical skills.",
+    title: "The fun side",
+    text: "Collaborate with people across disciplines, and come along to our fun socials!",
+  },
+];
+
+const EXPERIENCE: Item[] = [
+  {
+    num: "01",
+    title: "People skills",
+    points: ["Teamwork", "Leadership & Responsibility", "Communication", "Project & Time Management"],
   },
   {
-    num: "03",
-    title: "The fun side",
-    text: "Content coming soon.",
+    num: "02",
+    title: "Engineering skills",
+    points: [
+      "Practical Design",
+      "Testing & Problem Solving",
+      "Multidisciplinary engineering",
+      "Engineering Design Lifecycle",
+    ],
   },
 ];
 
@@ -79,8 +99,8 @@ function Corner({ className }: { className: string }) {
   );
 }
 
-/** Same drawing-sheet strip as the sponsors ribbon, holding three points. */
-export default function StuffWeDo() {
+/** Same drawing-sheet strip as the sponsors ribbon, holding a few cards. */
+function Strip({ sec, title, items }: { sec: string; title: string; items: Item[] }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { amount: 0.25 });
 
@@ -108,7 +128,7 @@ export default function StuffWeDo() {
 
         <div className="flex h-14 items-center gap-4 border-b border-white/10 bg-black/40 px-6 sm:h-16 sm:px-10">
           <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:block">
-            Sec. 04
+            Sec. {sec}
           </span>
           <div className="flex min-w-0 flex-1 items-center gap-4">
             <DimLine side="left" inView={inView} />
@@ -118,7 +138,7 @@ export default function StuffWeDo() {
               animate={{ opacity: inView ? 1 : 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
             >
-              Stuff We Do
+              {title}
             </motion.span>
             <DimLine side="right" inView={inView} />
           </div>
@@ -131,9 +151,9 @@ export default function StuffWeDo() {
           variants={container}
           initial="hidden"
           animate={inView ? "show" : "hidden"}
-          className="grid grid-cols-1 gap-6 px-6 py-8 sm:py-10 md:grid-cols-3 md:gap-8 xl:px-56"
+          className="grid grid-cols-1 gap-6 px-6 py-8 sm:py-10 md:grid-cols-2 md:gap-8 xl:px-56"
         >
-          {ITEMS.map((item) => (
+          {items.map((item) => (
             <motion.li
               key={item.num}
               variants={card}
@@ -150,11 +170,32 @@ export default function StuffWeDo() {
                 <span className="h-px flex-1 bg-white/15" />
               </div>
               <h3 className="mt-5 font-display text-xl text-zinc-100 sm:text-2xl">{item.title}</h3>
-              <p className="mt-3 font-body text-base leading-relaxed text-zinc-300">{item.text}</p>
+              {item.text && (
+                <p className="mt-3 font-body text-base leading-relaxed text-zinc-300">{item.text}</p>
+              )}
+              {item.points && (
+                <ul className="mt-4 space-y-2 font-body text-base text-zinc-300">
+                  {item.points.map((pt) => (
+                    <li key={pt} className="flex items-start gap-3">
+                      <span className="mt-2.5 h-px w-4 shrink-0" style={{ background: RED }} />
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </motion.li>
           ))}
         </motion.ul>
       </motion.div>
+    </div>
+  );
+}
+
+export default function StuffWeDo() {
+  return (
+    <div className="space-y-16 sm:space-y-24">
+      <Strip sec="4.01" title="Stuff We Do" items={STUFF} />
+      <Strip sec="4.02" title="Experience You Gain" items={EXPERIENCE} />
     </div>
   );
 }

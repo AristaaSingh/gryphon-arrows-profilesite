@@ -59,12 +59,19 @@ export function DimLine({
 }
 
 /** Red corner bracket; position it with className, e.g. "left-3 top-3 border-l border-t". */
-export function Corner({ className }: { className: string }) {
+export function Corner({
+  className,
+  color = `${RED}b3`,
+}: {
+  className: string;
+  /** Border colour; defaults to translucent red. */
+  color?: string;
+}) {
   return (
     <span
       aria-hidden="true"
       className={`pointer-events-none absolute h-3.5 w-3.5 ${className}`}
-      style={{ borderColor: `${RED}b3` }}
+      style={{ borderColor: color }}
     />
   );
 }

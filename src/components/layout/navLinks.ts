@@ -2,10 +2,6 @@ import { SITE_LINKS } from "@/content/site-links";
 
 /** Links and link styling shared by the top menu and the footer. */
 
-// Placeholder: Contact is a separate page that doesn't exist yet (linked
-// with "#" so it doesn't 404).
-export const PAGES = [{ label: "Contact", href: "#" }];
-
 // The "Join Us" link lives in src/content/site-links.ts so it can be edited
 // without touching any component.
 export const JOIN_HREF = SITE_LINKS.joinForm || "#";

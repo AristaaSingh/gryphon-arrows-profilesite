@@ -7,8 +7,8 @@ import {
   JOIN_HREF,
   JOIN_PROPS,
   LINK_HOVER,
-  PAGES,
 } from "@/components/layout/navLinks";
+import ContactLink from "@/components/contact/ContactLink";
 
 export default function SiteNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -33,13 +33,9 @@ export default function SiteNav() {
         {/* Desktop nav — hidden below sm, where it has no room and would
             squish against the wordmark. */}
         <ul className="hidden items-center gap-2 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300 sm:flex">
-          {PAGES.map((item) => (
-            <li key={item.label}>
-              <a href={item.href} className={LINK_HOVER}>
-                {item.label}
-              </a>
-            </li>
-          ))}
+          <li>
+            <ContactLink className={LINK_HOVER} />
+          </li>
           <li>
             <a href={JOIN_HREF} {...JOIN_PROPS} className={LINK_HOVER}>
               Join Us
@@ -86,18 +82,16 @@ export default function SiteNav() {
             className="overflow-hidden border-t border-white/10 sm:hidden"
           >
             <div className="flex flex-col gap-1 px-6 py-4 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300">
-              {PAGES.map((item, i) => (
-                <motion.a
-                  key={item.label}
-                  href={item.href}
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.08 + i * 0.06, duration: 0.3 }}
+              <motion.div
+                initial={{ opacity: 0, y: -8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.08, duration: 0.3 }}
+              >
+                <ContactLink
                   className={`${LINK_HOVER} py-2`}
-                >
-                  {item.label}
-                </motion.a>
-              ))}
+                  onClick={() => setMobileOpen(false)}
+                />
+              </motion.div>
             </div>
           </motion.div>
         )}

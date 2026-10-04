@@ -1,11 +1,11 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
+import ContactLink from "@/components/contact/ContactLink";
 import { SITE_LINKS } from "@/content/site-links";
 import {
   JOIN_HREF,
   JOIN_PROPS,
   FOOTER_LINK_HOVER,
-  PAGES,
 } from "@/components/layout/navLinks";
 
 /** Bottom bar, styled like the top menu (glass, logo) with calmer underline links. */
@@ -69,13 +69,9 @@ export default function SiteFooter() {
           <nav aria-label="Footer">
             <h2 className={HEADING}>Navigate</h2>
             <ul className="-ml-1 flex flex-col items-start font-mono text-sm uppercase tracking-[0.2em] text-zinc-300">
-              {PAGES.map((item) => (
-                <li key={item.label} className={ROW}>
-                  <a href={item.href} className={FOOTER_LINK_HOVER}>
-                    {item.label}
-                  </a>
-                </li>
-              ))}
+              <li className={ROW}>
+                <ContactLink className={FOOTER_LINK_HOVER} />
+              </li>
               <li className={ROW}>
                 <a
                   href={JOIN_HREF}

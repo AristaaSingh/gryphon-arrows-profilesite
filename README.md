@@ -24,7 +24,8 @@ section is its own file** and has an `EDIT HERE` block at the top with its text.
 | About Us text / team photo             | `src/components/sections/AboutSection.tsx`      |
 | Stuff We Do / Experience You Gain cards | `src/components/sections/OfferSection.tsx`      |
 | The Challenge text / logo              | `src/components/sections/ChallengeSection.tsx`  |
-| **Join form link**                     | `src/content/site-links.ts`                     |
+| **Join form link, social links, contact-form key** | `src/content/site-links.ts`        |
+| Contact pop-up form                    | `src/components/contact/ContactModal.tsx`       |
 | **Fonts** (see `src/config/fonts.md`)  | `src/config/fonts.ts`                           |
 | Side menu entries, "Sheet x/N" total   | `src/content/sections.ts`                       |
 | Top menu / footer                      | `src/components/layout/SiteNav.tsx`, `SiteFooter.tsx` (shared links in `navLinks.ts`) |

@@ -1,3 +1,4 @@
+import { ContactProvider } from "@/components/contact/ContactProvider";
 import SectionToc from "@/components/layout/SectionToc";
 import SiteFooter from "@/components/layout/SiteFooter";
 import SiteNav from "@/components/layout/SiteNav";
@@ -16,7 +17,7 @@ import { TOC_ITEMS } from "@/content/sections";
  */
 export default function Home() {
   return (
-    <>
+    <ContactProvider>
       <SiteNav />
       <SectionToc items={TOC_ITEMS} />
 
@@ -27,6 +28,6 @@ export default function Home() {
       <ChallengeSection />
 
       <SiteFooter />
-    </>
+    </ContactProvider>
   );
 }

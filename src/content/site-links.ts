@@ -21,4 +21,9 @@ export const SITE_LINKS = {
   // Footer social icons. While empty, the icon is shown but does nothing.
   instagram: "https://www.instagram.com/leeds_uav",
   linkedin: "https://www.linkedin.com/company/gryphon-arrows",
+
+  // Contact form: the free access key from https://web3forms.com (enter the
+  // team email there and it emails you the key). Messages from the pop-up
+  // form are delivered to that email. While empty, the form shows an error.
+  contactFormKey: "",
 };

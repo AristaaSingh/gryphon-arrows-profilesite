@@ -20,5 +20,5 @@ export const SITE_LINKS = {
 
   // Footer social icons. While empty, the icon is shown but does nothing.
   instagram: "https://www.instagram.com/leeds_uav",
-  linkedin: "",
+  linkedin: "https://www.linkedin.com/company/gryphon-arrows",
 };

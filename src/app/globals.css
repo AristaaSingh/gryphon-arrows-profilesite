@@ -63,3 +63,15 @@ body {
     transform: none;
   }
 }
+
+/* Contact form: stop the browser's autofill from recolouring the white fields
+   (yellow / blue tint). The long transition delays Chrome's own background
+   change; the inset shadow paints over the rest. Autofill itself still works. */
+.contact-field:-webkit-autofill,
+.contact-field:-webkit-autofill:hover,
+.contact-field:-webkit-autofill:focus {
+  -webkit-text-fill-color: #18181b;
+  box-shadow: 0 0 0 1000px #ffffff inset;
+  caret-color: #18181b;
+  transition: background-color 600000s 0s;
+}

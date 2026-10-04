@@ -13,9 +13,9 @@ const ENDPOINT = "https://api.web3forms.com/submit";
 type Status = "idle" | "sending" | "success" | "error";
 
 const FIELD =
-  "w-full rounded-sm border border-white/30 bg-black/45 px-3 py-2.5 font-body text-base text-white outline-none transition-colors placeholder:text-white/40 focus:border-[#ffc100]";
+  "contact-field w-full rounded-sm border-2 border-transparent bg-white px-3 py-2.5 font-body text-base text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-[#ffc100]";
 const LABEL =
-  "mb-1.5 block font-mono text-[10px] uppercase tracking-[0.25em] text-white/80";
+  "mb-1.5 block font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.55)]";
 
 /** Pop-up contact form. Opened via <ContactProvider> / <ContactLink>. */
 export default function ContactModal({
@@ -137,7 +137,7 @@ export default function ContactModal({
                   <motion.div
                     key={i}
                     className="flex-1"
-                    style={{ background: i % 2 === 0 ? "#e02828" : "#d42323" }}
+                    style={{ background: i % 2 === 0 ? "#e02828" : "#e02828" }}
                     initial={{ x: `${dir * 105}%` }}
                     animate={{
                       x: 0,
@@ -171,26 +171,26 @@ export default function ContactModal({
             >
               <Corner
                 color="rgba(255,255,255,0.7)"
-                className="left-3 top-3 border-l border-t"
+                className="left-1.5 top-1.5 border-l border-t"
               />
               <Corner
                 color="rgba(255,255,255,0.7)"
-                className="right-3 top-3 border-r border-t"
+                className="right-1.5 top-1.5 border-r border-t"
               />
               <Corner
                 color="rgba(255,255,255,0.7)"
-                className="bottom-3 left-3 border-b border-l"
+                className="bottom-1.5 left-1.5 border-b border-l"
               />
               <Corner
                 color="rgba(255,255,255,0.7)"
-                className="bottom-3 right-3 border-b border-r"
+                className="bottom-1.5 right-1.5 border-b border-r"
               />
 
               <button
                 type="button"
                 onClick={onClose}
                 aria-label="Close contact form"
-                className="absolute right-4 top-4 flex h-8 w-8 cursor-pointer items-center justify-center text-white/80 transition-colors hover:text-[#ffc100]"
+                className="absolute right-5 top-5 flex h-8 w-8 cursor-pointer items-center justify-center text-white/80 transition-colors hover:text-[#ffc100]"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -279,13 +279,13 @@ export default function ContactModal({
                     <div className="mb-1.5 flex items-baseline justify-between">
                       <label
                         htmlFor="contact-query"
-                        className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/80"
+                        className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.55)]"
                       >
                         Your query
                       </label>
                       <span
                         aria-live="polite"
-                        className={`font-mono text-[10px] tracking-[0.15em] ${query.length >= MAX_QUERY ? "text-[#ffc100]" : "text-white/70"}`}
+                        className={`font-mono text-[11px] font-bold tracking-[0.15em] [text-shadow:0_1px_2px_rgba(0,0,0,0.55)] ${query.length >= MAX_QUERY ? "text-[#ffc100]" : "text-white"}`}
                       >
                         {query.length}/{MAX_QUERY}
                       </span>
@@ -322,7 +322,7 @@ export default function ContactModal({
                   )}
 
                   <div className="flex items-center justify-between gap-4 pt-2">
-                    <p className="font-body text-xs text-white/80">
+                    <p className="font-body text-sm text-white">
                       We&apos;ll only use your details to reply to you.
                     </p>
                     <button

@@ -54,7 +54,13 @@ const DEFAULT_GLOW_2 = "#ffc100";
 
 function hexToRgba(hex: string, alpha: number) {
   const clean = hex.replace("#", "");
-  const full = clean.length === 3 ? clean.split("").map((c) => c + c).join("") : clean;
+  const full =
+    clean.length === 3
+      ? clean
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : clean;
   const value = parseInt(full, 16);
   const r = (value >> 16) & 255;
   const g = (value >> 8) & 255;
@@ -139,9 +145,13 @@ export default function DecryptTechHeading({
         ctx.letterSpacing = `${letterSpacingEm * probeSize}px`;
       }
       const m = ctx.measureText(text);
-      const inkWidth = (m.actualBoundingBoxLeft ?? 0) + (m.actualBoundingBoxRight ?? 0);
+      const inkWidth =
+        (m.actualBoundingBoxLeft ?? 0) + (m.actualBoundingBoxRight ?? 0);
       const fit = Math.min(1, (width * 0.9) / Math.max(inkWidth, 1));
-      const next = Math.min(maxFontSize, Math.max(minFontSize, probeSize * fit));
+      const next = Math.min(
+        maxFontSize,
+        Math.max(minFontSize, probeSize * fit),
+      );
       setFontSize(Math.round(next));
     };
 
@@ -160,7 +170,8 @@ export default function DecryptTechHeading({
       style={{ ...style, visibility: fontSize === null ? "hidden" : "visible" }}
     >
       {(!decrypted || !interactive) && fontSize !== null && (
-        <h1
+        <div
+          aria-hidden="true"
           className="relative flex h-full items-center justify-center whitespace-nowrap"
           style={{
             fontSize: `${fontSize}px`,
@@ -193,7 +204,7 @@ export default function DecryptTechHeading({
               onComplete={() => setResolvedCount((c) => c + 1)}
             />
           ))}
-        </h1>
+        </div>
       )}
 
       {decrypted && interactive && fontSize !== null && (

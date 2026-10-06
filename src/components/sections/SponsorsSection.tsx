@@ -78,14 +78,14 @@ export default function SponsorsSection() {
             </span>
             <div className="flex min-w-0 flex-1 items-center gap-4">
               <DimLine side="left" inView={inView} />
-              <motion.span
+              <motion.h2
                 className="whitespace-nowrap font-display text-lg uppercase tracking-[0.3em] text-white sm:text-2xl"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: inView ? 1 : 0 }}
                 transition={{ delay: 0.5, duration: 0.6 }}
               >
                 Our Sponsors
-              </motion.span>
+              </motion.h2>
               <DimLine side="right" inView={inView} />
             </div>
             <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:block">

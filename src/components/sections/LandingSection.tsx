@@ -76,6 +76,10 @@ export default function LandingSection() {
           </span>
         </ScrollFade>
 
+        {/* The animated words below are decorative; this is the real page
+            heading for search engines and screen readers. */}
+        <h1 className="sr-only">Gryphon Arrows</h1>
+
         <ScrollFade threshold={0.3} className="flex flex-col items-center">
           <DecryptTechHeading
             text="Gryphon"

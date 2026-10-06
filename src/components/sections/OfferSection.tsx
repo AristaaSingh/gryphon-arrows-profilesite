@@ -90,9 +90,9 @@ function ZigCard({ item }: { item: Item }) {
           <span>{item.group}</span>
           <span className="h-px flex-1 bg-white/15" />
         </div>
-        <h4 className="mt-3 font-display text-lg text-zinc-100 sm:mt-5 sm:text-3xl">
+        <h3 className="mt-3 font-display text-lg text-zinc-100 sm:mt-5 sm:text-3xl">
           {item.title}
-        </h4>
+        </h3>
         {item.text && (
           <p className="mt-2 font-body text-sm leading-relaxed sm:mt-4 sm:text-lg text-zinc-300">
             {item.text}
@@ -164,14 +164,14 @@ export default function OfferSection() {
               </span>
               <div className="flex min-w-0 flex-1 items-center gap-4">
                 <DimLine side="left" inView={inView} />
-                <motion.span
+                <motion.h2
                   className="whitespace-nowrap font-display text-lg uppercase tracking-[0.3em] text-white sm:text-2xl"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: inView ? 1 : 0 }}
                   transition={{ delay: 0.5, duration: 0.6 }}
                 >
                   What We Offer
-                </motion.span>
+                </motion.h2>
                 <DimLine side="right" inView={inView} />
               </div>
               <span className="hidden font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:block">

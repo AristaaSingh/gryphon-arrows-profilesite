@@ -103,7 +103,7 @@ export default function ContactModal({
             role="dialog"
             aria-modal="true"
             aria-labelledby="contact-title"
-            className="relative my-auto w-full max-w-lg overflow-hidden rounded-md border border-white/25 p-6 shadow-[0_0_80px_rgba(255,0,44,0.35)] sm:p-8"
+            className="relative my-auto w-full max-w-lg overflow-hidden rounded-md p-6 shadow-[0_0_80px_rgba(255,0,44,0.35)] sm:p-8"
             // Nothing to animate on the panel itself; this keeps it mounted
             // until the slices have slid back out.
             initial={{ opacity: 1 }}
@@ -214,7 +214,7 @@ export default function ContactModal({
                   <button
                     type="button"
                     onClick={onClose}
-                    className={`${LINK_HOVER} mt-6 cursor-pointer border border-white/40 bg-black/70 font-mono text-sm uppercase tracking-[0.2em] text-white`}
+                    className={`${LINK_HOVER} mt-6 cursor-pointer bg-black/70 font-mono text-sm uppercase tracking-[0.2em] text-white`}
                   >
                     Close
                   </button>
@@ -321,7 +321,7 @@ export default function ContactModal({
                     <button
                       type="submit"
                       disabled={status === "sending"}
-                      className={`${LINK_HOVER} shrink-0 cursor-pointer border border-white/40 bg-black/70 font-mono text-sm uppercase tracking-[0.2em] text-white disabled:cursor-wait disabled:opacity-60`}
+                      className={`${LINK_HOVER} shrink-0 cursor-pointer bg-black/70 font-mono text-sm uppercase tracking-[0.2em] text-white disabled:cursor-wait disabled:opacity-60`}
                     >
                       {status === "sending" ? "Sending…" : "Send"}
                     </button>

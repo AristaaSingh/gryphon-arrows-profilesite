@@ -86,6 +86,10 @@ const SpecularButton = ({
   followMouse = true,
   proximity = 250,
   autoAnimate = false,
+  // PATCHED: resting glow (0-1) shown when the pointer is far away and
+  // autoAnimate is off. While it is above 0 the light also stays still
+  // instead of drifting around idly. 0 = the original behaviour.
+  restingIntensity = 0,
   disabled = false,
   onClick,
   className = '',
@@ -100,7 +104,7 @@ const SpecularButton = ({
   // Moved into an effect with no deps so it still re-syncs after every
   // render, same as before.
   useEffect(() => {
-    propsRef.current = { radius, lineColor, baseColor, intensity, shineSize, shineFade, thickness, speed, followMouse, proximity, autoAnimate };
+    propsRef.current = { radius, lineColor, baseColor, intensity, shineSize, shineFade, thickness, speed, followMouse, proximity, autoAnimate, restingIntensity };
   });
 
   useEffect(() => {
@@ -198,14 +202,14 @@ const SpecularButton = ({
       last = now;
       const p = propsRef.current;
 
-      idleAngle += p.speed * dt;
+      if (p.restingIntensity === 0 || p.autoAnimate || proximityT > 0.01) idleAngle += p.speed * dt;
       const steer = p.followMouse && pointerAngle != null && (!p.autoAnimate || proximityT > 0);
       const target = steer ? pointerAngle : idleAngle;
       const diff = ((target - angle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
       angle += diff * (1 - Math.exp(-dt * 7));
 
       // Shine fades in with pointer proximity unless autoAnimate keeps it on
-      const brightTarget = p.autoAnimate ? 1 : proximityT;
+      const brightTarget = p.autoAnimate ? 1 : Math.max(proximityT, p.restingIntensity);
       bright += (brightTarget - bright) * (1 - Math.exp(-dt * 8));
 
       lineC.set(p.lineColor);

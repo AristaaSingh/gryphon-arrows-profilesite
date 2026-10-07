@@ -141,9 +141,10 @@ body {
 }
 
 /* ── Specular edge light (cards) ─────────────────────────────────────
-   A conic-gradient streak masked down to a thin rim, so it follows the
-   card's rounded corners. --spec-angle is set from the mouse by
-   SpecularEdge.tsx; keyboard focus spins it instead. */
+   A red conic-gradient streak masked down to a thin rim, so it follows the
+   card's rounded corners. --spec-angle is driven by SpecularEdge.tsx:
+   from the mouse while hovering, from scroll position while the page scrolls
+   past the card; keyboard focus spins it instead. */
 @property --spec-angle {
   syntax: "<angle>";
   inherits: false;
@@ -154,20 +155,20 @@ body {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  padding: 2px;
+  padding: 3px;
   opacity: 0;
-  transition: opacity 250ms ease;
+  transition: opacity 350ms ease;
   background: conic-gradient(
     from calc(var(--spec-angle) - 34deg),
     transparent 0deg,
-    rgba(255, 193, 0, 0.35) 12deg,
-    #ffc100 34deg,
-    rgba(255, 193, 0, 0.35) 56deg,
+    color-mix(in srgb, var(--color-brand-red) 35%, transparent) 12deg,
+    var(--color-brand-red) 34deg,
+    color-mix(in srgb, var(--color-brand-red) 35%, transparent) 56deg,
     transparent 68deg,
     transparent 180deg,
-    rgba(255, 193, 0, 0.35) 192deg,
-    #ffc100 214deg,
-    rgba(255, 193, 0, 0.35) 236deg,
+    color-mix(in srgb, var(--color-brand-red) 35%, transparent) 192deg,
+    var(--color-brand-red) 214deg,
+    color-mix(in srgb, var(--color-brand-red) 35%, transparent) 236deg,
     transparent 248deg,
     transparent 360deg
   );
@@ -179,10 +180,11 @@ body {
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
-  filter: drop-shadow(0 0 6px rgba(255, 193, 0, 0.7));
+  filter: drop-shadow(0 0 8px rgba(255, 0, 44, 0.95));
 }
 .group:hover > .spec-edge,
-.group:focus-visible > .spec-edge {
+.group:focus-visible > .spec-edge,
+.spec-edge[data-scrolling="true"] {
   opacity: 1;
 }
 .group:focus-visible > .spec-edge {
@@ -198,4 +200,3 @@ body {
     animation: none;
   }
 }
-

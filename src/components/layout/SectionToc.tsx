@@ -46,14 +46,14 @@ export default function SectionToc({ items }: { items: TocItem[] }) {
               {isActive && (
                 <motion.span
                   layoutId="toc-marker"
-                  className="absolute -left-[22px] top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-full bg-[#ff002c] shadow-[0_0_12px_rgba(255,0,44,0.9)]"
+                  className="absolute -left-[22px] top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-full bg-brand-red shadow-[0_0_12px_rgba(255,0,44,0.9)]"
                   transition={{ type: "spring", stiffness: 380, damping: 32 }}
                 />
               )}
               <a
                 href={`#${item.id}`}
                 aria-current={isActive ? "true" : undefined}
-                className={`relative block font-mono text-xs uppercase tracking-[0.25em] transition-all duration-300 after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-[#ff002c] after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100 focus-visible:after:scale-x-100 ${
+                className={`relative block font-mono text-xs uppercase tracking-[0.25em] transition-all duration-300 after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-brand-red after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100 focus-visible:after:scale-x-100 ${
                   isActive
                     ? "translate-x-1 text-white [text-shadow:0_0_14px_rgba(255,255,255,0.55)]"
                     : "text-zinc-500 hover:text-zinc-200"

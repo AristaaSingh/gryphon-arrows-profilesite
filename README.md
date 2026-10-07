@@ -43,7 +43,8 @@ src/
                   drawing-sheet parts, standard text block)
     effects/      fancy animated components (threads, decrypt text, button
                   shine). Several are copied from reactbits.dev; leave alone.
-  content/        links and section list
+  content/        links, SEO basics (site.ts) and the section list
+  lib/            small shared helpers: media-query hook, easing, contact-form sender
   config/         fonts
 public/           images
 ```

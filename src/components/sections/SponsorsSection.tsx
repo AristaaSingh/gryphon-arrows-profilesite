@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
 import { motion, useInView, type Variants } from "framer-motion";
 import {
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/DrawingSheet";
 import TargetLockLayer from "@/components/ui/TargetLockLayer";
 import { SHEET_TOTAL } from "@/content/sections";
+import { useSponsorLocks } from "@/components/sections/useSponsorLocks";
 
 // ── EDIT HERE ───────────────────────────────────────────────
 // To add a sponsor: drop the logo into public/sponsors/ and add a line.
@@ -33,14 +34,6 @@ const SPONSORS = [
 ];
 // ────────────────────────────────────────────────────────────
 
-// Touch-screen timing (ms). The cards start fading in about 900ms after the
-// strip appears; each is roughly halfway into place ~100ms later, which is
-// when its lock fires.
-const INTRO_START_MS = 1000;
-const INTRO_STEP_MS = 180; // matches the cards' fade-in stagger, so each locks as it arrives
-const INTRO_HOLD_MS = 700; // how long all three stay locked before the loop starts
-const IDLE_MS = 1600; // gap between locks once the intro is done
-
 const container: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.18, delayChildren: 0.9 } },
@@ -62,83 +55,9 @@ export default function SponsorsSection() {
   // away it has no visible area, so observing it would never fire.
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { amount: 0.25 });
-  // Which cards are "target locked": the mouse target cursor locks one at a
-  // time; the touch intro below keeps several locked together.
+  // Which cards are target-locked (mouse cursor, intro, touch loop).
   const listRef = useRef<HTMLUListElement>(null);
-  const [locked, setLocked] = useState<number[]>([]);
-  // True while a mouse is driving the locks, so the timed intro stays out of
-  // its way.
-  const engagedRef = useRef(false);
-  const lockOnly = (i: number | null) => {
-    engagedRef.current = i !== null;
-    setLocked(i === null ? [] : [i]);
-  };
-
-  // Timed target-lock sequence:
-  //  1. intro (all devices): each card locks as it is about halfway into
-  //     place, and the locks pile up so all of them show as the cards appear,
-  //  2. idle (touch screens only, which have no cursor): they release and the
-  //     cards take turns locking on a loop. Tapping a card locks it and
-  //     carries on from the next one. Mouse users get the target cursor.
-  const nextRef = useRef(0);
-  const tappedRef = useRef(false);
-  const [cycleKey, setCycleKey] = useState(0);
-  useEffect(() => {
-    if (!inView) return;
-    const isTouch = window.matchMedia("(hover: none)").matches;
-    const fromTap = tappedRef.current;
-    tappedRef.current = false;
-    const timers: number[] = [];
-
-    const step = () => {
-      const i = nextRef.current % SPONSORS.length;
-      setLocked([i]);
-      nextRef.current = i + 1;
-    };
-
-    let idleStart = IDLE_MS; // after a tap: let the tapped card sit a beat
-    if (!fromTap) {
-      nextRef.current = 0;
-      // Start clean: drop whatever was locked the last time the strip was on screen.
-      timers.push(
-        window.setTimeout(() => {
-          if (!engagedRef.current) setLocked([]);
-        }, 0),
-      );
-      SPONSORS.forEach((_, i) => {
-        timers.push(
-          window.setTimeout(
-            () => {
-              if (!engagedRef.current) setLocked((prev) => [...prev, i]);
-            },
-            INTRO_START_MS + i * INTRO_STEP_MS,
-          ),
-        );
-      });
-      const lastLock = INTRO_START_MS + (SPONSORS.length - 1) * INTRO_STEP_MS;
-      // Let the full set of locks show for a moment, then release them all.
-      timers.push(
-        window.setTimeout(() => {
-          if (!engagedRef.current) setLocked([]);
-        }, lastLock + INTRO_HOLD_MS),
-      );
-      idleStart = lastLock + INTRO_HOLD_MS + 500;
-    }
-    if (isTouch) {
-      timers.push(
-        window.setTimeout(() => {
-          step();
-          timers.push(window.setInterval(step, IDLE_MS));
-        }, idleStart),
-      );
-    }
-    return () => {
-      timers.forEach((t) => {
-        window.clearTimeout(t);
-        window.clearInterval(t);
-      });
-    };
-  }, [inView, cycleKey]);
+  const { locked, lockOnly, tap } = useSponsorLocks(inView, SPONSORS.length);
 
   return (
     <div
@@ -198,21 +117,13 @@ export default function SponsorsSection() {
               <motion.li
                 key={s.name}
                 data-target-name={s.name}
-                data-locked={inView && locked.includes(i)}
+                data-locked={locked.includes(i)}
                 variants={card}
                 whileHover={{ y: -6 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                onClick={() => {
-                  // Touch: lock the tapped card, then carry on from the next.
-                  if (window.matchMedia("(hover: none)").matches) {
-                    nextRef.current = i + 1;
-                    tappedRef.current = true;
-                    setLocked([i]);
-                    setCycleKey((k) => k + 1);
-                  }
-                }}
-                className="target-card group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/15 bg-white/[0.03] p-6 transition-[border-color,box-shadow] duration-500 data-[locked=true]:border-[#ff002c]/70 data-[locked=true]:shadow-[0_0_50px_rgba(255,0,44,0.3)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
+                onClick={() => tap(i)}
+                className="target-card group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/15 bg-white/[0.03] p-6 transition-[border-color,box-shadow] duration-500 data-[locked=true]:border-brand-red/70 data-[locked=true]:shadow-[0_0_50px_rgba(255,0,44,0.3)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
               >
                 {/* "Target lock": on hover (or, on touch screens, all the
                     time) red corner brackets snap in around the logo, the

@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import { EASE_OUT } from "@/lib/motion";
 
 const FADE_MASK_TOP =
   "linear-gradient(to bottom, black 0%, black 35%, transparent 100%)";
@@ -79,12 +80,12 @@ export default function SectionDivider({
         className={`absolute inset-x-0 h-px ${bottom ? "bottom-0" : "top-0"}`}
         style={{
           background:
-            "linear-gradient(90deg, transparent, #ff002c 20%, #ff002c 80%, transparent)",
+            "linear-gradient(90deg, transparent, var(--color-brand-red) 20%, var(--color-brand-red) 80%, transparent)",
           transformOrigin: "center",
         }}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: inView ? 1 : 0 }}
-        transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.1, ease: EASE_OUT }}
       />
 
       {/* Registration crosshair on the midline, where the two columns meet. */}
@@ -94,9 +95,9 @@ export default function SectionDivider({
         animate={{ opacity: inView ? 1 : 0, y: inView ? 0 : -6 }}
         transition={{ duration: 0.6, delay: 0.9 }}
       >
-        <span className="absolute left-1/2 top-0 h-6 w-px -translate-x-1/2 bg-[#ff002c]" />
-        <span className="absolute left-1/2 top-3 h-px w-5 -translate-x-1/2 bg-[#ff002c]" />
-        <span className="absolute left-1/2 top-3 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#ff002c]" />
+        <span className="absolute left-1/2 top-0 h-6 w-px -translate-x-1/2 bg-brand-red" />
+        <span className="absolute left-1/2 top-3 h-px w-5 -translate-x-1/2 bg-brand-red" />
+        <span className="absolute left-1/2 top-3 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-brand-red" />
       </motion.div>
 
       <motion.span

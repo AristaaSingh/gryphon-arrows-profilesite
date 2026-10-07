@@ -3,11 +3,12 @@
 import type { CSSProperties } from "react";
 import { motion } from "framer-motion";
 import { SHEET_TOTAL } from "@/content/sections";
+import { EASE_OUT } from "@/lib/motion";
 
 /** Shared bits of the "engineering drawing sheet" look used by the sponsors
  *  and offer strips (and the logo panel on mobile). */
 
-export const RED = "#ff002c";
+export const RED = "var(--color-brand-red)";
 
 /** Faint blueprint grid, applied as an inline style on a panel. */
 export const BLUEPRINT_GRID: CSSProperties = {
@@ -36,7 +37,7 @@ export function DimLine({
         }}
         initial={{ scaleX: 0 }}
         animate={{ scaleX: inView ? 1 : 0 }}
-        transition={{ duration: 0.9, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.9, delay: 0.7, ease: EASE_OUT }}
       />
       <motion.div
         className={`absolute top-0 h-4 w-px ${left ? "left-0" : "right-0"}`}
@@ -61,7 +62,7 @@ export function DimLine({
 /** Red corner bracket; position it with className, e.g. "left-3 top-3 border-l border-t". */
 export function Corner({
   className,
-  color = `${RED}b3`,
+  color = `color-mix(in srgb, ${RED} 70%, transparent)`,
 }: {
   className: string;
   /** Border colour; defaults to translucent red. */
@@ -85,7 +86,10 @@ export function MobileSheetRow({ sec, sheet }: { sec: string; sheet: number }) {
       className="flex items-center gap-3 px-8 pb-1 pt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500 sm:hidden"
     >
       <span>Sec. {sec}</span>
-      <span className="h-px flex-1" style={{ background: `${RED}99` }} />
+      <span
+        className="h-px flex-1"
+        style={{ background: `color-mix(in srgb, ${RED} 60%, transparent)` }}
+      />
       <span>
         Sheet {sheet}/{SHEET_TOTAL}
       </span>

@@ -8,6 +8,7 @@ import {
   type RefObject,
 } from "react";
 import { createPortal } from "react-dom";
+import { FINE_POINTER_QUERY, REDUCED_MOTION_QUERY } from "@/lib/useMediaQuery";
 import {
   animate,
   motion,
@@ -73,11 +74,8 @@ export default function TargetLockLayer({
     const el = containerRef.current;
     if (!el) return;
     // Only for devices with a real, hover-capable pointer.
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
-      return;
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    if (!window.matchMedia(FINE_POINTER_QUERY).matches) return;
+    const reduceMotion = window.matchMedia(REDUCED_MOTION_QUERY).matches;
 
     let inside = false;
     let first = true;
@@ -212,7 +210,7 @@ export default function TargetLockLayer({
 
   if (!mounted) return null;
 
-  const corner = "absolute border-[#ff002c]";
+  const corner = "absolute border-brand-red";
   return createPortal(
     <div
       aria-hidden="true"
@@ -244,7 +242,7 @@ export default function TargetLockLayer({
       {/* Name tag under the locked target */}
       <motion.div className="absolute left-0 top-0" style={{ x, y: labelY }}>
         <span
-          className={`mt-1.5 block whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[#ff002c] transition-opacity duration-150 ${label ? "opacity-100" : "opacity-0"}`}
+          className={`mt-1.5 block whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-brand-red transition-opacity duration-150 ${label ? "opacity-100" : "opacity-0"}`}
         >
           {label}
         </span>
@@ -252,7 +250,7 @@ export default function TargetLockLayer({
 
       {/* Centre dot: always exactly on the pointer */}
       <motion.span
-        className="absolute left-0 top-0 -ml-[3px] -mt-[3px] h-1.5 w-1.5 rounded-full bg-[#ff002c] shadow-[0_0_6px_rgba(255,0,44,0.9)]"
+        className="absolute left-0 top-0 -ml-[3px] -mt-[3px] h-1.5 w-1.5 rounded-full bg-brand-red shadow-[0_0_6px_rgba(255,0,44,0.9)]"
         style={{ x: px, y: py }}
       />
     </div>,

@@ -1,11 +1,16 @@
 @import "tailwindcss";
 
+@theme static {
+  /* Brand colours. Use as Tailwind classes (bg-brand-red, text-brand-yellow,
+     border-team-red…) or var(--color-brand-red) in inline styles. */
+  --color-brand-red: #ff002c; /* accent: highlights, brackets, rules */
+  --color-brand-yellow: #ffc100; /* hover / focus / selected */
+  --color-team-red: #e02828; /* the team's red, e.g. the contact panel */
+}
+
 :root {
   --background: #000000;
   --foreground: #ededed;
-  /* Team colour: red. Kept as separate r,g,b so it can be reused at
-     different alphas via rgba(var(--accent-rgb), <alpha>). */
-  --accent-rgb: 224, 40, 40;
 }
 
 @theme inline {

@@ -6,6 +6,7 @@ import {
   JOIN_HREF,
   JOIN_PROPS,
   FOOTER_LINK_HOVER,
+  GLASS_BAR,
 } from "@/components/layout/navLinks";
 
 /** Bottom bar, styled like the top menu (glass, logo) with calmer underline links. */
@@ -47,7 +48,7 @@ const HEADING =
  */
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-black/20 backdrop-blur-xl backdrop-saturate-150">
+    <footer className={`border-t ${GLASS_BAR}`}>
       <div className="flex flex-col gap-8 px-6 py-8 sm:flex-row sm:items-start sm:justify-between sm:px-10">
         <div className="flex items-center gap-3">
           <Image

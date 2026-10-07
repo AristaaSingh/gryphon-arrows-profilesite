@@ -6,15 +6,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   JOIN_HREF,
   JOIN_PROPS,
+  GLASS_BAR,
   LINK_HOVER,
 } from "@/components/layout/navLinks";
 import ContactLink from "@/components/contact/ContactLink";
+import { EASE_OUT } from "@/lib/motion";
 
 export default function SiteNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="animate-fade-in-up fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-black/20 backdrop-blur-xl backdrop-saturate-150">
+    <nav
+      className={`animate-fade-in-up fixed inset-x-0 top-0 z-50 border-b ${GLASS_BAR}`}
+    >
       <div className="flex items-center justify-between px-6 py-4 sm:px-10">
         <a href="#home" className="flex items-center gap-3">
           <Image
@@ -78,7 +82,7 @@ export default function SiteNav() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.35, ease: EASE_OUT }}
             className="overflow-hidden border-t border-white/10 sm:hidden"
           >
             <div className="flex flex-col gap-1 px-6 py-4 font-mono text-sm uppercase tracking-[0.2em] text-zinc-300">

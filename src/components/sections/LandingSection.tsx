@@ -1,35 +1,21 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
 import DecryptTechHeading from "@/components/effects/DecryptTechHeading";
 import SpecularButton from "@/components/effects/SpecularButton";
 import WebThreads from "@/components/effects/WebThreads";
 import ScrollFade from "@/components/ui/ScrollFade";
 import { SHEET_TOTAL } from "@/content/sections";
+import { TOUCH_QUERY, useMediaQuery } from "@/lib/useMediaQuery";
 
 // ── EDIT HERE ───────────────────────────────────────────────
 const EYEBROW = "University of Leeds IMechE UAS Challenge";
 const BUTTON_LABEL = "Explore us";
 // ────────────────────────────────────────────────────────────
 
-// True on touch-first devices (phones/tablets), where there is no hover to
-// light up the Explore button. Mouse users keep the hover-driven shine.
-const TOUCH_QUERY = "(hover: none)";
-function subscribeTouch(onChange: () => void) {
-  const mq = window.matchMedia(TOUCH_QUERY);
-  mq.addEventListener("change", onChange);
-  return () => mq.removeEventListener("change", onChange);
-}
-const getIsTouch = () => window.matchMedia(TOUCH_QUERY).matches;
-const getIsTouchServer = () => false;
-
 /** Section 01: the landing hero (animated threads, heading, Explore button). */
 export default function LandingSection() {
-  const isTouch = useSyncExternalStore(
-    subscribeTouch,
-    getIsTouch,
-    getIsTouchServer,
-  );
+  // No hover on touch screens, so the button keeps its shine on by default.
+  const isTouch = useMediaQuery(TOUCH_QUERY);
   const scrollToNext = () => {
     document.getElementById("sponsors")?.scrollIntoView({ behavior: "smooth" });
   };

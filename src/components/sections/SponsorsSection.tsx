@@ -33,6 +33,12 @@ const SPONSORS = [
 ];
 // ────────────────────────────────────────────────────────────
 
+// Touch-screen timing (ms). The cards fade in from about 900ms after the strip
+// appears, so the rapid intro locks start just after that.
+const INTRO_START_MS = 1000;
+const INTRO_STEP_MS = 380; // gap between the rapid locks as the cards appear
+const IDLE_MS = 1600; // gap between locks once the intro is done
+
 const container: Variants = {
   hidden: {},
   show: { transition: { staggerChildren: 0.18, delayChildren: 0.9 } },
@@ -58,24 +64,48 @@ export default function SponsorsSection() {
   const listRef = useRef<HTMLUListElement>(null);
   const [locked, setLocked] = useState<number | null>(null);
 
-  // Touch screens have no cursor, so lock the cards one after another on a
-  // timer instead. Tapping a card locks it and carries on from there.
+  // Touch screens have no cursor, so they get a timed sequence instead:
+  //  1. as the cards appear, each one is locked in quick succession (intro),
+  //  2. then the cards lock one after another on a loop (idle).
+  // Tapping a card locks it and carries on from the next one.
   const nextRef = useRef(0);
+  const tappedRef = useRef(false);
   const [cycleKey, setCycleKey] = useState(0);
   useEffect(() => {
     if (!inView || !window.matchMedia("(hover: none)").matches) return;
+    const fromTap = tappedRef.current;
+    tappedRef.current = false;
+    const timers: number[] = [];
+
     const step = () => {
       const i = nextRef.current % SPONSORS.length;
       setLocked(i);
       nextRef.current = i + 1;
     };
-    // After a tap, leave the tapped card locked a full beat before moving on.
-    const first = window.setTimeout(step, cycleKey > 0 ? 2400 : 900);
-    const timer = window.setInterval(step, 2400);
-    return () => {
-      window.clearTimeout(first);
-      window.clearInterval(timer);
-    };
+
+    let idleStart = IDLE_MS; // after a tap: let the tapped card sit a beat
+    if (!fromTap) {
+      nextRef.current = 0;
+      // Start clean: drop whatever was locked the last time the strip was on screen.
+      timers.push(window.setTimeout(() => setLocked(null), 0));
+      SPONSORS.forEach((_, i) => {
+        timers.push(
+          window.setTimeout(
+            () => setLocked(i),
+            INTRO_START_MS + i * INTRO_STEP_MS,
+          ),
+        );
+      });
+      idleStart = INTRO_START_MS + SPONSORS.length * INTRO_STEP_MS + 300;
+    }
+    timers.push(
+      window.setTimeout(() => {
+        step();
+        timers.push(window.setInterval(step, IDLE_MS));
+      }, idleStart),
+    );
+    return () =>
+      timers.forEach((t) => (window.clearTimeout(t), window.clearInterval(t)));
   }, [inView, cycleKey]);
 
   return (
@@ -145,6 +175,7 @@ export default function SponsorsSection() {
                   // Touch: lock the tapped card, then carry on from the next.
                   if (window.matchMedia("(hover: none)").matches) {
                     nextRef.current = i + 1;
+                    tappedRef.current = true;
                     setLocked(i);
                     setCycleKey((k) => k + 1);
                   }

@@ -57,7 +57,10 @@ export default function SponsorsSection() {
   const inView = useInView(wrapRef, { amount: 0.25 });
   // Which cards are target-locked (mouse cursor, intro, touch loop).
   const listRef = useRef<HTMLUListElement>(null);
-  const { locked, lockOnly, tap } = useSponsorLocks(inView, SPONSORS.length);
+  const { locked, lockOnly, tap, focusCard } = useSponsorLocks(
+    inView,
+    SPONSORS.length,
+  );
 
   return (
     <div
@@ -123,7 +126,16 @@ export default function SponsorsSection() {
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 260, damping: 18 }}
                 onClick={() => tap(i)}
-                className="target-card group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/20 bg-white p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] transition-[border-color,box-shadow] duration-500 data-[locked=true]:border-brand-red data-[locked=true]:shadow-[0_0_50px_rgba(255,0,44,0.45)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
+                // Keyboard users can tab to each card; focus shows the same
+                // target-lock look as hovering it.
+                tabIndex={0}
+                onFocus={(e) =>
+                  focusCard(
+                    e.currentTarget.matches(":focus-visible") ? i : null,
+                  )
+                }
+                onBlur={() => focusCard(null)}
+                className="target-card no-focus-ring group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/20 bg-white p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] transition-[border-color,box-shadow] duration-500 data-[locked=true]:border-brand-red data-[locked=true]:shadow-[0_0_50px_rgba(255,0,44,0.45)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
               >
                 {/* White card behind each logo. "Target lock": when a card is
                     locked, red corner brackets snap in around the logo and the

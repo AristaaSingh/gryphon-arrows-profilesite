@@ -124,3 +124,18 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .target-bracket { transition: none; }
 }
+
+/* ── Keyboard focus ──────────────────────────────────────────────────
+   Default for anything interactive that has no hover effect of its own: a
+   thin white line (rounded where the element has rounded corners: give
+   square elements a rounded-* class, as the logo link and menu button do). Elements whose hover effect also
+   plays on keyboard focus (menu wipe, footer underline, side menu, sponsor
+   and offer cards, the Explore button, contact fields…) opt out with the
+   .no-focus-ring class so the effect is the only indicator. */
+:focus-visible {
+  outline: 1px solid #ffffff;
+  outline-offset: 3px;
+}
+.no-focus-ring:focus-visible {
+  outline: none !important;
+}

@@ -17,7 +17,8 @@ const IDLE_MS = 1600; // gap between locks once the intro is done (touch screens
  *     release together.
  *  2. Idle (touch screens only, which have no cursor): the cards take turns
  *     locking on a loop. Tapping a card locks it and carries on from the next.
- *  3. Mouse: the target cursor (TargetLockLayer) locks the nearest card via
+ *  3. Keyboard: a focused card is shown locked, same as hovering it.
+ *  4. Mouse: the target cursor (TargetLockLayer) locks the nearest card via
  *     `lockOnly`, and the timed intro stays out of its way.
  *
  * @param active whether the strip is on screen (restarts the sequence each time)
@@ -26,6 +27,7 @@ const IDLE_MS = 1600; // gap between locks once the intro is done (touch screens
 export function useSponsorLocks(active: boolean, count: number) {
   const isTouch = useMediaQuery(TOUCH_QUERY);
   const [locked, setLocked] = useState<number[]>([]);
+  const [focused, setFocused] = useState<number | null>(null); // keyboard focus
   // True while a mouse is driving the locks.
   const engagedRef = useRef(false);
   const nextRef = useRef(0); // next card for the idle loop
@@ -89,7 +91,9 @@ export function useSponsorLocks(active: boolean, count: number) {
 
   return {
     /** Indices of the cards currently locked. */
-    locked: active ? locked : [],
+    locked: active ? (focused === null ? locked : [...locked, focused]) : [],
+    /** For keyboard focus: show this card locked while it is focused (null = none). */
+    focusCard: setFocused,
     /** For the mouse cursor: lock just this card (null = none). */
     lockOnly: (i: number | null) => {
       engagedRef.current = i !== null;

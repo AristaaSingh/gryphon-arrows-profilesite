@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LINK_HOVER } from "@/components/layout/navLinks";
-import { Corner } from "@/components/ui/DrawingSheet";
+import FocusLock from "@/components/ui/FocusLock";
 import { ContactError, sendContactMessage } from "@/lib/sendContactMessage";
 import { EASE_OUT } from "@/lib/motion";
 
@@ -13,7 +13,7 @@ const SLICES = 8;
 type Status = "idle" | "sending" | "success" | "error";
 
 const FIELD =
-  "contact-field w-full rounded-sm border-2 border-transparent bg-white px-3 py-2.5 font-body text-base text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-brand-yellow";
+  "contact-field w-full rounded-sm bg-white px-3 py-2.5 font-body text-base text-zinc-900 outline-none transition-colors placeholder:text-zinc-400";
 const LABEL =
   "mb-1.5 block font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.55)]";
 
@@ -140,9 +140,8 @@ export default function ContactModal({
               })}
             </div>
 
-            {/* Panel chrome: corner marks and the close button sit against the
-                panel's own edges (not inside the padded form area), so they
-                never overlap the content. */}
+            {/* Panel chrome: the close button sits against the panel's own edge,
+                clear of the form content. */}
             <motion.div
               className="pointer-events-none absolute inset-0 z-10"
               initial={{ opacity: 0 }}
@@ -152,23 +151,6 @@ export default function ContactModal({
               }}
               exit={{ opacity: 0, transition: { duration: 0.15 } }}
             >
-              <Corner
-                color="rgba(255,255,255,0.7)"
-                className="left-1.5 top-1.5 border-l border-t"
-              />
-              <Corner
-                color="rgba(255,255,255,0.7)"
-                className="right-1.5 top-1.5 border-r border-t"
-              />
-              <Corner
-                color="rgba(255,255,255,0.7)"
-                className="bottom-1.5 left-1.5 border-b border-l"
-              />
-              <Corner
-                color="rgba(255,255,255,0.7)"
-                className="bottom-1.5 right-1.5 border-b border-r"
-              />
-
               <button
                 type="button"
                 onClick={onClose}
@@ -220,7 +202,11 @@ export default function ContactModal({
                   </button>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+                <form
+                  onSubmit={handleSubmit}
+                  className="relative mt-6 space-y-4"
+                >
+                  <FocusLock />
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div>
                       <label htmlFor="contact-first" className={LABEL}>

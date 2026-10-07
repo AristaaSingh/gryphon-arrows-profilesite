@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { LINK_HOVER } from "@/components/layout/navLinks";
+import { LINK_HOVER, WIPE_FILL } from "@/components/layout/navLinks";
 import FocusLock from "@/components/ui/FocusLock";
 import { ContactError, sendContactMessage } from "@/lib/sendContactMessage";
 import { EASE_OUT } from "@/lib/motion";
@@ -97,7 +97,6 @@ export default function ContactModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          onMouseDown={(e) => e.target === e.currentTarget && onClose()}
         >
           <motion.div
             role="dialog"
@@ -143,7 +142,7 @@ export default function ContactModal({
             {/* Panel chrome: the close button sits against the panel's own edge,
                 clear of the form content. */}
             <motion.div
-              className="pointer-events-none absolute inset-0 z-10"
+              className="pointer-events-none absolute inset-0 z-20"
               initial={{ opacity: 0 }}
               animate={{
                 opacity: 1,
@@ -155,7 +154,7 @@ export default function ContactModal({
                 type="button"
                 onClick={onClose}
                 aria-label="Close contact form"
-                className="pointer-events-auto absolute right-5 top-5 flex h-8 w-8 cursor-pointer items-center justify-center text-white/80 transition-colors hover:text-brand-yellow focus-visible:text-brand-yellow no-focus-ring"
+                className={`${WIPE_FILL} pointer-events-auto absolute right-4 top-4 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-black/25 text-white`}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -182,7 +181,7 @@ export default function ContactModal({
             >
               <h2
                 id="contact-title"
-                className="font-display text-2xl text-white sm:text-3xl pr-10"
+                className="font-display text-2xl text-white sm:text-3xl pr-12"
               >
                 Contact Us
               </h2>

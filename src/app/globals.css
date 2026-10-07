@@ -160,7 +160,10 @@ body {
   pointer-events: none;
   padding: 2px;
   opacity: 0.5;
-  transition: opacity 350ms ease;
+  transition:
+    opacity 350ms ease,
+    padding 250ms ease,
+    filter 250ms ease;
   animation: spec-spin 14s linear infinite;
   background: conic-gradient(
     from calc(var(--spec-angle) - 34deg),
@@ -186,15 +189,23 @@ body {
   mask-composite: exclude;
   filter: drop-shadow(0 0 5px rgba(255, 0, 44, 0.7));
 }
-/* Hover: stop drifting and follow the mouse (angle comes from the inline style). */
-.group:hover > .spec-edge {
-  animation: none;
-  opacity: 0.85;
+/* Highlight states: a thicker rim and a much brighter glow. */
+.group:hover > .spec-edge,
+.group:focus-visible > .spec-edge,
+.group:active > .spec-edge {
+  opacity: 1;
+  padding: 4px;
+  filter: drop-shadow(0 0 8px rgba(255, 0, 44, 1))
+    drop-shadow(0 0 22px rgba(255, 0, 44, 0.75));
 }
-/* Keyboard focus: a faster, brighter lap. */
+/* Hover: stop drifting and follow the mouse (angle comes from the inline style). */
+.group:hover > .spec-edge,
+.group:active > .spec-edge {
+  animation: none;
+}
+/* Keyboard focus: a faster lap. */
 .group:focus-visible > .spec-edge {
   animation-duration: 3s;
-  opacity: 1;
 }
 @keyframes spec-spin {
   to {

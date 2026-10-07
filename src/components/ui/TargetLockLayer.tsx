@@ -16,7 +16,9 @@ import {
   useTransform,
 } from "framer-motion";
 
-const SNAP = { stiffness: 900, damping: 45, mass: 0.5 };
+// Spring for the corners snapping onto a target. Lower stiffness / higher mass
+// = slower, softer snap.
+const SNAP = { stiffness: 500, damping: 38, mass: 0.7 };
 const FREE_SIZE = 28; // side of the little spinning cursor box
 const FREE_ARM = 8; // corner length while it's the cursor
 const LOCK_ARM = 16; // corner length once locked onto a card
@@ -60,7 +62,7 @@ export default function TargetLockLayer({
   const y = useSpring(0, SNAP);
   const w = useSpring(FREE_SIZE, SNAP);
   const h = useSpring(FREE_SIZE, SNAP);
-  const arm = useSpring(FREE_ARM, { stiffness: 500, damping: 35 });
+  const arm = useSpring(FREE_ARM, { stiffness: 320, damping: 30 });
   const rot = useMotionValue(0);
   // Bottom edge of the corner box, where the name tag sits.
   const labelY = useTransform([y, h], ([yy, hh]: number[]) => yy + hh);
@@ -100,7 +102,7 @@ export default function TargetLockLayer({
       // Take the shortest way back to upright.
       const wrapped = (((rot.get() % 360) + 540) % 360) - 180;
       rot.set(wrapped);
-      animate(rot, 0, { type: "spring", stiffness: 260, damping: 28 });
+      animate(rot, 0, { type: "spring", stiffness: 190, damping: 25 });
     };
 
     const place = (rect: { l: number; t: number; w: number; h: number }) => {

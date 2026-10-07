@@ -54,3 +54,19 @@ public/           images
 1. Create `src/components/sections/YourSection.tsx` (copy `AboutSection.tsx` as a start).
 2. Add it to the list in `src/app/page.tsx`.
 3. Add its `id` and label to `src/content/sections.ts` and bump `SHEET_TOTAL`.
+
+## Contact form security
+
+- Everything typed is validated and cleaned in `src/lib/contactValidation.ts`
+  (names: letters only; email: strict format; message: plain text, no HTML or
+  scripts, at most one link, 5-300 characters) and again in
+  `src/lib/sendContactMessage.ts` before anything is sent. `npm test` runs the
+  checks, including attack strings.
+- Spam traps: a hidden field and checkbox, a minimum time before sending, and
+  a 30-second gap between messages.
+- This all runs in the visitor's browser, so a determined attacker can bypass
+  it and call Web3Forms directly with the (public) access key. The real
+  defence for that is set in the Web3Forms dashboard: allowed domain, captcha,
+  spam filter.
+- Security headers are set in `next.config.ts`. Run `npm audit` now and then.
+

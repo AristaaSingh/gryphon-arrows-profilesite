@@ -52,7 +52,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col font-body">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organisationData) }}
+          // "<" is escaped so the data can never close the script tag early.
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organisationData).replace(/</g, "\\u003c"),
+          }}
         />
         {children}
       </body>

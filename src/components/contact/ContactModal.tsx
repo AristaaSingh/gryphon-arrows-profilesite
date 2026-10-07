@@ -4,10 +4,21 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LINK_HOVER, WIPE_FILL } from "@/components/layout/navLinks";
 import FocusLock from "@/components/ui/FocusLock";
+import {
+  LIMITS,
+  validateContact,
+  type FieldName,
+} from "@/lib/contactValidation";
 import { ContactError, sendContactMessage } from "@/lib/sendContactMessage";
 import { EASE_OUT } from "@/lib/motion";
 
-const MAX_QUERY = 300;
+const MAX_QUERY = LIMITS.message;
+const FIELD_IDS: Record<FieldName, string> = {
+  firstName: "contact-first",
+  lastName: "contact-last",
+  email: "contact-email",
+  message: "contact-query",
+};
 const SLICES = 8;
 
 type Status = "idle" | "sending" | "success" | "error";
@@ -28,6 +39,10 @@ export default function ContactModal({
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
+  // Field with a validation problem (marked aria-invalid), and when the form
+  // opened (a human can't fill four fields in under a couple of seconds).
+  const [invalid, setInvalid] = useState<FieldName | null>(null);
+  const openedAtRef = useRef(0);
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const returnFocusRef = useRef<HTMLElement | null>(null);
 
@@ -36,6 +51,7 @@ export default function ContactModal({
   useEffect(() => {
     if (!open) return;
     returnFocusRef.current = document.activeElement as HTMLElement | null;
+    openedAtRef.current = Date.now();
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -57,6 +73,7 @@ export default function ContactModal({
     setStatus("idle");
     setError("");
     setQuery("");
+    setInvalid(null);
   };
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -64,25 +81,52 @@ export default function ContactModal({
     if (status === "sending") return;
 
     const data = new FormData(e.currentTarget);
-    const field = (name: string) => String(data.get(name) ?? "").trim();
+    const text = (name: string) => String(data.get(name) ?? "");
+
+    // Spam traps that real visitors never trigger (hidden fields). Bots get a
+    // fake "sent" screen so they don't learn what tripped them.
+    if (text("contact_hp_check") || data.get("botcheck")) {
+      setStatus("success");
+      return;
+    }
+    if (Date.now() - openedAtRef.current < 2500) {
+      setStatus("error");
+      setError("That was quick! Please take a moment and try again.");
+      return;
+    }
+
+    const check = validateContact({
+      firstName: text("firstName"),
+      lastName: text("lastName"),
+      email: text("email"),
+      message: text("query"),
+    });
+    if (!check.ok) {
+      setStatus("error");
+      setError(check.error);
+      setInvalid(check.field);
+      document.getElementById(FIELD_IDS[check.field])?.focus();
+      return;
+    }
 
     setStatus("sending");
     setError("");
+    setInvalid(null);
     try {
-      await sendContactMessage({
-        firstName: field("firstName"),
-        lastName: field("lastName"),
-        email: field("email"),
-        message: field("query"),
-        botcheck: Boolean(data.get("botcheck")),
-      });
+      await sendContactMessage(check.values);
       setStatus("success");
     } catch (err) {
       setStatus("error");
+      const reason = err instanceof ContactError ? err.reason : "failed";
       setError(
-        err instanceof ContactError && err.reason === "not-configured"
+        reason === "not-configured"
           ? "The contact form isn't set up yet. Please try again later."
-          : "Sorry, something went wrong sending that. Please try again in a moment.",
+          : reason === "too-fast"
+            ? "You've just sent a message. Please wait a moment before sending another."
+            : reason === "invalid"
+              ? ((err as ContactError).detail ??
+                "Please check your details and try again.")
+              : "Sorry, something went wrong sending that. Please try again in a moment.",
       );
     }
   }
@@ -214,6 +258,7 @@ export default function ContactModal({
                       <input
                         ref={firstFieldRef}
                         id="contact-first"
+                        aria-invalid={invalid === "firstName"}
                         name="firstName"
                         type="text"
                         required
@@ -228,6 +273,7 @@ export default function ContactModal({
                       </label>
                       <input
                         id="contact-last"
+                        aria-invalid={invalid === "lastName"}
                         name="lastName"
                         type="text"
                         required
@@ -244,6 +290,7 @@ export default function ContactModal({
                     </label>
                     <input
                       id="contact-email"
+                      aria-invalid={invalid === "email"}
                       name="email"
                       type="email"
                       required
@@ -270,6 +317,7 @@ export default function ContactModal({
                     </div>
                     <textarea
                       id="contact-query"
+                      aria-invalid={invalid === "message"}
                       name="query"
                       required
                       rows={5}
@@ -280,7 +328,16 @@ export default function ContactModal({
                     />
                   </div>
 
-                  {/* Spam trap, hidden from people. */}
+                  {/* Spam traps, hidden from people (and skipped by keyboard and
+                      screen readers). Bots tend to fill every field they find. */}
+                  <input
+                    type="text"
+                    name="contact_hp_check"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    className="pointer-events-none absolute -left-[9999px] h-px w-px opacity-0"
+                  />
                   <input
                     type="checkbox"
                     name="botcheck"

@@ -87,7 +87,7 @@ function ZigCard({ item }: { item: Item }) {
         tabIndex={0}
         role="group"
         aria-label={`${item.group}: ${item.title}`}
-        className={`no-focus-ring transform-gpu will-change-transform group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-4 transition-[border-color,box-shadow] md:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] hover:border-white/30 focus-visible:border-white/30 sm:p-8 md:mx-0 ${
+        className={`no-focus-ring transform-gpu will-change-transform group relative rounded-xl border border-white/15 bg-black/60 p-4 transition-[border-color,box-shadow] md:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] hover:border-white/30 focus-visible:border-white/30 sm:p-8 md:mx-0 ${
           right ? "md:col-start-2 md:ml-10" : "md:mr-10"
         }`}
       >

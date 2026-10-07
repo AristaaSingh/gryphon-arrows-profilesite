@@ -142,7 +142,7 @@ body {
 
 /* ── Specular edge light (cards) ─────────────────────────────────────
    A red conic-gradient streak masked down to a thin rim, so it follows the
-   card's rounded corners. It always drifts slowly around the card (idle);
+   card's rounded corners and lies over its border. It always drifts slowly around the card (idle);
    while hovered it points at the mouse instead (--spec-angle is set by
    SpecularEdge.tsx); keyboard focus makes it circle faster and brighter. */
 @property --spec-angle {
@@ -152,7 +152,10 @@ body {
 }
 .spec-edge {
   position: absolute;
-  inset: 0;
+  /* Sits exactly on the card's own 1px border (and 1px inside it), so the red
+     streak replaces the grey line where it passes instead of sitting beside
+     it. The card must not clip it (no overflow-hidden). */
+  inset: -1px;
   border-radius: inherit;
   pointer-events: none;
   padding: 2px;

@@ -154,7 +154,7 @@ export default function ContactModal({
                 type="button"
                 onClick={onClose}
                 aria-label="Close contact form"
-                className={`${WIPE_FILL} pointer-events-auto absolute right-4 top-4 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-black/25 text-white`}
+                className={`${WIPE_FILL} pointer-events-auto absolute right-4 top-4 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-white`}
               >
                 <svg
                   viewBox="0 0 24 24"

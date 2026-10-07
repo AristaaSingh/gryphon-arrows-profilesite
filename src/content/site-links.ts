@@ -25,5 +25,5 @@ export const SITE_LINKS = {
   // Contact form: the free access key from https://web3forms.com (enter the
   // team email there and it emails you the key). Messages from the pop-up
   // form are delivered to that email. While empty, the form shows an error.
-  contactFormKey: "",
+  contactFormKey: "c648eadc-5b3f-4c74-8005-be8e37f92a6d",
 };

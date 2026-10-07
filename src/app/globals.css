@@ -144,7 +144,9 @@ body {
    Thin grey border with a faint red glow at rest. On hover, press and
    keyboard focus the border turns red and the glow strengthens. */
 .offer-card {
-  box-shadow: 0 0 20px rgba(255, 0, 44, 0.1);
+  box-shadow:
+    0 0 12px rgba(255, 0, 44, 0.3),
+    0 0 30px rgba(255, 0, 44, 0.14);
   transition:
     border-color 250ms ease,
     box-shadow 250ms ease;

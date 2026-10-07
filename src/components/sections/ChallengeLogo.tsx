@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
 import { BLUEPRINT_GRID } from "@/components/ui/DrawingSheet";
+import { EASE_OUT } from "@/lib/motion";
 
 /**
  * Left half of The Challenge: the UAS Challenge logo on a blueprint panel,
@@ -39,7 +40,7 @@ export default function ChallengeLogo() {
               ? { x: 0, y: 0, opacity: 1 }
               : { x: -140, y: 120, opacity: 0 }
           }
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.9, ease: EASE_OUT }}
           className="w-full"
         >
           <Image

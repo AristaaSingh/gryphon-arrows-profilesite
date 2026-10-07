@@ -25,7 +25,7 @@ export default function SectionText({
         className="mb-5 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500"
       >
         <span>Sec. {sec}</span>
-        <span className="h-px w-16 bg-[#ff002c]" />
+        <span className="h-px w-16 bg-brand-red" />
         <span>
           Sheet {sheet}/{SHEET_TOTAL}
         </span>

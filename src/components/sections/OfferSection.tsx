@@ -81,7 +81,7 @@ function ZigCard({ item }: { item: Item }) {
     <li ref={ref} className="relative md:grid md:grid-cols-2">
       <motion.div
         style={{ x, opacity }}
-        className={`transform-gpu will-change-transform group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-4 transition-colors md:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] hover:border-[#ff002c]/60 sm:p-8 md:mx-0 ${
+        className={`transform-gpu will-change-transform group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-4 transition-colors md:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] hover:border-brand-red/60 sm:p-8 md:mx-0 ${
           right ? "md:col-start-2 md:ml-10" : "md:mr-10"
         }`}
       >
@@ -115,7 +115,7 @@ function ZigCard({ item }: { item: Item }) {
       {/* Node on the centre spine. */}
       <span
         aria-hidden="true"
-        className={`absolute top-9 hidden h-2.5 w-2.5 rounded-full border border-[#ff002c] bg-black md:block ${
+        className={`absolute top-9 hidden h-2.5 w-2.5 rounded-full border border-brand-red bg-black md:block ${
           right ? "left-1/2 ml-3" : "right-1/2 mr-3"
         }`}
       />

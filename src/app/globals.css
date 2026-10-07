@@ -1,11 +1,16 @@
 @import "tailwindcss";
 
+@theme static {
+  /* Brand colours. Use as Tailwind classes (bg-brand-red, text-brand-yellow,
+     border-team-red…) or var(--color-brand-red) in inline styles. */
+  --color-brand-red: #ff002c; /* accent: highlights, brackets, rules */
+  --color-brand-yellow: #ffc100; /* hover / focus / selected */
+  --color-team-red: #e02828; /* the team's red, e.g. the contact panel */
+}
+
 :root {
   --background: #000000;
   --foreground: #ededed;
-  /* Team colour: red. Kept as separate r,g,b so it can be reused at
-     different alphas via rgba(var(--accent-rgb), <alpha>). */
-  --accent-rgb: 224, 40, 40;
 }
 
 @theme inline {
@@ -77,9 +82,9 @@ body {
 }
 
 /* ── Sponsor cards: "target lock" hover ──────────────────────────────
-   Red corner brackets snap in around the logo, a scan line sweeps across,
-   and a red grid lights up. On touch screens (no hover) the brackets stay
-   locked and the scan line loops slowly, staggered per card via --scan-delay. */
+   Red corner brackets snap in around the logo and a red grid lights up. A card is "locked" via data-locked="true", set by
+   the mouse target cursor (TargetLockLayer) or, on touch screens, by a timer
+   that locks the cards one after another (see SponsorsSection). */
 .target-grid {
   position: absolute;
   inset: 0;
@@ -91,7 +96,7 @@ body {
     linear-gradient(90deg, rgba(255, 0, 44, 0.12) 1px, transparent 1px);
   background-size: 16px 16px;
 }
-.target-card:hover .target-grid,
+.target-card[data-locked="true"] .target-grid,
 .target-card:active .target-grid {
   opacity: 1;
 }
@@ -106,10 +111,10 @@ body {
   filter: drop-shadow(0 0 0 rgba(255, 0, 44, 0));
   /* The overshoot in the easing gives the "snap" when they lock on. */
   transition:
-    top 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    right 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    bottom 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
-    left 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    top 520ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    right 520ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    bottom 520ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    left 520ms cubic-bezier(0.34, 1.56, 0.64, 1),
     opacity 300ms ease,
     filter 300ms ease;
 }
@@ -118,55 +123,20 @@ body {
 .target-bracket--bl { bottom: 6px; left: 6px; border-bottom-width: 2px; border-left-width: 2px; }
 .target-bracket--br { bottom: 6px; right: 6px; border-bottom-width: 2px; border-right-width: 2px; }
 
-.target-card:hover .target-bracket,
+.target-card[data-locked="true"] .target-bracket,
 .target-card:active .target-bracket {
   opacity: 1;
   filter: drop-shadow(0 0 4px rgba(255, 0, 44, 0.9));
 }
-.target-card:hover .target-bracket--tl,
+.target-card[data-locked="true"] .target-bracket--tl,
 .target-card:active .target-bracket--tl { top: 16px; left: 16px; }
-.target-card:hover .target-bracket--tr,
+.target-card[data-locked="true"] .target-bracket--tr,
 .target-card:active .target-bracket--tr { top: 16px; right: 16px; }
-.target-card:hover .target-bracket--bl,
+.target-card[data-locked="true"] .target-bracket--bl,
 .target-card:active .target-bracket--bl { bottom: 16px; left: 16px; }
-.target-card:hover .target-bracket--br,
+.target-card[data-locked="true"] .target-bracket--br,
 .target-card:active .target-bracket--br { bottom: 16px; right: 16px; }
 
-.target-scan {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: -2%;
-  width: 2px;
-  pointer-events: none;
-  opacity: 0;
-  background: linear-gradient(to bottom, transparent, #ffc100 20%, #ff002c 80%, transparent);
-  box-shadow: 0 0 14px 2px rgba(255, 0, 44, 0.65);
-}
-.target-card:hover .target-scan {
-  animation: target-scan 800ms ease-in-out 1;
-}
-@keyframes target-scan {
-  0% { left: -2%; opacity: 0; }
-  12% { opacity: 1; }
-  88% { opacity: 1; }
-  100% { left: 102%; opacity: 0; }
-}
-
-@media (hover: none) {
-  .target-bracket { opacity: 1; filter: drop-shadow(0 0 4px rgba(255, 0, 44, 0.8)); }
-  .target-bracket--tl { top: 14px; left: 14px; }
-  .target-bracket--tr { top: 14px; right: 14px; }
-  .target-bracket--bl { bottom: 14px; left: 14px; }
-  .target-bracket--br { bottom: 14px; right: 14px; }
-  .target-grid { opacity: 0.6; }
-  .target-scan {
-    animation: target-scan 3.4s ease-in-out infinite;
-    animation-delay: var(--scan-delay, 0s);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .target-scan { animation: none !important; }
   .target-bracket { transition: none; }
 }

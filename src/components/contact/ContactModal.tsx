@@ -4,16 +4,16 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { LINK_HOVER } from "@/components/layout/navLinks";
 import { Corner } from "@/components/ui/DrawingSheet";
-import { SITE_LINKS } from "@/content/site-links";
+import { ContactError, sendContactMessage } from "@/lib/sendContactMessage";
+import { EASE_OUT } from "@/lib/motion";
 
 const MAX_QUERY = 300;
 const SLICES = 8;
-const ENDPOINT = "https://api.web3forms.com/submit";
 
 type Status = "idle" | "sending" | "success" | "error";
 
 const FIELD =
-  "contact-field w-full rounded-sm border-2 border-transparent bg-white px-3 py-2.5 font-body text-base text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-[#ffc100]";
+  "contact-field w-full rounded-sm border-2 border-transparent bg-white px-3 py-2.5 font-body text-base text-zinc-900 outline-none transition-colors placeholder:text-zinc-400 focus:border-brand-yellow";
 const LABEL =
   "mb-1.5 block font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.55)]";
 
@@ -62,46 +62,27 @@ export default function ContactModal({
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (status === "sending") return;
-    if (!SITE_LINKS.contactFormKey) {
-      setStatus("error");
-      setError("The contact form isn't set up yet. Please try again later.");
-      return;
-    }
 
     const data = new FormData(e.currentTarget);
-    const firstName = String(data.get("firstName") ?? "").trim();
-    const lastName = String(data.get("lastName") ?? "").trim();
-    const email = String(data.get("email") ?? "").trim();
-    const message = String(data.get("query") ?? "").trim();
+    const field = (name: string) => String(data.get(name) ?? "").trim();
 
     setStatus("sending");
     setError("");
     try {
-      const res = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: SITE_LINKS.contactFormKey,
-          subject: `Website enquiry from ${firstName} ${lastName}`,
-          from_name: "Gryphon Arrows website",
-          name: `${firstName} ${lastName}`,
-          email,
-          message,
-          // Hidden spam trap: real visitors never tick it.
-          botcheck: data.get("botcheck") ? "on" : "",
-        }),
+      await sendContactMessage({
+        firstName: field("firstName"),
+        lastName: field("lastName"),
+        email: field("email"),
+        message: field("query"),
+        botcheck: Boolean(data.get("botcheck")),
       });
-      const result = await res.json();
-      if (!res.ok || !result.success)
-        throw new Error(result.message || "Request failed");
       setStatus("success");
-    } catch {
+    } catch (err) {
       setStatus("error");
       setError(
-        "Sorry, something went wrong sending that. Please try again in a moment.",
+        err instanceof ContactError && err.reason === "not-configured"
+          ? "The contact form isn't set up yet. Please try again later."
+          : "Sorry, something went wrong sending that. Please try again in a moment.",
       );
     }
   }
@@ -136,15 +117,14 @@ export default function ContactModal({
                 return (
                   <motion.div
                     key={i}
-                    className="flex-1"
-                    style={{ background: i % 2 === 0 ? "#e02828" : "#e02828" }}
+                    className="flex-1 bg-team-red"
                     initial={{ x: `${dir * 105}%` }}
                     animate={{
                       x: 0,
                       transition: {
                         duration: 0.55,
                         delay: i * 0.05,
-                        ease: [0.16, 1, 0.3, 1],
+                        ease: EASE_OUT,
                       },
                     }}
                     exit={{
@@ -190,7 +170,7 @@ export default function ContactModal({
                 type="button"
                 onClick={onClose}
                 aria-label="Close contact form"
-                className="absolute right-5 top-5 flex h-8 w-8 cursor-pointer items-center justify-center text-white/80 transition-colors hover:text-[#ffc100]"
+                className="absolute right-5 top-5 flex h-8 w-8 cursor-pointer items-center justify-center text-white/80 transition-colors hover:text-brand-yellow"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -285,7 +265,7 @@ export default function ContactModal({
                       </label>
                       <span
                         aria-live="polite"
-                        className={`font-mono text-[11px] font-bold tracking-[0.15em] [text-shadow:0_1px_2px_rgba(0,0,0,0.55)] ${query.length >= MAX_QUERY ? "text-[#ffc100]" : "text-white"}`}
+                        className={`font-mono text-[11px] font-bold tracking-[0.15em] [text-shadow:0_1px_2px_rgba(0,0,0,0.55)] ${query.length >= MAX_QUERY ? "text-brand-yellow" : "text-white"}`}
                       >
                         {query.length}/{MAX_QUERY}
                       </span>

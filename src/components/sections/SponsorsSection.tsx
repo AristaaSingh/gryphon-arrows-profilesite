@@ -66,18 +66,26 @@ export default function SponsorsSection() {
   // time; the touch intro below keeps several locked together.
   const listRef = useRef<HTMLUListElement>(null);
   const [locked, setLocked] = useState<number[]>([]);
-  const lockOnly = (i: number | null) => setLocked(i === null ? [] : [i]);
+  // True while a mouse is driving the locks, so the timed intro stays out of
+  // its way.
+  const engagedRef = useRef(false);
+  const lockOnly = (i: number | null) => {
+    engagedRef.current = i !== null;
+    setLocked(i === null ? [] : [i]);
+  };
 
-  // Touch screens have no cursor, so they get a timed sequence instead:
-  //  1. intro: each card locks as it is about halfway into place, and the
-  //     locks pile up so you can see all of them as the cards appear,
-  //  2. then they release and the cards take turns locking on a loop (idle).
-  // Tapping a card locks it and carries on from the next one.
+  // Timed target-lock sequence:
+  //  1. intro (all devices): each card locks as it is about halfway into
+  //     place, and the locks pile up so all of them show as the cards appear,
+  //  2. idle (touch screens only, which have no cursor): they release and the
+  //     cards take turns locking on a loop. Tapping a card locks it and
+  //     carries on from the next one. Mouse users get the target cursor.
   const nextRef = useRef(0);
   const tappedRef = useRef(false);
   const [cycleKey, setCycleKey] = useState(0);
   useEffect(() => {
-    if (!inView || !window.matchMedia("(hover: none)").matches) return;
+    if (!inView) return;
+    const isTouch = window.matchMedia("(hover: none)").matches;
     const fromTap = tappedRef.current;
     tappedRef.current = false;
     const timers: number[] = [];
@@ -92,11 +100,17 @@ export default function SponsorsSection() {
     if (!fromTap) {
       nextRef.current = 0;
       // Start clean: drop whatever was locked the last time the strip was on screen.
-      timers.push(window.setTimeout(() => setLocked([]), 0));
+      timers.push(
+        window.setTimeout(() => {
+          if (!engagedRef.current) setLocked([]);
+        }, 0),
+      );
       SPONSORS.forEach((_, i) => {
         timers.push(
           window.setTimeout(
-            () => setLocked((prev) => [...prev, i]),
+            () => {
+              if (!engagedRef.current) setLocked((prev) => [...prev, i]);
+            },
             INTRO_START_MS + i * INTRO_STEP_MS,
           ),
         );
@@ -104,16 +118,20 @@ export default function SponsorsSection() {
       const lastLock = INTRO_START_MS + (SPONSORS.length - 1) * INTRO_STEP_MS;
       // Let the full set of locks show for a moment, then release them all.
       timers.push(
-        window.setTimeout(() => setLocked([]), lastLock + INTRO_HOLD_MS),
+        window.setTimeout(() => {
+          if (!engagedRef.current) setLocked([]);
+        }, lastLock + INTRO_HOLD_MS),
       );
       idleStart = lastLock + INTRO_HOLD_MS + 500;
     }
-    timers.push(
-      window.setTimeout(() => {
-        step();
-        timers.push(window.setInterval(step, IDLE_MS));
-      }, idleStart),
-    );
+    if (isTouch) {
+      timers.push(
+        window.setTimeout(() => {
+          step();
+          timers.push(window.setInterval(step, IDLE_MS));
+        }, idleStart),
+      );
+    }
     return () => {
       timers.forEach((t) => {
         window.clearTimeout(t);

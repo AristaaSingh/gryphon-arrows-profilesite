@@ -8,20 +8,30 @@ import {
   type RefObject,
 } from "react";
 import { createPortal } from "react-dom";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import {
+  animate,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 
 const SNAP = { stiffness: 900, damping: 45, mass: 0.5 };
-const PAD = 8; // how far outside the target the brackets sit
+const FREE_SIZE = 28; // side of the little spinning cursor box
+const FREE_ARM = 8; // corner length while it's the cursor
+const LOCK_ARM = 16; // corner length once locked onto a card
+const PAD = 8; // how far outside the target the corners sit
+const SNAP_DISTANCE = 90; // px: how close the pointer must be to lock on
 
 /**
- * A "target lock" cursor for mouse users. While the pointer is anywhere inside
- * `containerRef`, the normal cursor is hidden (add the cursor-none class to
- * the container) and replaced by:
- *   - a small crosshair that follows the pointer exactly, and
- *   - red corner brackets that snap onto the NEAREST item matching
- *     `itemSelector`, hopping to a new item as the pointer moves between them.
- * `onLock(index)` is called when the locked item changes (null when the
- * pointer leaves) so the item itself can light up. Touch screens are ignored.
+ * A "target cursor" for mouse users, in the style of reactbits.dev's Target
+ * Cursor. While the pointer is inside `containerRef` (add the cursor-none
+ * class to it) the normal cursor is replaced by four small corner brackets
+ * that spin around a centre dot. When the pointer comes near an item that
+ * matches `itemSelector`, the brackets stop spinning and stretch out to
+ * frame that item (the dot stays on the pointer); move away and they shrink
+ * back into the spinning cursor. `onLock(index)` fires when the locked item
+ * changes (null when none) so the item can light up. Touch is ignored.
  */
 export default function TargetLockLayer({
   containerRef,
@@ -33,14 +43,14 @@ export default function TargetLockLayer({
   onLock: (index: number | null) => void;
 }) {
   const [active, setActive] = useState(false);
+  const [label, setLabel] = useState("");
   // Rendered into <body> so no transformed / clipped ancestor can offset or
-  // cut the fixed-position reticle.
+  // cut the fixed-position cursor.
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
     () => false,
   );
-  const [label, setLabel] = useState("");
   const onLockRef = useRef(onLock);
   useEffect(() => {
     onLockRef.current = onLock;
@@ -48,8 +58,12 @@ export default function TargetLockLayer({
 
   const x = useSpring(0, SNAP);
   const y = useSpring(0, SNAP);
-  const w = useSpring(0, SNAP);
-  const h = useSpring(0, SNAP);
+  const w = useSpring(FREE_SIZE, SNAP);
+  const h = useSpring(FREE_SIZE, SNAP);
+  const arm = useSpring(FREE_ARM, { stiffness: 500, damping: 35 });
+  const rot = useMotionValue(0);
+  // Bottom edge of the corner box, where the name tag sits.
+  const labelY = useTransform([y, h], ([yy, hh]: number[]) => yy + hh);
   const px = useMotionValue(-100);
   const py = useMotionValue(-100);
 
@@ -59,17 +73,54 @@ export default function TargetLockLayer({
     // Only for devices with a real, hover-capable pointer.
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
       return;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     let inside = false;
     let first = true;
-    let index = -1;
+    let index = -1; // locked item, -1 = free cursor
+    let spin: { stop: () => void } | null = null;
     let raf = 0;
     const last = { x: 0, y: 0 };
 
+    const startSpin = () => {
+      if (reduceMotion) return;
+      spin?.stop();
+      rot.set(0);
+      spin = animate(rot, 360, {
+        duration: 2.6,
+        ease: "linear",
+        repeat: Infinity,
+      });
+    };
+    const stopSpin = () => {
+      spin?.stop();
+      spin = null;
+      // Take the shortest way back to upright.
+      const wrapped = (((rot.get() % 360) + 540) % 360) - 180;
+      rot.set(wrapped);
+      animate(rot, 0, { type: "spring", stiffness: 260, damping: 28 });
+    };
+
+    const place = (rect: { l: number; t: number; w: number; h: number }) => {
+      if (first) {
+        x.jump(rect.l);
+        y.jump(rect.t);
+        w.jump(rect.w);
+        h.jump(rect.h);
+        first = false;
+      } else {
+        x.set(rect.l);
+        y.set(rect.t);
+        w.set(rect.w);
+        h.set(rect.h);
+      }
+    };
+
     const update = () => {
       const items = Array.from(el.querySelectorAll<HTMLElement>(itemSelector));
-      if (!items.length) return;
-      let best = 0;
+      let best = -1;
       let bestDist = Infinity;
       items.forEach((item, i) => {
         const r = item.getBoundingClientRect();
@@ -81,35 +132,41 @@ export default function TargetLockLayer({
           best = i;
         }
       });
-      const r = items[best].getBoundingClientRect();
-      const set = first
-        ? {
-            x: (v: number) => x.jump(v),
-            y: (v: number) => y.jump(v),
-            w: (v: number) => w.jump(v),
-            h: (v: number) => h.jump(v),
-          }
-        : {
-            x: (v: number) => x.set(v),
-            y: (v: number) => y.set(v),
-            w: (v: number) => w.set(v),
-            h: (v: number) => h.set(v),
-          };
-      set.x(r.left - PAD);
-      set.y(r.top - PAD);
-      set.w(r.width + PAD * 2);
-      set.h(r.height + PAD * 2);
-      first = false;
-      if (best !== index) {
-        index = best;
-        setLabel(
-          `TGT ${String(best + 1).padStart(2, "0")} · ${items[best].dataset.targetName ?? ""}`,
-        );
-        onLockRef.current(best);
+
+      if (best >= 0 && bestDist <= SNAP_DISTANCE) {
+        const r = items[best].getBoundingClientRect();
+        place({
+          l: r.left - PAD,
+          t: r.top - PAD,
+          w: r.width + PAD * 2,
+          h: r.height + PAD * 2,
+        });
+        arm.set(LOCK_ARM);
+        if (best !== index) {
+          if (index === -1) stopSpin();
+          index = best;
+          setLabel(
+            `TGT ${String(best + 1).padStart(2, "0")} · ${items[best].dataset.targetName ?? ""}`,
+          );
+          onLockRef.current(best);
+        }
+      } else {
+        place({
+          l: last.x - FREE_SIZE / 2,
+          t: last.y - FREE_SIZE / 2,
+          w: FREE_SIZE,
+          h: FREE_SIZE,
+        });
+        arm.set(FREE_ARM);
+        if (index !== -1) {
+          index = -1;
+          startSpin();
+          onLockRef.current(null);
+        }
       }
     };
 
-    // Keeps the brackets glued to the card while it lifts / the page scrolls.
+    // Keeps the corners glued to the card while it lifts / the page scrolls.
     const loop = () => {
       if (!inside) return;
       update();
@@ -125,6 +182,8 @@ export default function TargetLockLayer({
       if (!inside) {
         inside = true;
         first = true;
+        index = -1;
+        startSpin();
         setActive(true);
         raf = requestAnimationFrame(loop);
       }
@@ -132,6 +191,8 @@ export default function TargetLockLayer({
     const onLeave = () => {
       inside = false;
       index = -1;
+      spin?.stop();
+      spin = null;
       cancelAnimationFrame(raf);
       setActive(false);
       onLockRef.current(null);
@@ -142,37 +203,56 @@ export default function TargetLockLayer({
     return () => {
       el.removeEventListener("pointermove", onMove);
       el.removeEventListener("pointerleave", onLeave);
+      spin?.stop();
       cancelAnimationFrame(raf);
     };
-  }, [containerRef, itemSelector, x, y, w, h, px, py]);
+  }, [containerRef, itemSelector, x, y, w, h, arm, rot, px, py]);
 
-  const corner = "absolute h-4 w-4 border-[#ff002c]";
   if (!mounted) return null;
+
+  const corner = "absolute border-[#ff002c]";
   return createPortal(
     <div
       aria-hidden="true"
       className={`pointer-events-none fixed left-0 top-0 z-[90] transition-opacity duration-150 ${active ? "opacity-100" : "opacity-0"}`}
     >
-      {/* Brackets around the nearest target */}
+      {/* The four corner brackets: the cursor itself, or the frame around a target */}
       <motion.div
         className="absolute left-0 top-0 drop-shadow-[0_0_6px_rgba(255,0,44,0.9)]"
-        style={{ x, y, width: w, height: h }}
+        style={{ x, y, width: w, height: h, rotate: rot }}
       >
-        <span className={`${corner} left-0 top-0 border-l-2 border-t-2`} />
-        <span className={`${corner} right-0 top-0 border-r-2 border-t-2`} />
-        <span className={`${corner} bottom-0 left-0 border-b-2 border-l-2`} />
-        <span className={`${corner} bottom-0 right-0 border-b-2 border-r-2`} />
-        <span className="absolute left-0 top-full mt-1.5 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[#ff002c]">
+        <motion.span
+          className={`${corner} left-0 top-0 border-l-2 border-t-2`}
+          style={{ width: arm, height: arm }}
+        />
+        <motion.span
+          className={`${corner} right-0 top-0 border-r-2 border-t-2`}
+          style={{ width: arm, height: arm }}
+        />
+        <motion.span
+          className={`${corner} bottom-0 left-0 border-b-2 border-l-2`}
+          style={{ width: arm, height: arm }}
+        />
+        <motion.span
+          className={`${corner} bottom-0 right-0 border-b-2 border-r-2`}
+          style={{ width: arm, height: arm }}
+        />
+      </motion.div>
+
+      {/* Name tag under the locked target */}
+      <motion.div className="absolute left-0 top-0" style={{ x, y: labelY }}>
+        <span
+          className={`mt-1.5 block whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.2em] text-[#ff002c] transition-opacity duration-150 ${label ? "opacity-100" : "opacity-0"}`}
+        >
           {label}
         </span>
       </motion.div>
 
-      {/* Crosshair on the real pointer position */}
-      <motion.div className="absolute left-0 top-0" style={{ x: px, y: py }}>
-        <span className="absolute -left-2.5 top-0 h-px w-5 bg-white" />
-        <span className="absolute left-0 -top-2.5 h-5 w-px bg-white" />
-        <span className="absolute -left-[3px] -top-[3px] h-1.5 w-1.5 rounded-full bg-[#ff002c]" />
-      </motion.div>
+      {/* Centre dot: always exactly on the pointer */}
+      <motion.span
+        className="absolute left-0 top-0 -ml-[3px] -mt-[3px] h-1.5 w-1.5 rounded-full bg-[#ff002c] shadow-[0_0_6px_rgba(255,0,44,0.9)]"
+        style={{ x: px, y: py }}
+      />
     </div>,
     document.body,
   );

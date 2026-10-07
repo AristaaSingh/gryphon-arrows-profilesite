@@ -140,81 +140,20 @@ body {
   outline: none !important;
 }
 
-/* ── Specular edge light (cards) ─────────────────────────────────────
-   A red conic-gradient streak masked down to a thin rim, so it follows the
-   card's rounded corners and lies over its border. It always drifts slowly around the card (idle);
-   while hovered it points at the mouse instead (--spec-angle is set by
-   SpecularEdge.tsx); keyboard focus makes it circle faster and brighter. */
-@property --spec-angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 135deg;
-}
-.spec-edge {
-  position: absolute;
-  /* Sits exactly on the card's own 1px border (and 1px inside it), so the red
-     streak replaces the grey line where it passes instead of sitting beside
-     it. The card must not clip it (no overflow-hidden). */
-  inset: -1px;
-  border-radius: inherit;
-  pointer-events: none;
-  padding: 2px;
-  opacity: 0.5;
+/* ── What We Offer cards ─────────────────────────────────────────────
+   Plain grey border at rest. On hover, press and keyboard focus the border
+   turns red, thickens slightly (a second 1px line) and the card glows red. */
+.offer-card {
   transition:
-    opacity 350ms ease,
-    padding 250ms ease,
-    filter 250ms ease;
-  animation: spec-spin 14s linear infinite;
-  background: conic-gradient(
-    from calc(var(--spec-angle) - 34deg),
-    transparent 0deg,
-    color-mix(in srgb, var(--color-brand-red) 35%, transparent) 12deg,
-    var(--color-brand-red) 34deg,
-    color-mix(in srgb, var(--color-brand-red) 35%, transparent) 56deg,
-    transparent 68deg,
-    transparent 180deg,
-    color-mix(in srgb, var(--color-brand-red) 35%, transparent) 192deg,
-    var(--color-brand-red) 214deg,
-    color-mix(in srgb, var(--color-brand-red) 35%, transparent) 236deg,
-    transparent 248deg,
-    transparent 360deg
-  );
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  mask-composite: exclude;
-  filter: drop-shadow(0 0 5px rgba(255, 0, 44, 0.7));
+    border-color 250ms ease,
+    box-shadow 250ms ease;
 }
-/* Highlight states: a thicker rim and a much brighter glow. */
-.group:hover > .spec-edge,
-.group:focus-visible > .spec-edge,
-.group:active > .spec-edge {
-  opacity: 1;
-  padding: 4px;
-  filter: drop-shadow(0 0 8px rgba(255, 0, 44, 1))
-    drop-shadow(0 0 22px rgba(255, 0, 44, 0.75));
-}
-/* Hover: stop drifting and follow the mouse (angle comes from the inline style). */
-.group:hover > .spec-edge,
-.group:active > .spec-edge {
-  animation: none;
-}
-/* Keyboard focus: a faster lap. */
-.group:focus-visible > .spec-edge {
-  animation-duration: 3s;
-}
-@keyframes spec-spin {
-  to {
-    --spec-angle: 495deg;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .spec-edge,
-  .group:focus-visible > .spec-edge {
-    animation: none;
-  }
+.offer-card:hover,
+.offer-card:active,
+.offer-card:focus-visible {
+  border-color: var(--color-brand-red);
+  box-shadow:
+    0 0 0 1px var(--color-brand-red),
+    0 0 14px rgba(255, 0, 44, 0.85),
+    0 0 38px rgba(255, 0, 44, 0.5);
 }

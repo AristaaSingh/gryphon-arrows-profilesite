@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import DecryptTechHeading from "@/components/effects/DecryptTechHeading";
 import SpecularButton from "@/components/effects/SpecularButton";
 import WebThreads from "@/components/effects/WebThreads";
@@ -16,6 +17,8 @@ const BUTTON_LABEL = "Explore us";
 export default function LandingSection() {
   // No hover on touch screens, so the button keeps its shine on by default.
   const isTouch = useMediaQuery(TOUCH_QUERY);
+  // Keyboard focus shows the same shine as hovering the button.
+  const [keyboardFocus, setKeyboardFocus] = useState(false);
   const scrollToNext = () => {
     document.getElementById("sponsors")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -86,23 +89,32 @@ export default function LandingSection() {
         </ScrollFade>
 
         <ScrollFade threshold={0.4} className="mt-8">
-          <SpecularButton
-            size="md"
-            radius={14}
-            textColor="#f5f5f5"
-            lineColor="#ffc100"
-            baseColor="#3a1414"
-            intensity={1}
-            shineSize={12}
-            shineFade={45}
-            speed={0.3}
-            followMouse
-            autoAnimate={isTouch}
-            proximity={260}
-            onClick={scrollToNext}
+          <span
+            className="contents"
+            onFocus={(e) =>
+              setKeyboardFocus(e.target.matches(":focus-visible"))
+            }
+            onBlur={() => setKeyboardFocus(false)}
           >
-            {BUTTON_LABEL}
-          </SpecularButton>
+            <SpecularButton
+              size="md"
+              radius={14}
+              textColor="#f5f5f5"
+              lineColor="#ffc100"
+              baseColor="#3a1414"
+              intensity={1}
+              shineSize={12}
+              shineFade={45}
+              speed={0.3}
+              followMouse
+              autoAnimate={isTouch || keyboardFocus}
+              proximity={260}
+              onClick={scrollToNext}
+              className="no-focus-ring"
+            >
+              {BUTTON_LABEL}
+            </SpecularButton>
+          </span>
         </ScrollFade>
       </div>
 

@@ -81,7 +81,12 @@ function ZigCard({ item }: { item: Item }) {
     <li ref={ref} className="relative md:grid md:grid-cols-2">
       <motion.div
         style={{ x, opacity }}
-        className={`transform-gpu will-change-transform group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-4 transition-colors md:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] hover:border-brand-red/60 sm:p-8 md:mx-0 ${
+        // Focusable so keyboard users can reach each card; focus looks
+        // the same as hover (red border and ring).
+        tabIndex={0}
+        role="group"
+        aria-label={`${item.group}: ${item.title}`}
+        className={`no-focus-ring transform-gpu will-change-transform group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-4 transition-[border-color,box-shadow] md:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] hover:border-brand-red/70 hover:ring-1 hover:ring-brand-red/50 focus-visible:border-brand-red/70 focus-visible:ring-1 focus-visible:ring-brand-red/50 sm:p-8 md:mx-0 ${
           right ? "md:col-start-2 md:ml-10" : "md:mr-10"
         }`}
       >

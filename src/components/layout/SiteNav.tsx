@@ -20,7 +20,7 @@ export default function SiteNav() {
       className={`animate-fade-in-up fixed inset-x-0 top-0 z-50 border-b ${GLASS_BAR}`}
     >
       <div className="flex items-center justify-between px-6 py-4 sm:px-10">
-        <a href="#home" className="flex items-center gap-3">
+        <a href="#home" className="flex items-center gap-3 rounded-lg">
           <Image
             src="/team/griff-logo.png"
             alt="Gryphon Arrows logo"
@@ -62,7 +62,7 @@ export default function SiteNav() {
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             onClick={() => setMobileOpen((v) => !v)}
-            className="flex h-8 w-8 flex-col items-center justify-center gap-1.5 sm:hidden"
+            className="flex h-8 w-8 flex-col items-center justify-center gap-1.5 rounded-md sm:hidden"
           >
             <span
               className={`h-px w-5 bg-zinc-300 transition-transform ${mobileOpen ? "translate-y-[3.5px] rotate-45" : ""}`}

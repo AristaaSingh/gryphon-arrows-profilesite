@@ -13,7 +13,7 @@ const SLICES = 8;
 type Status = "idle" | "sending" | "success" | "error";
 
 const FIELD =
-  "contact-field w-full rounded-sm bg-white px-3 py-2.5 font-body text-base text-zinc-900 outline-none transition-colors placeholder:text-zinc-400";
+  "contact-field no-focus-ring w-full rounded-sm bg-white px-3 py-2.5 font-body text-base text-zinc-900 outline-none transition-colors placeholder:text-zinc-400";
 const LABEL =
   "mb-1.5 block font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-white [text-shadow:0_1px_2px_rgba(0,0,0,0.55)]";
 
@@ -155,7 +155,7 @@ export default function ContactModal({
                 type="button"
                 onClick={onClose}
                 aria-label="Close contact form"
-                className="pointer-events-auto absolute right-5 top-5 flex h-8 w-8 cursor-pointer items-center justify-center text-white/80 transition-colors hover:text-brand-yellow"
+                className="pointer-events-auto absolute right-5 top-5 flex h-8 w-8 cursor-pointer items-center justify-center text-white/80 transition-colors hover:text-brand-yellow focus-visible:text-brand-yellow no-focus-ring"
               >
                 <svg
                   viewBox="0 0 24 24"

@@ -141,12 +141,13 @@ body {
 }
 
 /* ── What We Offer cards ─────────────────────────────────────────────
-   Thin grey border with a faint red glow at rest. On hover, press and
-   keyboard focus the border turns red and the glow strengthens. */
+   A thin red border and a faint red glow at rest; on hover, press and
+   keyboard focus the border goes full red and the glow strengthens. */
 .offer-card {
+  border-color: color-mix(in srgb, var(--color-brand-red) 55%, transparent);
   box-shadow:
-    0 0 12px rgba(255, 0, 44, 0.3),
-    0 0 30px rgba(255, 0, 44, 0.14);
+    0 0 12px rgba(255, 0, 44, 0.22),
+    0 0 30px rgba(255, 0, 44, 0.1);
   transition:
     border-color 250ms ease,
     box-shadow 250ms ease;

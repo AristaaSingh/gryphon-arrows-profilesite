@@ -139,3 +139,63 @@ body {
 .no-focus-ring:focus-visible {
   outline: none !important;
 }
+
+/* ── Specular edge light (cards) ─────────────────────────────────────
+   A conic-gradient streak masked down to a thin rim, so it follows the
+   card's rounded corners. --spec-angle is set from the mouse by
+   SpecularEdge.tsx; keyboard focus spins it instead. */
+@property --spec-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 135deg;
+}
+.spec-edge {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 2px;
+  opacity: 0;
+  transition: opacity 250ms ease;
+  background: conic-gradient(
+    from calc(var(--spec-angle) - 34deg),
+    transparent 0deg,
+    rgba(255, 193, 0, 0.35) 12deg,
+    #ffc100 34deg,
+    rgba(255, 193, 0, 0.35) 56deg,
+    transparent 68deg,
+    transparent 180deg,
+    rgba(255, 193, 0, 0.35) 192deg,
+    #ffc100 214deg,
+    rgba(255, 193, 0, 0.35) 236deg,
+    transparent 248deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 6px rgba(255, 193, 0, 0.7));
+}
+.group:hover > .spec-edge,
+.group:focus-visible > .spec-edge {
+  opacity: 1;
+}
+.group:focus-visible > .spec-edge {
+  animation: spec-spin 3s linear infinite;
+}
+@keyframes spec-spin {
+  to {
+    --spec-angle: 495deg;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .group:focus-visible > .spec-edge {
+    animation: none;
+  }
+}
+

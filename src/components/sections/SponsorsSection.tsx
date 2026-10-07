@@ -21,6 +21,12 @@ const SPONSORS = [
     width: 600,
     height: 155,
   },
+  {
+    name: "3DEXPERIENCE SOLIDWORKS",
+    src: "/sponsors/solidworks-logo.png",
+    width: 1000,
+    height: 326,
+  },
 ];
 // ────────────────────────────────────────────────────────────
 
@@ -97,7 +103,7 @@ export default function SponsorsSection() {
             variants={container}
             initial="hidden"
             animate={inView ? "show" : "hidden"}
-            className="flex flex-col items-center justify-center gap-6 px-6 py-8 sm:flex-row sm:gap-10 sm:py-10 xl:px-56"
+            className="flex flex-wrap items-center justify-center gap-6 px-6 py-8 sm:gap-10 sm:py-10 xl:px-48"
           >
             {SPONSORS.map((s) => (
               <motion.li
@@ -106,7 +112,7 @@ export default function SponsorsSection() {
                 whileHover={{ y: -8, rotate: 1, scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                className="group relative w-full max-w-sm overflow-hidden rounded-xl bg-white p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] ring-1 ring-white/20 sm:max-w-none sm:flex-1 sm:basis-0 lg:max-w-xl"
+                className="group relative w-full max-w-sm overflow-hidden rounded-xl bg-white p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] ring-1 ring-white/20 sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
               >
                 {/* Diagonal shine that sweeps across on hover */}
                 <span

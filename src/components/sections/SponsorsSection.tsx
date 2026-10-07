@@ -15,8 +15,8 @@ import { useSponsorLocks } from "@/components/sections/useSponsorLocks";
 
 // ── EDIT HERE ───────────────────────────────────────────────
 // To add a sponsor: drop the logo into public/sponsors/ and add a line.
-// Use a PNG/WebP with a TRANSPARENT background (a white box around the logo
-// would show up as a white block).
+// Logos sit on a white card, so a PNG/WebP with a transparent (or white)
+// background works.
 const SPONSORS = [
   { name: "Menapia", src: "/sponsors/menapia.webp", width: 2500, height: 1109 },
   {
@@ -123,13 +123,11 @@ export default function SponsorsSection() {
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 260, damping: 18 }}
                 onClick={() => tap(i)}
-                className="target-card group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/15 bg-white/[0.03] p-6 transition-[border-color,box-shadow] duration-500 data-[locked=true]:border-brand-red/70 data-[locked=true]:shadow-[0_0_50px_rgba(255,0,44,0.3)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
+                className="target-card group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/20 bg-white p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] transition-[border-color,box-shadow] duration-500 data-[locked=true]:border-brand-red data-[locked=true]:shadow-[0_0_50px_rgba(255,0,44,0.45)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
               >
-                {/* "Target lock": on hover (or, on touch screens, all the
-                    time) red corner brackets snap in around the logo, the
-                    grid lights up. Styles live in
-                    globals.css under .target-*. Logos keep their real colours;
-                    a thin white outline keeps dark logos readable on black. */}
+                {/* White card behind each logo. "Target lock": when a card is
+                    locked, red corner brackets snap in around the logo and the
+                    grid lights up. Styles live in globals.css under .target-*. */}
                 <span aria-hidden="true" className="target-grid" />
                 <span
                   aria-hidden="true"
@@ -153,7 +151,7 @@ export default function SponsorsSection() {
                     alt={s.name}
                     width={s.width}
                     height={s.height}
-                    className="h-full w-full object-contain transition-transform duration-500 [filter:drop-shadow(1.5px_0_0_#fff)_drop-shadow(-1.5px_0_0_#fff)_drop-shadow(0_1.5px_0_#fff)_drop-shadow(0_-1.5px_0_#fff)_drop-shadow(0_0_12px_rgba(255,255,255,0.3))] group-data-[locked=true]:scale-[1.04]"
+                    className="h-full w-full object-contain transition-transform duration-500 group-data-[locked=true]:scale-[1.04]"
                   />
                 </div>
               </motion.li>

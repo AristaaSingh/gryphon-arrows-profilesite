@@ -30,9 +30,9 @@ const SNAP_DISTANCE = 90; // px: how close the pointer must be to lock on
  * A "target cursor" for mouse users, in the style of reactbits.dev's Target
  * Cursor. While the pointer is inside `containerRef` (add the cursor-none
  * class to it) the normal cursor is replaced by four small corner brackets
- * that spin around a centre dot. When the pointer comes near an item that
+ * that spin around the pointer. When the pointer comes near an item that
  * matches `itemSelector`, the brackets stop spinning and stretch out to
- * frame that item (the dot stays on the pointer); move away and they shrink
+ * frame that item; move away and they shrink
  * back into the spinning cursor. `onLock(index)` fires when the locked item
  * changes (null when none) so the item can light up. Touch is ignored.
  */
@@ -67,8 +67,6 @@ export default function TargetLockLayer({
   const rot = useMotionValue(0);
   // Bottom edge of the corner box, where the name tag sits.
   const labelY = useTransform([y, h], ([yy, hh]: number[]) => yy + hh);
-  const px = useMotionValue(-100);
-  const py = useMotionValue(-100);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -177,8 +175,6 @@ export default function TargetLockLayer({
       if (e.pointerType === "touch") return;
       last.x = e.clientX;
       last.y = e.clientY;
-      px.set(e.clientX);
-      py.set(e.clientY);
       if (!inside) {
         inside = true;
         first = true;
@@ -206,7 +202,7 @@ export default function TargetLockLayer({
       spin?.stop();
       cancelAnimationFrame(raf);
     };
-  }, [containerRef, itemSelector, x, y, w, h, arm, rot, px, py]);
+  }, [containerRef, itemSelector, x, y, w, h, arm, rot]);
 
   if (!mounted) return null;
 
@@ -247,12 +243,6 @@ export default function TargetLockLayer({
           {label}
         </span>
       </motion.div>
-
-      {/* Centre dot: always exactly on the pointer */}
-      <motion.span
-        className="absolute left-0 top-0 -ml-[3px] -mt-[3px] h-1.5 w-1.5 rounded-full bg-brand-red shadow-[0_0_6px_rgba(255,0,44,0.9)]"
-        style={{ x: px, y: py }}
-      />
     </div>,
     document.body,
   );

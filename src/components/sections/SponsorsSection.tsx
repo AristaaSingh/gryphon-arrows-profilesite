@@ -33,10 +33,12 @@ const SPONSORS = [
 ];
 // ────────────────────────────────────────────────────────────
 
-// Touch-screen timing (ms). The cards fade in from about 900ms after the strip
-// appears, so the rapid intro locks start just after that.
+// Touch-screen timing (ms). The cards start fading in about 900ms after the
+// strip appears; each is roughly halfway into place ~100ms later, which is
+// when its lock fires.
 const INTRO_START_MS = 1000;
-const INTRO_STEP_MS = 380; // gap between the rapid locks as the cards appear
+const INTRO_STEP_MS = 180; // matches the cards' fade-in stagger, so each locks as it arrives
+const INTRO_HOLD_MS = 700; // how long all three stay locked before the loop starts
 const IDLE_MS = 1600; // gap between locks once the intro is done
 
 const container: Variants = {
@@ -60,13 +62,16 @@ export default function SponsorsSection() {
   // away it has no visible area, so observing it would never fire.
   const wrapRef = useRef<HTMLDivElement>(null);
   const inView = useInView(wrapRef, { amount: 0.25 });
-  // Which card the target-lock cursor is currently on (mouse users).
+  // Which cards are "target locked": the mouse target cursor locks one at a
+  // time; the touch intro below keeps several locked together.
   const listRef = useRef<HTMLUListElement>(null);
-  const [locked, setLocked] = useState<number | null>(null);
+  const [locked, setLocked] = useState<number[]>([]);
+  const lockOnly = (i: number | null) => setLocked(i === null ? [] : [i]);
 
   // Touch screens have no cursor, so they get a timed sequence instead:
-  //  1. as the cards appear, each one is locked in quick succession (intro),
-  //  2. then the cards lock one after another on a loop (idle).
+  //  1. intro: each card locks as it is about halfway into place, and the
+  //     locks pile up so you can see all of them as the cards appear,
+  //  2. then they release and the cards take turns locking on a loop (idle).
   // Tapping a card locks it and carries on from the next one.
   const nextRef = useRef(0);
   const tappedRef = useRef(false);
@@ -79,7 +84,7 @@ export default function SponsorsSection() {
 
     const step = () => {
       const i = nextRef.current % SPONSORS.length;
-      setLocked(i);
+      setLocked([i]);
       nextRef.current = i + 1;
     };
 
@@ -87,16 +92,21 @@ export default function SponsorsSection() {
     if (!fromTap) {
       nextRef.current = 0;
       // Start clean: drop whatever was locked the last time the strip was on screen.
-      timers.push(window.setTimeout(() => setLocked(null), 0));
+      timers.push(window.setTimeout(() => setLocked([]), 0));
       SPONSORS.forEach((_, i) => {
         timers.push(
           window.setTimeout(
-            () => setLocked(i),
+            () => setLocked((prev) => [...prev, i]),
             INTRO_START_MS + i * INTRO_STEP_MS,
           ),
         );
       });
-      idleStart = INTRO_START_MS + SPONSORS.length * INTRO_STEP_MS + 300;
+      const lastLock = INTRO_START_MS + (SPONSORS.length - 1) * INTRO_STEP_MS;
+      // Let the full set of locks show for a moment, then release them all.
+      timers.push(
+        window.setTimeout(() => setLocked([]), lastLock + INTRO_HOLD_MS),
+      );
+      idleStart = lastLock + INTRO_HOLD_MS + 500;
     }
     timers.push(
       window.setTimeout(() => {
@@ -104,8 +114,12 @@ export default function SponsorsSection() {
         timers.push(window.setInterval(step, IDLE_MS));
       }, idleStart),
     );
-    return () =>
-      timers.forEach((t) => (window.clearTimeout(t), window.clearInterval(t)));
+    return () => {
+      timers.forEach((t) => {
+        window.clearTimeout(t);
+        window.clearInterval(t);
+      });
+    };
   }, [inView, cycleKey]);
 
   return (
@@ -166,7 +180,7 @@ export default function SponsorsSection() {
               <motion.li
                 key={s.name}
                 data-target-name={s.name}
-                data-locked={inView && locked === i}
+                data-locked={inView && locked.includes(i)}
                 variants={card}
                 whileHover={{ y: -6 }}
                 whileTap={{ scale: 0.98 }}
@@ -176,7 +190,7 @@ export default function SponsorsSection() {
                   if (window.matchMedia("(hover: none)").matches) {
                     nextRef.current = i + 1;
                     tappedRef.current = true;
-                    setLocked(i);
+                    setLocked([i]);
                     setCycleKey((k) => k + 1);
                   }
                 }}
@@ -219,7 +233,7 @@ export default function SponsorsSection() {
           <TargetLockLayer
             containerRef={listRef}
             itemSelector="li"
-            onLock={setLocked}
+            onLock={lockOnly}
           />
         </motion.div>
       </div>

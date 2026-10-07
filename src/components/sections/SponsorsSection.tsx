@@ -13,11 +13,13 @@ import { SHEET_TOTAL } from "@/content/sections";
 
 // ── EDIT HERE ───────────────────────────────────────────────
 // To add a sponsor: drop the logo into public/sponsors/ and add a line.
+// Use a PNG/WebP with a TRANSPARENT background: it is shown as a white
+// silhouette, and in full colour when hovered.
 const SPONSORS = [
   { name: "Menapia", src: "/sponsors/menapia.webp", width: 2500, height: 1109 },
   {
     name: "SimScale",
-    src: "/sponsors/SimScale-logo.png",
+    src: "/sponsors/simscale-logo.png",
     width: 600,
     height: 155,
   },
@@ -109,23 +111,33 @@ export default function SponsorsSection() {
               <motion.li
                 key={s.name}
                 variants={card}
-                whileHover={{ y: -8, rotate: 1, scale: 1.03 }}
+                whileHover={{ y: -8, scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                className="group relative w-full max-w-sm overflow-hidden rounded-xl bg-white p-6 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] ring-1 ring-white/20 sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
+                className="group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/15 bg-white/[0.03] p-6 transition-[border-color,box-shadow] duration-500 hover:border-white/60 hover:shadow-[0_0_50px_rgba(255,0,44,0.35)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
               >
-                {/* Diagonal shine that sweeps across on hover */}
+                {/* Hover: a white fill wipes in diagonally (bottom left to top
+                    right, like the menu buttons) and the logo changes from a
+                    white silhouette to its real colours. */}
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/80 to-transparent opacity-0 transition-all duration-700 group-hover:left-[120%] group-hover:opacity-100"
+                  className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top_right,#ffffff_50%,transparent_50%)] bg-[length:200%_200%] bg-[position:100%_0%] transition-[background-position] duration-500 ease-out group-hover:bg-[position:0%_100%] group-active:bg-[position:0%_100%]"
                 />
-                <div className="flex h-24 items-center justify-center">
+                <div className="relative flex h-24 items-center justify-center">
                   <Image
                     src={s.src}
                     alt={s.name}
                     width={s.width}
                     height={s.height}
-                    className="h-full w-full object-contain"
+                    className="h-full w-full object-contain opacity-90 transition-opacity duration-500 [filter:brightness(0)_invert(1)] group-hover:opacity-0 group-active:opacity-0"
+                  />
+                  <Image
+                    src={s.src}
+                    alt=""
+                    aria-hidden="true"
+                    width={s.width}
+                    height={s.height}
+                    className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-active:opacity-100"
                   />
                 </div>
               </motion.li>

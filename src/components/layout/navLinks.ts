@@ -18,8 +18,9 @@ export const JOIN_PROPS = SITE_LINKS.joinForm
 export const WIPE_FILL =
   "no-focus-ring isolate overflow-hidden transition-colors duration-300 before:absolute before:inset-0 before:-z-10 before:bg-[linear-gradient(to_top_right,var(--color-brand-yellow)_50%,transparent_50%)] before:bg-[length:200%_200%] before:bg-[position:100%_0%] before:transition-[background-position] before:duration-400 before:ease-out hover:text-black hover:before:bg-[position:0%_100%] focus-visible:text-black focus-visible:before:bg-[position:0%_100%] active:text-black active:before:bg-[position:0%_100%]";
 
-/** The wipe as a text-sized button: Contact, Join Us, Send… */
-export const LINK_HOVER = `relative rounded-sm px-3 py-1.5 ${WIPE_FILL}`;
+// Square corners, and inline-block so links (<a>) behave like buttons (an
+// inline element would not clip the wipe to its box).
+export const LINK_HOVER = `relative inline-block px-3 py-1.5 ${WIPE_FILL}`;
 
 // Footer links are calmer than the menu's wipe fill: a yellow underline
 // slides in on hover/focus, and the text turns yellow while pressed.

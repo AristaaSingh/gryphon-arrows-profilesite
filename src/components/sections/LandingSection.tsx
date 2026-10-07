@@ -101,13 +101,16 @@ export default function LandingSection() {
               radius={14}
               textColor="#f5f5f5"
               lineColor="#ffc100"
-              baseColor="#3a1414"
-              intensity={1}
-              shineSize={12}
-              shineFade={45}
+              baseColor="#7a4a12"
+              intensity={1.6}
+              shineSize={26}
+              shineFade={60}
               speed={0.3}
               followMouse
               autoAnimate={isTouch || keyboardFocus}
+              // Mouse users: a steady glow at rest that brightens as the cursor
+              // approaches. Touch and keyboard focus animate it instead.
+              restingIntensity={1}
               proximity={260}
               onClick={scrollToNext}
               className="no-focus-ring"

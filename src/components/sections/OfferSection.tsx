@@ -9,6 +9,7 @@ import {
   MobileSheetRow,
   RED,
 } from "@/components/ui/DrawingSheet";
+import SpecularEdge from "@/components/ui/SpecularEdge";
 import { SHEET_TOTAL } from "@/content/sections";
 
 interface Item {
@@ -82,14 +83,15 @@ function ZigCard({ item }: { item: Item }) {
       <motion.div
         style={{ x, opacity }}
         // Focusable so keyboard users can reach each card; focus looks
-        // the same as hover (red border and ring).
+        // like hover (the specular edge light).
         tabIndex={0}
         role="group"
         aria-label={`${item.group}: ${item.title}`}
-        className={`no-focus-ring transform-gpu will-change-transform group relative overflow-hidden rounded-xl border border-white/15 bg-black/60 p-4 transition-[border-color,box-shadow] md:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] hover:border-brand-red/70 hover:ring-1 hover:ring-brand-red/50 focus-visible:border-brand-red/70 focus-visible:ring-1 focus-visible:ring-brand-red/50 sm:p-8 md:mx-0 ${
+        className={`no-focus-ring transform-gpu will-change-transform group relative rounded-xl border border-white/15 bg-black/60 p-4 transition-[border-color,box-shadow] md:shadow-[0_20px_60px_-15px_rgba(0,0,0,0.9)] hover:border-white/30 focus-visible:border-white/30 sm:p-8 md:mx-0 ${
           right ? "md:col-start-2 md:ml-10" : "md:mr-10"
         }`}
       >
+        <SpecularEdge />
         <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.25em] text-zinc-500">
           <span style={{ color: RED }}>{item.tag}</span>
           <span>{item.group}</span>

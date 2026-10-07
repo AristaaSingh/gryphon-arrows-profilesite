@@ -75,3 +75,98 @@ body {
   caret-color: #18181b;
   transition: background-color 600000s 0s;
 }
+
+/* ── Sponsor cards: "target lock" hover ──────────────────────────────
+   Red corner brackets snap in around the logo, a scan line sweeps across,
+   and a red grid lights up. On touch screens (no hover) the brackets stay
+   locked and the scan line loops slowly, staggered per card via --scan-delay. */
+.target-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 400ms ease;
+  background-image:
+    linear-gradient(rgba(255, 0, 44, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 44, 0.12) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.target-card:hover .target-grid,
+.target-card:active .target-grid {
+  opacity: 1;
+}
+
+.target-bracket {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  border: 0 solid #ff002c;
+  opacity: 0.35;
+  filter: drop-shadow(0 0 0 rgba(255, 0, 44, 0));
+  /* The overshoot in the easing gives the "snap" when they lock on. */
+  transition:
+    top 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    right 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    bottom 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    left 380ms cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 300ms ease,
+    filter 300ms ease;
+}
+.target-bracket--tl { top: 6px; left: 6px; border-top-width: 2px; border-left-width: 2px; }
+.target-bracket--tr { top: 6px; right: 6px; border-top-width: 2px; border-right-width: 2px; }
+.target-bracket--bl { bottom: 6px; left: 6px; border-bottom-width: 2px; border-left-width: 2px; }
+.target-bracket--br { bottom: 6px; right: 6px; border-bottom-width: 2px; border-right-width: 2px; }
+
+.target-card:hover .target-bracket,
+.target-card:active .target-bracket {
+  opacity: 1;
+  filter: drop-shadow(0 0 4px rgba(255, 0, 44, 0.9));
+}
+.target-card:hover .target-bracket--tl,
+.target-card:active .target-bracket--tl { top: 16px; left: 16px; }
+.target-card:hover .target-bracket--tr,
+.target-card:active .target-bracket--tr { top: 16px; right: 16px; }
+.target-card:hover .target-bracket--bl,
+.target-card:active .target-bracket--bl { bottom: 16px; left: 16px; }
+.target-card:hover .target-bracket--br,
+.target-card:active .target-bracket--br { bottom: 16px; right: 16px; }
+
+.target-scan {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -2%;
+  width: 2px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(to bottom, transparent, #ffc100 20%, #ff002c 80%, transparent);
+  box-shadow: 0 0 14px 2px rgba(255, 0, 44, 0.65);
+}
+.target-card:hover .target-scan {
+  animation: target-scan 800ms ease-in-out 1;
+}
+@keyframes target-scan {
+  0% { left: -2%; opacity: 0; }
+  12% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { left: 102%; opacity: 0; }
+}
+
+@media (hover: none) {
+  .target-bracket { opacity: 1; filter: drop-shadow(0 0 4px rgba(255, 0, 44, 0.8)); }
+  .target-bracket--tl { top: 14px; left: 14px; }
+  .target-bracket--tr { top: 14px; right: 14px; }
+  .target-bracket--bl { bottom: 14px; left: 14px; }
+  .target-bracket--br { bottom: 14px; right: 14px; }
+  .target-grid { opacity: 0.6; }
+  .target-scan {
+    animation: target-scan 3.4s ease-in-out infinite;
+    animation-delay: var(--scan-delay, 0s);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .target-scan { animation: none !important; }
+  .target-bracket { transition: none; }
+}

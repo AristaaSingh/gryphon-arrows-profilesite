@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import Image from "next/image";
 import { motion, useInView, type Variants } from "framer-motion";
 import {
@@ -9,7 +9,6 @@ import {
   DimLine,
   MobileSheetRow,
 } from "@/components/ui/DrawingSheet";
-import PixelFill from "@/components/ui/PixelFill";
 import { SHEET_TOTAL } from "@/content/sections";
 
 // ── EDIT HERE ───────────────────────────────────────────────
@@ -108,28 +107,47 @@ export default function SponsorsSection() {
             animate={inView ? "show" : "hidden"}
             className="flex flex-wrap items-center justify-center gap-6 px-6 py-8 sm:gap-10 sm:py-10 xl:px-48"
           >
-            {SPONSORS.map((s) => (
+            {SPONSORS.map((s, i) => (
               <motion.li
                 key={s.name}
                 variants={card}
-                whileHover={{ y: -8, scale: 1.03 }}
+                whileHover={{ y: -6 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                className="group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/15 bg-white/[0.03] p-6 transition-[border-color,box-shadow] duration-500 hover:border-white/60 hover:shadow-[0_0_50px_rgba(255,0,44,0.35)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
+                // --scan-delay staggers the idle scan on touch screens.
+                style={{ "--scan-delay": `${i * 1.1}s` } as CSSProperties}
+                className="target-card group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/15 bg-white/[0.03] p-6 transition-[border-color,box-shadow] duration-500 hover:border-[#ff002c]/70 hover:shadow-[0_0_50px_rgba(255,0,44,0.3)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
               >
-                {/* Logos keep their real colours. A thin white outline (a
-                    "die-cut sticker" edge) keeps dark logos readable on the
-                    black page; on hover a white pixel / dither fill sweeps in
-                    from the bottom left to the top right and the outline
-                    fades out. */}
-                <PixelFill />
+                {/* "Target lock": on hover (or, on touch screens, all the
+                    time) red corner brackets snap in around the logo, a scan
+                    line sweeps across and the grid lights up. Styles live in
+                    globals.css under .target-*. Logos keep their real colours;
+                    a thin white outline keeps dark logos readable on black. */}
+                <span aria-hidden="true" className="target-grid" />
+                <span aria-hidden="true" className="target-scan" />
+                <span
+                  aria-hidden="true"
+                  className="target-bracket target-bracket--tl"
+                />
+                <span
+                  aria-hidden="true"
+                  className="target-bracket target-bracket--tr"
+                />
+                <span
+                  aria-hidden="true"
+                  className="target-bracket target-bracket--bl"
+                />
+                <span
+                  aria-hidden="true"
+                  className="target-bracket target-bracket--br"
+                />
                 <div className="relative flex h-24 items-center justify-center">
                   <Image
                     src={s.src}
                     alt={s.name}
                     width={s.width}
                     height={s.height}
-                    className="h-full w-full object-contain transition-[filter] duration-500 [filter:drop-shadow(1.5px_0_0_#fff)_drop-shadow(-1.5px_0_0_#fff)_drop-shadow(0_1.5px_0_#fff)_drop-shadow(0_-1.5px_0_#fff)_drop-shadow(0_0_12px_rgba(255,255,255,0.3))] group-hover:[filter:none] group-active:[filter:none]"
+                    className="h-full w-full object-contain transition-transform duration-500 [filter:drop-shadow(1.5px_0_0_#fff)_drop-shadow(-1.5px_0_0_#fff)_drop-shadow(0_1.5px_0_#fff)_drop-shadow(0_-1.5px_0_#fff)_drop-shadow(0_0_12px_rgba(255,255,255,0.3))] group-hover:scale-[1.04]"
                   />
                 </div>
               </motion.li>

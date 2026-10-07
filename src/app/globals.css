@@ -77,8 +77,7 @@ body {
 }
 
 /* ── Sponsor cards: "target lock" hover ──────────────────────────────
-   Red corner brackets snap in around the logo, a scan line sweeps across,
-   and a red grid lights up. A card is "locked" via data-locked="true", set by
+   Red corner brackets snap in around the logo and a red grid lights up. A card is "locked" via data-locked="true", set by
    the mouse target cursor (TargetLockLayer) or, on touch screens, by a timer
    that locks the cards one after another (see SponsorsSection). */
 .target-grid {
@@ -133,45 +132,6 @@ body {
 .target-card[data-locked="true"] .target-bracket--br,
 .target-card:active .target-bracket--br { bottom: 16px; right: 16px; }
 
-.target-scan {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: -2%;
-  width: 4px;
-  pointer-events: none;
-  opacity: 0;
-  image-rendering: pixelated;
-  /* A column of 4px pixels in red / yellow, solid to the top and bottom edge. */
-  background: repeating-linear-gradient(to bottom, #ff002c 0 4px, #ffc100 4px 8px);
-}
-/* Trail behind the line: a checkerboard of 4px pixels that fades out to the
-   left, so the scan looks dithered / 8-bit instead of soft. */
-.target-scan::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 100%;
-  width: 32px;
-  image-rendering: pixelated;
-  background:
-    conic-gradient(#ff002c 25%, transparent 0 50%, #ff002c 0 75%, transparent 0) 0 0 / 8px 8px;
-  -webkit-mask-image: linear-gradient(to left, #000, transparent);
-  mask-image: linear-gradient(to left, #000, transparent);
-}
-.target-card[data-locked="true"] .target-scan {
-  /* steps(): the line jumps in whole pixels instead of gliding smoothly. */
-  animation: target-scan 800ms steps(28, end) 1;
-}
-@keyframes target-scan {
-  0% { left: -2%; opacity: 0; }
-  8% { opacity: 1; }
-  92% { opacity: 1; }
-  100% { left: 102%; opacity: 0; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .target-scan { animation: none !important; }
   .target-bracket { transition: none; }
 }

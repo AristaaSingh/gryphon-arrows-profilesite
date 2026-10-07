@@ -152,12 +152,11 @@ export default function SponsorsSection() {
                 className="target-card group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/15 bg-white/[0.03] p-6 transition-[border-color,box-shadow] duration-500 data-[locked=true]:border-[#ff002c]/70 data-[locked=true]:shadow-[0_0_50px_rgba(255,0,44,0.3)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
               >
                 {/* "Target lock": on hover (or, on touch screens, all the
-                    time) red corner brackets snap in around the logo, a scan
-                    line sweeps across and the grid lights up. Styles live in
+                    time) red corner brackets snap in around the logo, the
+                    grid lights up. Styles live in
                     globals.css under .target-*. Logos keep their real colours;
                     a thin white outline keeps dark logos readable on black. */}
                 <span aria-hidden="true" className="target-grid" />
-                <span aria-hidden="true" className="target-scan" />
                 <span
                   aria-hidden="true"
                   className="target-bracket target-bracket--tl"

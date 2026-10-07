@@ -140,8 +140,11 @@ export default function ContactModal({
               })}
             </div>
 
+            {/* Panel chrome: corner marks and the close button sit against the
+                panel's own edges (not inside the padded form area), so they
+                never overlap the content. */}
             <motion.div
-              className="relative z-10"
+              className="pointer-events-none absolute inset-0 z-10"
               initial={{ opacity: 0 }}
               animate={{
                 opacity: 1,
@@ -170,7 +173,7 @@ export default function ContactModal({
                 type="button"
                 onClick={onClose}
                 aria-label="Close contact form"
-                className="absolute right-5 top-5 flex h-8 w-8 cursor-pointer items-center justify-center text-white/80 transition-colors hover:text-brand-yellow"
+                className="pointer-events-auto absolute right-5 top-5 flex h-8 w-8 cursor-pointer items-center justify-center text-white/80 transition-colors hover:text-brand-yellow"
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -184,10 +187,20 @@ export default function ContactModal({
                   <path d="M6 6l12 12M18 6L6 18" />
                 </svg>
               </button>
+            </motion.div>
 
+            <motion.div
+              className="relative z-10"
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: 1,
+                transition: { duration: 0.3, delay: 0.5 },
+              }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
+            >
               <h2
                 id="contact-title"
-                className="font-display text-2xl text-white sm:text-3xl"
+                className="font-display text-2xl text-white sm:text-3xl pr-10"
               >
                 Contact Us
               </h2>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion, useInView, type Variants } from "framer-motion";
 import {
@@ -57,6 +57,26 @@ export default function SponsorsSection() {
   // Which card the target-lock cursor is currently on (mouse users).
   const listRef = useRef<HTMLUListElement>(null);
   const [locked, setLocked] = useState<number | null>(null);
+
+  // Touch screens have no cursor, so lock the cards one after another on a
+  // timer instead. Tapping a card locks it and carries on from there.
+  const nextRef = useRef(0);
+  const [cycleKey, setCycleKey] = useState(0);
+  useEffect(() => {
+    if (!inView || !window.matchMedia("(hover: none)").matches) return;
+    const step = () => {
+      const i = nextRef.current % SPONSORS.length;
+      setLocked(i);
+      nextRef.current = i + 1;
+    };
+    // After a tap, leave the tapped card locked a full beat before moving on.
+    const first = window.setTimeout(step, cycleKey > 0 ? 2400 : 900);
+    const timer = window.setInterval(step, 2400);
+    return () => {
+      window.clearTimeout(first);
+      window.clearInterval(timer);
+    };
+  }, [inView, cycleKey]);
 
   return (
     <div
@@ -116,13 +136,19 @@ export default function SponsorsSection() {
               <motion.li
                 key={s.name}
                 data-target-name={s.name}
-                data-locked={locked === i}
+                data-locked={inView && locked === i}
                 variants={card}
                 whileHover={{ y: -6 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 260, damping: 18 }}
-                // --scan-delay staggers the idle scan on touch screens.
-                style={{ "--scan-delay": `${i * 1.1}s` } as CSSProperties}
+                onClick={() => {
+                  // Touch: lock the tapped card, then carry on from the next.
+                  if (window.matchMedia("(hover: none)").matches) {
+                    nextRef.current = i + 1;
+                    setLocked(i);
+                    setCycleKey((k) => k + 1);
+                  }
+                }}
                 className="target-card group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/15 bg-white/[0.03] p-6 transition-[border-color,box-shadow] duration-500 data-[locked=true]:border-[#ff002c]/70 data-[locked=true]:shadow-[0_0_50px_rgba(255,0,44,0.3)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
               >
                 {/* "Target lock": on hover (or, on touch screens, all the

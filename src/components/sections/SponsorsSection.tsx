@@ -13,8 +13,8 @@ import { SHEET_TOTAL } from "@/content/sections";
 
 // ── EDIT HERE ───────────────────────────────────────────────
 // To add a sponsor: drop the logo into public/sponsors/ and add a line.
-// Use a PNG/WebP with a TRANSPARENT background: it is shown as a white
-// silhouette, and in full colour when hovered.
+// Use a PNG/WebP with a TRANSPARENT background (a white box around the logo
+// would show up as a white block).
 const SPONSORS = [
   { name: "Menapia", src: "/sponsors/menapia.webp", width: 2500, height: 1109 },
   {
@@ -116,9 +116,11 @@ export default function SponsorsSection() {
                 transition={{ type: "spring", stiffness: 260, damping: 18 }}
                 className="group relative w-full max-w-sm overflow-hidden rounded-xl border border-white/15 bg-white/[0.03] p-6 transition-[border-color,box-shadow] duration-500 hover:border-white/60 hover:shadow-[0_0_50px_rgba(255,0,44,0.35)] sm:w-[calc(50%-1.25rem)] sm:max-w-none lg:w-[calc(33.333%-1.667rem)]"
               >
-                {/* Hover: a white fill wipes in diagonally (bottom left to top
-                    right, like the menu buttons) and the logo changes from a
-                    white silhouette to its real colours. */}
+                {/* Logos keep their real colours. A thin white outline (a
+                    "die-cut sticker" edge) keeps dark logos readable on the
+                    black page; on hover a white fill wipes in diagonally
+                    (bottom left to top right, like the menu buttons) and the
+                    outline fades out. */}
                 <span
                   aria-hidden="true"
                   className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top_right,#ffffff_50%,transparent_50%)] bg-[length:200%_200%] bg-[position:100%_0%] transition-[background-position] duration-500 ease-out group-hover:bg-[position:0%_100%] group-active:bg-[position:0%_100%]"
@@ -129,15 +131,7 @@ export default function SponsorsSection() {
                     alt={s.name}
                     width={s.width}
                     height={s.height}
-                    className="h-full w-full object-contain opacity-90 transition-opacity duration-500 [filter:brightness(0)_invert(1)] group-hover:opacity-0 group-active:opacity-0"
-                  />
-                  <Image
-                    src={s.src}
-                    alt=""
-                    aria-hidden="true"
-                    width={s.width}
-                    height={s.height}
-                    className="absolute inset-0 h-full w-full object-contain opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-active:opacity-100"
+                    className="h-full w-full object-contain transition-[filter] duration-500 [filter:drop-shadow(1.5px_0_0_#fff)_drop-shadow(-1.5px_0_0_#fff)_drop-shadow(0_1.5px_0_#fff)_drop-shadow(0_-1.5px_0_#fff)_drop-shadow(0_0_12px_rgba(255,255,255,0.3))] group-hover:[filter:none] group-active:[filter:none]"
                   />
                 </div>
               </motion.li>

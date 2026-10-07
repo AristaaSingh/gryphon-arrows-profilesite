@@ -142,9 +142,9 @@ body {
 
 /* ── Specular edge light (cards) ─────────────────────────────────────
    A red conic-gradient streak masked down to a thin rim, so it follows the
-   card's rounded corners. --spec-angle is driven by SpecularEdge.tsx:
-   from the mouse while hovering, from scroll position while the page scrolls
-   past the card; keyboard focus spins it instead. */
+   card's rounded corners. It always drifts slowly around the card (idle);
+   while hovered it points at the mouse instead (--spec-angle is set by
+   SpecularEdge.tsx); keyboard focus makes it circle faster and brighter. */
 @property --spec-angle {
   syntax: "<angle>";
   inherits: false;
@@ -155,9 +155,10 @@ body {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  padding: 3px;
-  opacity: 0;
+  padding: 2px;
+  opacity: 0.5;
   transition: opacity 350ms ease;
+  animation: spec-spin 14s linear infinite;
   background: conic-gradient(
     from calc(var(--spec-angle) - 34deg),
     transparent 0deg,
@@ -180,15 +181,17 @@ body {
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
-  filter: drop-shadow(0 0 8px rgba(255, 0, 44, 0.95));
+  filter: drop-shadow(0 0 5px rgba(255, 0, 44, 0.7));
 }
-.group:hover > .spec-edge,
-.group:focus-visible > .spec-edge,
-.spec-edge[data-scrolling="true"] {
-  opacity: 1;
+/* Hover: stop drifting and follow the mouse (angle comes from the inline style). */
+.group:hover > .spec-edge {
+  animation: none;
+  opacity: 0.85;
 }
+/* Keyboard focus: a faster, brighter lap. */
 .group:focus-visible > .spec-edge {
-  animation: spec-spin 3s linear infinite;
+  animation-duration: 3s;
+  opacity: 1;
 }
 @keyframes spec-spin {
   to {
@@ -196,6 +199,7 @@ body {
   }
 }
 @media (prefers-reduced-motion: reduce) {
+  .spec-edge,
   .group:focus-visible > .spec-edge {
     animation: none;
   }

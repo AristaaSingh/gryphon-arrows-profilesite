@@ -9,6 +9,7 @@ import {
   DimLine,
   MobileSheetRow,
 } from "@/components/ui/DrawingSheet";
+import PixelFill from "@/components/ui/PixelFill";
 import { SHEET_TOTAL } from "@/content/sections";
 
 // ── EDIT HERE ───────────────────────────────────────────────
@@ -118,13 +119,10 @@ export default function SponsorsSection() {
               >
                 {/* Logos keep their real colours. A thin white outline (a
                     "die-cut sticker" edge) keeps dark logos readable on the
-                    black page; on hover a white fill wipes in diagonally
-                    (bottom left to top right, like the menu buttons) and the
-                    outline fades out. */}
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top_right,#ffffff_50%,transparent_50%)] bg-[length:200%_200%] bg-[position:100%_0%] transition-[background-position] duration-500 ease-out group-hover:bg-[position:0%_100%] group-active:bg-[position:0%_100%]"
-                />
+                    black page; on hover a white pixel / dither fill sweeps in
+                    from the bottom left to the top right and the outline
+                    fades out. */}
+                <PixelFill />
                 <div className="relative flex h-24 items-center justify-center">
                   <Image
                     src={s.src}

@@ -82,25 +82,9 @@ body {
 }
 
 /* ── Sponsor cards: "target lock" hover ──────────────────────────────
-   Red corner brackets snap in around the logo and a red grid lights up. A card is "locked" via data-locked="true", set by
+   Red corner brackets snap in around the logo. A card is "locked" via data-locked="true", set by
    the mouse target cursor (TargetLockLayer) or, on touch screens, by a timer
    that locks the cards one after another (see SponsorsSection). */
-.target-grid {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 400ms ease;
-  background-image:
-    linear-gradient(rgba(255, 0, 44, 0.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 0, 44, 0.12) 1px, transparent 1px);
-  background-size: 16px 16px;
-}
-.target-card[data-locked="true"] .target-grid,
-.target-card:active .target-grid {
-  opacity: 1;
-}
-
 .target-bracket {
   position: absolute;
   width: 16px;

@@ -127,8 +127,7 @@ export default function SponsorsSection() {
               >
                 {/* White card behind each logo. "Target lock": when a card is
                     locked, red corner brackets snap in around the logo and the
-                    grid lights up. Styles live in globals.css under .target-*. */}
-                <span aria-hidden="true" className="target-grid" />
+                    card glows red. Styles live in globals.css under .target-*. */}
                 <span
                   aria-hidden="true"
                   className="target-bracket target-bracket--tl"
